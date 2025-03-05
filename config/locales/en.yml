@@ -28,4 +28,7 @@
 #       enabled: "ON"
 
 en:
+  task:
+    slug:
+      immutable: "is immutable!"
   hello: "Hello world"
