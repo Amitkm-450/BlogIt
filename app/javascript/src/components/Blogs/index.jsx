@@ -2,7 +2,7 @@ import React from "react";
 
 import List from "./List";
 
-import Sidebar from "../commons/Sidebar";
+import { Sidebar } from "../commons";
 
 const BlogPage = () => (
   <div className="flex h-screen">

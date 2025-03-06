@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 
 import { Button, Input, Spinner, Textarea } from "@bigbinary/neetoui";
+import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
 
 import postsApi from "../../apis/posts";
 
@@ -8,6 +9,8 @@ const PostForm = () => {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [loading, setLoading] = useState(false);
+
+  const history = useHistory();
 
   const handleSubmit = async e => {
     e.preventDefault();
@@ -22,6 +25,12 @@ const PostForm = () => {
     }
     setTitle("");
     setDescription("");
+  };
+
+  const handleCancel = () => {
+    setTitle("");
+    setDescription("");
+    history.push("/");
   };
 
   if (loading) {
@@ -56,16 +65,15 @@ const PostForm = () => {
         </div>
         <div className="flex justify-end gap-2">
           <Button
-            type="button"
-            variant="outline"
-            onClick={() => {
-              setTitle("");
-              setDescription("");
-            }}
+            className="text-black"
+            style="secondary"
+            onClick={handleCancel}
           >
             Cancel
           </Button>
-          <Button type="submit">Submit</Button>
+          <Button className="bg-black text-white" type="submit">
+            Submit
+          </Button>
         </div>
       </form>
     </div>
