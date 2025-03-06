@@ -12,6 +12,9 @@ const Sidebar = () => (
         <Link className="rounded p-2 hover:bg-gray-700" to="/about">
           Others
         </Link>
+        <Link className="rounded p-2 hover:bg-gray-700" to="/posts/create">
+          Add post
+        </Link>
       </nav>
     </div>
   </div>
