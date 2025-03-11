@@ -13,8 +13,18 @@ class PostsController < ApplicationController
 
   def create
     post = Post.new(post_params)
+    puts "==============>1"
+
+    post.user = @current_user
+    puts "==============>"
+    post.organization = @current_user.organization
+    puts "==============>3"
     post.save!
+    puts "==============>4"
+
     post.categories << Category.where(id: params[:category_ids])
+    puts "==============>5"
+
     render_notice(t("successfully_created", entity: "Post"))
   end
 

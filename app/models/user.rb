@@ -9,6 +9,7 @@ class User < ApplicationRecord
   has_many :posts, dependent: :destroy
 
   has_secure_password
+  has_secure_token :authentication_token
 
   validates :name, presence: true
   validates :email, presence: true,
@@ -29,6 +30,6 @@ class User < ApplicationRecord
 
     # add random organization to user if null
     def assign_random_organization
-      self.organization_id = Organization.pluck(:id).sample
+      self.organization_id = 1
    end
 end

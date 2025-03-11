@@ -6,6 +6,7 @@ import Select from "react-select";
 
 import categoriesApi from "../../apis/categories";
 import postsApi from "../../apis/posts";
+import { getFromLocalStorage } from "../../utils/storage";
 
 const PostForm = () => {
   const [title, setTitle] = useState("");
@@ -39,11 +40,13 @@ const PostForm = () => {
     label: category.name,
   }));
 
+  const name = getFromLocalStorage("authUserName");
+
   const handleSubmit = async e => {
     e.preventDefault();
     setLoading(true);
     try {
-      await postsApi.create({ title, description, selectedCategories });
+      await postsApi.create({ name, title, description, selectedCategories });
       setLoading(false);
       history.push("/");
     } catch (error) {
