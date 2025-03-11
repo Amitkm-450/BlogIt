@@ -1,18 +1,28 @@
-import React from "react";
+import React, { useState } from "react";
 
 import List from "./List";
 
-import { Sidebar } from "../commons";
+import { CategorySidebar, Sidebar } from "../commons";
 
-const BlogPage = () => (
-  <div className="flex h-screen">
-    <div className="flex w-full flex-col">
-      <div className="flex items-center justify-between border-b p-4">
-        <Sidebar />
+const BlogPage = () => {
+  const [isCategoryOpen, setIsCategoryOpen] = useState(false);
+  const [selectedCategories, setSelectedCategories] = useState([]);
+
+  return (
+    <div className="flex h-screen">
+      {/* Sidebar and CategorySidebar in a flex container */}
+      <div className="flex">
+        <Sidebar onCategoryClick={() => setIsCategoryOpen(!isCategoryOpen)} />
+        {isCategoryOpen && (
+          <CategorySidebar onSelectCategory={setSelectedCategories} />
+        )}
       </div>
-      <List />
+      {/* Main content */}
+      <div className="flex w-full flex-col">
+        <List category={selectedCategories} />
+      </div>
     </div>
-  </div>
-);
+  );
+};
 
 export default BlogPage;

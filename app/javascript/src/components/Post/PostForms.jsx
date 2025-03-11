@@ -1,22 +1,49 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import { Button, Input, Spinner, Textarea } from "@bigbinary/neetoui";
 import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
+import Select from "react-select";
 
+import categoriesApi from "../../apis/categories";
 import postsApi from "../../apis/posts";
 
 const PostForm = () => {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
+  const [selectedCategories, setSelectedCategories] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [categories, setCategories] = useState([]);
 
   const history = useHistory();
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      setLoading(true);
+      try {
+        const {
+          data: { categories },
+        } = await categoriesApi.fetch();
+        setCategories(categories);
+      } catch (error) {
+        logger.error(error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchCategories();
+  }, []);
+
+  const categoriesOption = categories.map(category => ({
+    value: category.id,
+    label: category.name,
+  }));
 
   const handleSubmit = async e => {
     e.preventDefault();
     setLoading(true);
     try {
-      await postsApi.create({ title, description });
+      await postsApi.create({ title, description, selectedCategories });
       setLoading(false);
       history.push("/");
     } catch (error) {
@@ -31,6 +58,11 @@ const PostForm = () => {
     setTitle("");
     setDescription("");
     history.push("/");
+  };
+
+  const handleChange = selectedOptions => {
+    setSelectedCategories(selectedOptions);
+    logger.log(selectedCategories);
   };
 
   if (loading) {
@@ -53,6 +85,20 @@ const PostForm = () => {
             value={title}
             onChange={e => setTitle(e.target.value)}
           />
+        </div>
+        <div className="flex flex-col">
+          <p className="text-sm font-medium leading-none text-gray-800">
+            Categories*
+          </p>
+          <div className="mb-1 mt-1 w-full">
+            <Select
+              isMulti
+              menuPosition="fixed"
+              options={categoriesOption}
+              value={selectedCategories}
+              onChange={handleChange}
+            />
+          </div>
         </div>
         <div className="mb-4">
           <label className="block text-sm font-medium">Description*</label>

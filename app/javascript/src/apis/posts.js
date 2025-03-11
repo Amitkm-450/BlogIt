@@ -1,10 +1,16 @@
 import axios from "axios";
 
-const fetch = () => axios.get("/posts");
+const fetch = selectedCategories =>
+  axios.get("/posts", {
+    params: { categories: selectedCategories },
+  });
 
 const create = payload =>
   axios.post("/posts", {
-    post: payload,
+    post: {
+      ...payload,
+      category_ids: payload.selectedCategories.map(option => option.value),
+    },
   });
 
 const show = slug => axios.get(`/posts/${slug}`);

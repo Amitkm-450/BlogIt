@@ -7,7 +7,7 @@ import Card from "./Card";
 
 import postsApi from "../../apis/posts";
 
-const List = () => {
+const List = ({ selectedCategories }) => {
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -17,7 +17,8 @@ const List = () => {
     try {
       const {
         data: { posts },
-      } = await postsApi.fetch();
+      } = await postsApi.fetch(selectedCategories);
+      logger.log(posts);
       setPosts(posts);
       setLoading(false);
     } catch (error) {
@@ -53,7 +54,7 @@ const List = () => {
       </div>
       <div className="space-y-4">
         {posts.map((post, index) => (
-          <Card key={index} {...post} />
+          <Card key={index} post={post} />
         ))}
       </div>
     </div>
