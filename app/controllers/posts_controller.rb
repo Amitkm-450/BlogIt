@@ -4,8 +4,8 @@ class PostsController < ApplicationController
   def index
     posts = Post.includes(:categories, :user)
 
-    if params[:categories].present?
-      posts = posts.joins(:categories).where(categories: { name: params[:categories] })
+    if params[:category_ids].present?
+      posts = posts.joins(:categories).where(categories: { id: params[:category_ids] }).distinct
     end
 
     render status: :ok, json: { posts: posts.as_json(include: [:categories], methods: [:author_name]) }

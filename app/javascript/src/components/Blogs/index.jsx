@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-import List from "./List";
+import BlogList from "./List";
 
 import { CategorySidebar, Sidebar } from "../commons";
 
@@ -8,18 +8,22 @@ const BlogPage = () => {
   const [isCategoryOpen, setIsCategoryOpen] = useState(false);
   const [selectedCategories, setSelectedCategories] = useState([]);
 
+  const handleCategorySelect = categoryId => {
+    setSelectedCategories([...selectedCategories, categoryId]);
+  };
+
   return (
     <div className="flex h-screen">
       {/* Sidebar and CategorySidebar in a flex container */}
       <div className="flex">
         <Sidebar onCategoryClick={() => setIsCategoryOpen(!isCategoryOpen)} />
         {isCategoryOpen && (
-          <CategorySidebar onSelectCategory={setSelectedCategories} />
+          <CategorySidebar onSelectCategory={handleCategorySelect} />
         )}
       </div>
       {/* Main content */}
       <div className="flex w-full flex-col">
-        <List category={selectedCategories} />
+        <BlogList category={selectedCategories} />
       </div>
     </div>
   );

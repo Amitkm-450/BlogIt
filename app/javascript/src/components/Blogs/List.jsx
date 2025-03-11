@@ -18,7 +18,6 @@ const List = ({ selectedCategories }) => {
       const {
         data: { posts },
       } = await postsApi.fetch(selectedCategories);
-      logger.log(posts);
       setPosts(posts);
       setLoading(false);
     } catch (error) {
@@ -28,8 +27,9 @@ const List = ({ selectedCategories }) => {
   };
 
   useEffect(() => {
+    logger.log(1);
     fetchPosts();
-  }, []);
+  }, [selectedCategories]);
 
   if (loading) {
     return (

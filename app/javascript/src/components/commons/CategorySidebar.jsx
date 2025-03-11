@@ -66,7 +66,7 @@ const CategorySidebar = ({ onSelectCategory }) => {
           <li
             className="cursor-pointer rounded bg-white p-2 text-gray-700 shadow-sm hover:bg-gray-200"
             key={category.id}
-            onClick={() => onSelectCategory(category)}
+            onClick={() => onSelectCategory(category.id)}
           >
             {category.name}
           </li>
