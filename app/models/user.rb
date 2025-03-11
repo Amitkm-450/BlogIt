@@ -1,22 +1,34 @@
 # frozen_string_literal: true
 
 class User < ApplicationRecord
+  MIN_PASSWORD_LENGTH = 6
+  MAX_EMAIL_LENGTH = 255
+  VALID_EMAIL_REGEX = /\A([\w+\-].?)+@[a-z\d\-]+(\.[a-z]+)*\.[a-z]+\z/i
+
   belongs_to :organization
+  has_many :posts, dependent: :destroy
+
   has_secure_password
 
   validates :name, presence: true
-  validates :email, presence: true, uniqueness: true, format: { with: URI::MailTo::EMAIL_REGEXP }
-  validates :password, presence: true, length: { minimum: 6 }, if: :password_required?
-  validates :password_confirmation, presence: true, if: :password_required?
-  validate :password_match
+  validates :email, presence: true,
+    uniqueness: { case_sensitive: false },
+    length: { maximum: MAX_EMAIL_LENGTH },
+    format: { with: VALID_EMAIL_REGEX }
+  validates :password, length: { minimum: MIN_PASSWORD_LENGTH }, if: -> { password.present? }
+  validates :password_confirmation, presence: true, on: :create
+
+  before_save :to_lowercase
+  before_save :assign_random_organization, if: -> { organization_id.nil? }
 
   private
 
-    def password_required?
-      password_digest.blank? || password.present?
+    def to_lowercase
+      email.downcase!
     end
 
-    def password_match
-      errors.add(:password_confirmation, "does not match Password") if password != password_confirmation
-    end
+    # add random organization to user if null
+    def assign_random_organization
+      self.organization_id = Organization.pluck(:id).sample
+   end
 end

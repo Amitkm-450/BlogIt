@@ -10,7 +10,7 @@ class CategoriesController < ApplicationController
     organization = Organization.find_by(name: category_params[:organization_name])
     category = organization.categories.build(name: category_params[:name])
     category.save!
-    render_notice(t("successfully_created"))
+    render_notice(t("successfully_created", entity: "Category"))
   end
 
   private
