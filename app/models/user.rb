@@ -20,7 +20,7 @@ class User < ApplicationRecord
   validates :password_confirmation, presence: true, on: :create
 
   before_save :to_lowercase
-  before_save :assign_random_organization, if: -> { organization_id.nil? }
+  before_validation :assign_random_organization, if: -> { organization_id.nil? }
 
   private
 
@@ -30,6 +30,6 @@ class User < ApplicationRecord
 
     # add random organization to user if null
     def assign_random_organization
-      self.organization_id = 1
+      self.organization ||= Organization.first || Organization.create!(name: "Default Org")
    end
 end
