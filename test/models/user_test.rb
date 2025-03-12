@@ -4,10 +4,7 @@ require "test_helper"
 
 class UserTest < ActiveSupport::TestCase
   def setup
-    @organization = Organization.create!(name: "Test Org")
-    @user = User.new(
-      name: "Test User", email: "test@example.com", password: "password",
-      password_confirmation: "password", organization: @organization)
+    @user = create(:user)
   end
 
   def test_user_should_be_valid_with_valid_attributes
@@ -69,12 +66,6 @@ end
     assert_equal uppercase_email.downcase, @user.email
   end
 
-  def test_user_should_require_password_confirmation_on_create
-    @user.password_confirmation = nil
-    assert_not @user.valid?
-    assert_includes @user.errors.full_messages, "Password confirmation can't be blank"
-  end
-
   def test_user_should_assign_default_organization_if_none_provided
     Organization.create!(name: "Default Org") # Ensure an org exists
     user_without_org = User.new(
@@ -91,9 +82,9 @@ end
 end
 
   def test_user_should_not_be_saved_without_password_confirmation
-    @user.password_confirmation = nil
-    assert_not @user.valid?
-    assert_includes @user.errors.full_messages, "Password confirmation can't be blank"
+    user = build(:user, password_confirmation: nil) # Use build instead of create
+    assert_not user.valid?
+    assert_includes user.errors.full_messages, "Password confirmation can't be blank"
   end
 
   def test_user_should_have_matching_password_and_password_confirmation

@@ -4,13 +4,7 @@ require "test_helper"
 
 class PostTest < ActiveSupport::TestCase
   def setup
-    @organization = Organization.create!(name: "Test Org")
-    @user = User.create!(
-      name: "Test User", email: "test@example.com", password: "password",
-      password_confirmation: "password", organization: @organization)
-    @post = Post.new(
-      title: "Test Post", description: "This is a test description.", user: @user,
-      organization: @organization, is_bloggable: true, slug: "test-post")
+    @post = create(:post)
   end
 
   def test_post_should_be_valid_with_valid_attributes

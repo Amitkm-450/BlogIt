@@ -4,8 +4,7 @@ require "test_helper"
 
 class CategoryTest < ActiveSupport::TestCase
   def setup
-    @organization = Organization.create!(name: "Test Org")
-    @category = Category.new(name: "Tech", organization: @organization)
+    @category = build(:category)
   end
 
   def test_category_should_be_valid_with_valid_attributes

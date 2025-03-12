@@ -4,7 +4,7 @@ require "test_helper"
 
 class OrganizationTest < ActiveSupport::TestCase
   def setup
-    @organization = Organization.new(name: "Test Org")
+    @organization = build(:organization)
   end
 
   def test_organization_should_be_valid_with_valid_attributes

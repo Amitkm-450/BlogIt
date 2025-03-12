@@ -63,6 +63,14 @@ group :test do
   gem "selenium-webdriver"
 end
 
+group :development, :test do
+  # Rails integration for factory_bot, a replacement for fixtures
+  gem "factory_bot_rails"
+
+  # For auto-generating demo data
+  gem "faker"
+end
+
 # For compiling and bundling JavaScript. Read more: https://github.com/shakacode/shakapacker
 gem "bcrypt", "~> 3.1.13"
 gem "react-rails", "~> 2.7.1"
