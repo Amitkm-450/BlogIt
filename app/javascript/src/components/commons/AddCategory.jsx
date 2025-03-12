@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 
 import { Modal, Input, Select, Button } from "@bigbinary/neetoui";
-import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
 
 import categoriesApi from "../../apis/categories";
 import organizationsApi from "../../apis/organizations";
@@ -11,8 +10,6 @@ const AddCategory = ({ isOpen, onClose, onCategoryAdded }) => {
   const [organizations, setOrganizations] = useState([]);
   const [selectedOrg, setSelectedOrg] = useState(null);
   const [loading, setLoading] = useState(false);
-
-  const history = useHistory();
 
   useEffect(() => {
     const fetchOrganizations = async () => {
@@ -35,20 +32,21 @@ const AddCategory = ({ isOpen, onClose, onCategoryAdded }) => {
   const handleSubmit = async () => {
     setLoading(true);
     try {
-      await categoriesApi.create({
+      const {
+        data: { category },
+      } = await categoriesApi.create({
         name: categoryName,
         organization_name: selectedOrg.label,
       });
 
-      onCategoryAdded(categoryName); // Callback to update category list
-      onClose();
+      setLoading(false);
+      onCategoryAdded(category);
       setCategoryName("");
       setSelectedOrg(null);
-      history.push("/");
+      onClose();
+      window.location.href = "/";
     } catch (error) {
       logger.error(error);
-    } finally {
-      setLoading(false);
     }
   };
 

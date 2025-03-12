@@ -7,6 +7,8 @@ const create = payload =>
     category: payload,
   });
 
-const categoriesApi = { fetch, create };
+const show = name => axios.show(`/categories/${name}`);
+
+const categoriesApi = { fetch, create, show };
 
 export default categoriesApi;
