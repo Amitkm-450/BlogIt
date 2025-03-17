@@ -11,6 +11,11 @@ class UsersController < ApplicationController
     render_notice(t("successfully_created", entity: "User"))
   end
 
+  def show
+    user = @current_user
+    render status: :ok, json: { user: user }
+  end
+
   private
 
     def user_params

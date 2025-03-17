@@ -11,6 +11,7 @@ import postsApi from "../../apis/posts";
 import { getFromLocalStorage, setToLocalStorage } from "../../utils/storage";
 
 const List = ({ selectedCategories }) => {
+  logger.log(selectedCategories);
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [isMenuVisible, setIsMenuVisible] = useState(false);
@@ -23,7 +24,7 @@ const List = ({ selectedCategories }) => {
     try {
       const {
         data: { posts },
-      } = await postsApi.fetch(selectedCategories);
+      } = await postsApi.fetch({ selectedCategories });
       setPosts(posts);
       setLoading(false);
     } catch (error) {
@@ -76,35 +77,43 @@ const List = ({ selectedCategories }) => {
   }
 
   return (
-    <div className="mx-auto w-full max-w-4xl p-6">
-      <div className="flex items-center justify-between">
-        <Typography className="mb-6" style="h1" weight="bold">
+    <div className="m-4 w-full p-4">
+      <div className="flex items-center justify-between px-4">
+        <Typography
+          className="flex items-center justify-center"
+          style="h1"
+          weight="bold"
+        >
           Blog posts
         </Typography>
-        <Button
-          className="bg-black text-white"
-          label="Add new blog post"
-          size="medium"
-          onClick={() => history.push("/posts/create")}
-        />
-        <div className="relative" ref={menuRef}>
-          <button
-            className="flex items-center gap-x-2 rounded-md bg-gray-200 px-4 py-2 text-sm font-semibold text-gray-800 hover:bg-gray-300 focus:shadow-md"
-            onClick={toggleMenu}
-          >
-            <span className="font-bold italic text-indigo-600">{userName}</span>
-            <i className="ri-arrow-down-s-line" />
-          </button>
-          {isMenuVisible && (
-            <div className="absolute right-0 mt-2 w-24 rounded-md border border-gray-300 bg-white py-2 shadow-lg">
-              <button
-                className="block w-full rounded-md  text-sm text-gray-800 hover:bg-gray-100"
-                onClick={handleLogout}
-              >
-                Log out
-              </button>
-            </div>
-          )}
+        <div className="flex justify-between gap-4">
+          <Button
+            className="bg-black text-white"
+            label="Add new blog post"
+            size="medium"
+            onClick={() => history.push("/posts/create")}
+          />
+          <div className="relative" ref={menuRef}>
+            <button
+              className="flex items-center gap-x-2 rounded-md bg-gray-200 px-4 py-2 text-sm font-semibold text-gray-800 hover:bg-gray-300 focus:shadow-md"
+              onClick={toggleMenu}
+            >
+              <span className="font-bold italic text-indigo-600">
+                {userName}
+              </span>
+              <i className="ri-arrow-down-s-line" />
+            </button>
+            {isMenuVisible && (
+              <div className="absolute right-0 mt-2 w-24 rounded-md border border-gray-300 bg-white py-2 shadow-lg">
+                <button
+                  className="block w-full rounded-md  text-sm text-gray-800 hover:bg-gray-100"
+                  onClick={handleLogout}
+                >
+                  Log out
+                </button>
+              </div>
+            )}
+          </div>
         </div>
       </div>
       <div className="space-y-4">

@@ -7,7 +7,7 @@ import AddCategory from "./AddCategory";
 
 import categoriesApi from "../../apis/categories";
 
-const CategorySidebar = ({ onSelectCategory }) => {
+const CategorySidebar = ({ onSelectCategory, selectedCategories }) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -48,7 +48,7 @@ const CategorySidebar = ({ onSelectCategory }) => {
   );
 
   return (
-    <div className="flex h-full w-72 flex-col border-r bg-gray-100 p-4">
+    <div className="flex h-full w-auto flex-col border-r bg-gray-100 p-4">
       <div className="flex items-center justify-between border-b pb-2">
         <h2 className="text-lg font-semibold">Categories</h2>
         <Button icon={Plus} style="icon" onClick={handleAddCategory} />
@@ -64,8 +64,12 @@ const CategorySidebar = ({ onSelectCategory }) => {
       <ul className="mt-4 space-y-2">
         {filteredCategories.map(category => (
           <li
-            className="cursor-pointer rounded bg-white p-2 text-gray-700 shadow-sm hover:bg-gray-200"
             key={category.id}
+            className={`cursor-pointer rounded p-2 text-gray-700 shadow-sm hover:bg-gray-200 ${
+              selectedCategories?.includes(category.id)
+                ? "bg-red-500 text-white"
+                : "bg-white"
+            }`}
             onClick={() => onSelectCategory(category.id)}
           >
             {category.name}

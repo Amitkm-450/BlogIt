@@ -9,21 +9,24 @@ const BlogPage = () => {
   const [selectedCategories, setSelectedCategories] = useState([]);
 
   const handleCategorySelect = categoryId => {
-    setSelectedCategories([...selectedCategories, categoryId]);
+    setSelectedCategories(
+      prevCategories =>
+        prevCategories.includes(categoryId)
+          ? prevCategories.filter(id => id !== categoryId) // Remove if present
+          : [...prevCategories, categoryId] // Add if not present
+    );
   };
 
   return (
-    <div className="flex h-screen">
-      {/* Sidebar and CategorySidebar in a flex container */}
-      <div className="flex">
+    <div className="flex h-screen w-screen">
+      <div className="flex flex-shrink-0">
         <Sidebar onCategoryClick={() => setIsCategoryOpen(!isCategoryOpen)} />
         {isCategoryOpen && (
           <CategorySidebar onSelectCategory={handleCategorySelect} />
         )}
       </div>
-      {/* Main content */}
-      <div className="flex w-full flex-col">
-        <BlogList category={selectedCategories} />
+      <div className="flex-grow">
+        <BlogList selectedCategories={selectedCategories} />
       </div>
     </div>
   );

@@ -13,29 +13,34 @@ class PostsController < ApplicationController
 
   def create
     post = Post.new(post_params)
-    puts "==============>1"
-
     post.user = @current_user
-    puts "==============>"
     post.organization = @current_user.organization
-    puts "==============>3"
     post.save!
-    puts "==============>4"
-
     post.categories << Category.where(id: params[:category_ids])
-    puts "==============>5"
-
     render_notice(t("successfully_created", entity: "Post"))
+  end
+
+  def update
+    post = Post.find_by!(slug: params[:slug])
+    post.update(post_params)
+    post.categories = Category.where(id: params[:category_ids]) if params[:category_ids].present?
+    render_notice(t("successfully_updated", entity: "Post"))
   end
 
   def show
     post = Post.find_by!(slug: params[:slug])
-    render_json({ post: post })
+    render status: :ok, json: { post: post.as_json(include: [:categories, :user]) }
+  end
+
+  def destroy
+    post = Post.find_by!(slug: params[:slug])
+    post.destroy!
+    render_notice(t("successfully_deleted", entity: "Post"))
   end
 
   private
 
     def post_params
-      params.require(:post).permit(:title, :description, category_ids: [])
+      params.require(:post).permit(:title, :description, :status, category_ids: [])
     end
 end
