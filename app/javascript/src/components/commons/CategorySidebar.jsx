@@ -12,6 +12,7 @@ const CategorySidebar = ({ onSelectCategory, selectedCategories }) => {
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedCategoriesName, setSelectedCategoriesName] = useState([]);
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -39,6 +40,14 @@ const CategorySidebar = ({ onSelectCategory, selectedCategories }) => {
     setCategories([...categories, newCategory]);
   };
 
+  const handleSelectedCategoryName = name => {
+    setSelectedCategoriesName(prevSelected =>
+      prevSelected.includes(name)
+        ? prevSelected.filter(category => category !== name)
+        : [...prevSelected, name]
+    );
+  };
+
   if (loading) {
     return <Spinner />;
   }
@@ -61,6 +70,13 @@ const CategorySidebar = ({ onSelectCategory, selectedCategories }) => {
           onChange={e => setSearchTerm(e.target.value)}
         />
       </div>
+      <div className="mt-4">
+        <Input
+          readOnly
+          placeholder="Selected categories"
+          value={selectedCategoriesName.join(", ")}
+        />
+      </div>
       <ul className="mt-4 space-y-2">
         {filteredCategories.map(category => (
           <li
@@ -70,7 +86,10 @@ const CategorySidebar = ({ onSelectCategory, selectedCategories }) => {
                 ? "bg-red-500 text-white"
                 : "bg-white"
             }`}
-            onClick={() => onSelectCategory(category.id)}
+            onClick={() => {
+              onSelectCategory(category.id);
+              handleSelectedCategoryName(category.name);
+            }}
           >
             {category.name}
           </li>

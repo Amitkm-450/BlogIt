@@ -22,6 +22,7 @@ class PostsController < ApplicationController
 
   def update
     post = Post.find_by!(slug: params[:slug])
+    authorize post
     post.update(post_params)
     post.categories = Category.where(id: params[:category_ids]) if params[:category_ids].present?
     render_notice(t("successfully_updated", entity: "Post"))
@@ -29,11 +30,13 @@ class PostsController < ApplicationController
 
   def show
     post = Post.find_by!(slug: params[:slug])
+    authorize post
     render status: :ok, json: { post: post.as_json(include: [:categories, :user]) }
   end
 
   def destroy
     post = Post.find_by!(slug: params[:slug])
+    authorize post
     post.destroy!
     render_notice(t("successfully_deleted", entity: "Post"))
   end

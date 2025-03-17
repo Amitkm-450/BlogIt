@@ -37,7 +37,7 @@ const PostForm = () => {
     fetchCategories();
   }, []);
 
-  const categoriesOption = categories.map(category => ({
+  const categoriesOption = categories?.map(category => ({
     value: category.id,
     label: category.name,
   }));
