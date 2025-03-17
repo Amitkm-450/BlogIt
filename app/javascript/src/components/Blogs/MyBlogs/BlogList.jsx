@@ -8,7 +8,14 @@ import {
   Tag,
 } from "@bigbinary/neetoui";
 
-const BlogList = ({ posts, handleDelete, handlePublish, handleUnpublish }) => {
+const BlogList = ({
+  posts,
+  handleDelete,
+  handlePublish,
+  handleUnpublish,
+  selectedColumns = [],
+}) => {
+  logger.log(selectedColumns);
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
 
   const formatedPosts = posts.map(
@@ -17,7 +24,7 @@ const BlogList = ({ posts, handleDelete, handlePublish, handleUnpublish }) => {
       slug,
       title,
       categories,
-      publishedAt: updated_at,
+      lastPublishedAt: updated_at,
       status,
     })
   );
@@ -44,7 +51,6 @@ const BlogList = ({ posts, handleDelete, handlePublish, handleUnpublish }) => {
           </a>
         </Tooltip>
       ),
-      width: 250,
     },
     {
       title: "Category",
@@ -60,13 +66,12 @@ const BlogList = ({ posts, handleDelete, handlePublish, handleUnpublish }) => {
           : "—",
     },
     {
-      dataIndex: "publishedAt",
-      key: "publishedAt",
+      dataIndex: "lastPublishedAt",
+      key: "lastPublishedAt",
       title: "Last Published At",
-      width: 200,
-      render: publishedAt => (
+      render: lastPublishedAt => (
         <div className="flex items-center">
-          {publishedAt ? new Date(publishedAt).toDateString() : "—"}
+          {lastPublishedAt ? new Date(lastPublishedAt).toDateString() : "—"}
         </div>
       ),
     },
@@ -74,7 +79,6 @@ const BlogList = ({ posts, handleDelete, handlePublish, handleUnpublish }) => {
       dataIndex: "status",
       key: "status",
       title: "Status",
-      width: 150,
       render: status => (
         <Tag type={status === "published" ? "success" : "warning"}>
           {status.charAt(0).toUpperCase() + status.slice(1)}
@@ -120,7 +124,6 @@ const BlogList = ({ posts, handleDelete, handlePublish, handleUnpublish }) => {
           </Menu>
         </Dropdown>
       ),
-      width: 100,
     },
   ];
 
@@ -128,7 +131,7 @@ const BlogList = ({ posts, handleDelete, handlePublish, handleUnpublish }) => {
     <div>
       <NeetoTable
         rowSelection
-        columns={columns}
+        columns={columns.filter(({ key }) => selectedColumns[key])}
         dataSource={formatedPosts}
         selectedRowKeys={selectedRowKeys}
         onRowSelect={handleSelect}

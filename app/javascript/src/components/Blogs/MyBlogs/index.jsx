@@ -1,6 +1,12 @@
 import React, { useState, useEffect } from "react";
 
-import { Spinner, Typography, Toastr } from "@bigbinary/neetoui";
+import { Down } from "@bigbinary/neeto-icons";
+import {
+  ActionDropdown,
+  Checkbox,
+  Spinner,
+  Typography,
+} from "@bigbinary/neetoui";
 
 import postsApi from "apis/posts";
 
@@ -11,10 +17,23 @@ import PageLayout from "../../commons/PageLayout";
 const MyPosts = () => {
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [selectedColumns, setSelectedColumns] = useState({
+    title: true,
+    categories: true,
+    lastPublishedAt: true,
+    status: true,
+  });
 
   useEffect(() => {
     fetchPosts();
   }, []);
+
+  const toggleColumn = column => {
+    setSelectedColumns(prev => ({
+      ...prev,
+      [column]: !prev[column],
+    }));
+  };
 
   const fetchPosts = async () => {
     try {
@@ -45,7 +64,6 @@ const MyPosts = () => {
             : post
         )
       );
-      Toastr.success("Post published successfully");
     } catch (error) {
       logger.error(error);
     }
@@ -60,7 +78,6 @@ const MyPosts = () => {
           post.slug === id ? { ...post, status: "Draft" } : post
         )
       );
-      Toastr.success("Post unpublished successfully");
     } catch (error) {
       logger.error(error);
     }
@@ -70,11 +87,12 @@ const MyPosts = () => {
     try {
       await postsApi.destroy(slug);
       setPosts(prev => prev.filter(post => post.slug !== slug));
-      Toastr.success("Post deleted successfully");
     } catch (error) {
       logger.error(error);
     }
   };
+
+  const { Menu, MenuItem, Divider } = ActionDropdown;
 
   if (loading) return <Spinner />;
 
@@ -82,15 +100,57 @@ const MyPosts = () => {
     <PageLayout>
       <div className="mb-6">
         <Typography style="h2">My blog posts</Typography>
-        <Typography className="text-gray-500" style="body2">
-          {posts.length} articles
-        </Typography>
+        <div className="flex items-center">
+          <Typography className="text-gray-500" style="body2">
+            {posts.length} articles
+          </Typography>
+          <div className="flex flex-grow justify-end">
+            <ActionDropdown
+              buttonStyle="secondary"
+              icon={Down}
+              label="Column"
+              position="bottom-end"
+              strategy="fixed"
+            >
+              <Menu className="space-y-2 p-2">
+                <MenuItem>
+                  <Checkbox checked disabled label="Title" />
+                </MenuItem>
+                <Divider />
+                <MenuItem>
+                  <Checkbox
+                    checked={selectedColumns.categories}
+                    label="Category"
+                    onChange={() => toggleColumn("categories")}
+                  />
+                </MenuItem>
+                <Divider />
+                <MenuItem>
+                  <Checkbox
+                    checked={selectedColumns.lastPublishedAt}
+                    label="Last published at"
+                    onChange={() => toggleColumn("lastPublishedAt")}
+                  />
+                </MenuItem>
+                <Divider />
+                <MenuItem>
+                  <Checkbox
+                    checked={selectedColumns.status}
+                    label="Status"
+                    onChange={() => toggleColumn("status")}
+                  />
+                </MenuItem>
+              </Menu>
+            </ActionDropdown>
+          </div>
+        </div>
       </div>
       <BlogList
         handleDelete={handleDelete}
         handlePublish={handlePublish}
         handleUnpublish={handleUnpublish}
         posts={posts}
+        selectedColumns={selectedColumns}
       />
     </PageLayout>
   );
