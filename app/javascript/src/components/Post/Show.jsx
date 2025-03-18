@@ -5,6 +5,7 @@ import { Spinner, Typography, Button, Tag, Avatar } from "@bigbinary/neetoui";
 import { useParams, useHistory } from "react-router-dom";
 
 import postsApi from "../../apis/posts";
+import { getFromLocalStorage } from "../../utils/storage";
 import PageLayout from "../commons/PageLayout";
 
 const Show = () => {
@@ -55,13 +56,15 @@ const Show = () => {
             </Typography>
             {post.status === "draft" && <Tag label="draft" style="danger" />}
           </div>
-          <Button
-            className="p-2 text-gray-500"
-            icon={Edit}
-            size="medium"
-            style="text"
-            onClick={handlePostEdit}
-          />
+          {post.user.email === getFromLocalStorage("authEmail") && (
+            <Button
+              className="p-2 text-gray-500"
+              icon={Edit}
+              size="medium"
+              style="text"
+              onClick={handlePostEdit}
+            />
+          )}
         </div>
         {/* Author and Date */}
         <div className="mt-2 flex items-center space-x-2 text-gray-500">

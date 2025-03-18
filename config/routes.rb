@@ -3,7 +3,12 @@
 Rails.application.routes.draw do
   get "posts/my-blogs", to: "home#index"
 
-  resources :posts, only: %i[index create show update destroy], param: :slug
+  resources :posts, only: %i[index create show update destroy], param: :slug do
+    collection do
+      delete :bulk_delete
+      patch :bulk_update_status
+    end
+  end
   resources :categories, only: [:index, :create]
   resources :organizations, only: :index
   resources :users, only: [:create, :show]

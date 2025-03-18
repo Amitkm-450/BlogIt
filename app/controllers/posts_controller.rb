@@ -4,12 +4,10 @@ class PostsController < ApplicationController
   def index
     posts = Post.includes(:categories, :user)
 
-    if params[:category_ids].present?
-      posts = posts.joins(:categories).where(categories: { id: params[:category_ids] }).distinct
-    end
+    posts = PostFilterService.new(posts, params, current_user).process!
 
     render status: :ok, json: { posts: posts.as_json(include: [:categories], methods: [:author_name]) }
-  end
+end
 
   def create
     post = Post.new(post_params)
@@ -41,9 +39,30 @@ class PostsController < ApplicationController
     render_notice(t("successfully_deleted", entity: "Post"))
   end
 
+  def bulk_delete
+    posts = Post.where(slug: params[:post_slugs])
+    authorize posts, :bulk_delete?
+    posts.destroy_all
+    render_notice(t("successfully_deleted", entity: "Posts"))
+  end
+
+  def bulk_update_status
+    posts = Post.where(slug: params[:params][:post_slugs])
+
+    authorize posts, :bulk_update_status?
+
+    posts.each do |post|
+      next if post.status == params[:params][:status]
+
+      post.update!(status: params[:params][:status])
+    end
+
+    render_notice(t("successfully_updated", entity: "Posts"))
+  end
+
   private
 
     def post_params
-      params.require(:post).permit(:title, :description, :status, category_ids: [])
+      params.require(:post).permit(:title, :description, :status, category_ids: [], post_slugs: [])
     end
 end

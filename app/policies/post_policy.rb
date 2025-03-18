@@ -23,4 +23,12 @@ class PostPolicy
   def destroy?
     post.user_id == user.id
   end
+
+  def bulk_delete?
+    Array(post).all? { |post| post.user_id == user.id }
+end
+
+  def bulk_update_status?
+    Array(post).all? { |post| post.user_id == user.id }
+  end
 end

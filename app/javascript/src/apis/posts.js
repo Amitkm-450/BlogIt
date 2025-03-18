@@ -1,18 +1,29 @@
 import axios from "axios";
 
-const fetch = payload =>
-  axios.get("/posts", {
-    params: { category_ids: payload.selectedCategories },
-  });
+const fetch = payload => {
+  const path = payload?.self ? `/posts?self=true` : `/posts`;
+  // logger.log(payload);
 
-const create = payload =>
-  axios.post("/posts", {
+  return axios.get(path, {
+    params: {
+      category_ids: payload.selectedCategories,
+      title: payload?.title,
+      status: payload?.postStatus,
+    },
+  });
+};
+
+const create = payload => {
+  logger.log(payload);
+
+  return axios.post("/posts", {
     post: {
       ...payload,
       category_ids: payload.selectedCategories?.map(option => option.value),
       status: payload.postStatus,
     },
   });
+};
 
 const update = (slug, payload) =>
   axios.put(`/posts/${slug}`, {
@@ -27,6 +38,26 @@ const show = slug => axios.get(`/posts/${slug}`);
 
 const destroy = slug => axios.delete(`/posts/${slug}`);
 
-const postsApi = { fetch, create, show, update, destroy };
+const bulkDelete = postSlugs =>
+  axios.delete("/posts/bulk_delete", {
+    params: { post_slugs: postSlugs },
+  });
+
+const bulkUpdateStatus = (postSlugs, status) =>
+  // logger.log(postSlugs, "Inside postsApi");
+
+  axios.patch("/posts/bulk_update_status", {
+    params: { post_slugs: postSlugs, status },
+  });
+
+const postsApi = {
+  fetch,
+  create,
+  show,
+  update,
+  destroy,
+  bulkDelete,
+  bulkUpdateStatus,
+};
 
 export default postsApi;

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 
 import { MenuHorizontal } from "@bigbinary/neeto-icons";
 import {
@@ -14,14 +14,12 @@ const BlogList = ({
   handlePublish,
   handleUnpublish,
   selectedColumns = [],
+  selectedRowKeys,
+  setSelectedRowKeys,
 }) => {
-  logger.log(selectedColumns);
-  const [selectedRowKeys, setSelectedRowKeys] = useState([]);
-
   const formatedPosts = posts.map(
-    ({ id, slug, title, categories, updated_at, status }) => ({
-      id,
-      slug,
+    ({ slug, title, categories, updated_at, status }) => ({
+      id: slug,
       title,
       categories,
       lastPublishedAt: updated_at,
@@ -45,7 +43,7 @@ const BlogList = ({
         <Tooltip content={title} position="right">
           <a
             className="block max-w-xs truncate"
-            href={`/posts/${post.slug}/edit`}
+            href={`/posts/${post.id}/edit`}
           >
             {title.length > 30 ? `${title.slice(0, 30)}...` : title}
           </a>
@@ -103,8 +101,8 @@ const BlogList = ({
                 style="link"
                 onClick={() =>
                   post.status === "published"
-                    ? handleUnpublish(post.slug)
-                    : handlePublish(post.slug)
+                    ? handleUnpublish(post.id)
+                    : handlePublish(post.id)
                 }
               >
                 {post.status === "published" ? "Unpublish" : "Publish"}
@@ -116,7 +114,7 @@ const BlogList = ({
                 label="Delete"
                 style="danger"
                 type="delete"
-                onClick={() => handleDelete(post.slug)}
+                onClick={() => handleDelete(post.id)}
               >
                 Delete
               </MenuButton>

@@ -48,7 +48,13 @@ const PostForm = () => {
     e.preventDefault();
     setLoading(true);
     try {
-      await postsApi.create({ name, title, description, selectedCategories });
+      await postsApi.create({
+        name,
+        title,
+        description,
+        selectedCategories,
+        postStatus,
+      });
       setLoading(false);
       history.push("/");
     } catch (error) {
@@ -68,7 +74,6 @@ const PostForm = () => {
 
   const handleChange = selectedOptions => {
     setSelectedCategories(selectedOptions);
-    logger.log(selectedCategories);
   };
 
   if (loading) {
