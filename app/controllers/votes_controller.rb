@@ -22,6 +22,8 @@ class VotesController < ApplicationController
       post.increment!(:downvotes)
     end
 
+    post.save!
+
     render status: :ok, json: {
       net_votes: post.upvotes - post.downvotes,
       user_vote: post.votes.find_by(user: current_user)&.vote_type

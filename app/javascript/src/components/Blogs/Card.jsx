@@ -83,7 +83,16 @@ import postsApi from "../../apis/posts";
 import { votesApi } from "../../apis/votes";
 
 const Card = ({
-  post: { title, slug, created_at, author_name, categories, net_votes, id },
+  post: {
+    title,
+    slug,
+    created_at,
+    author_name,
+    categories,
+    net_votes,
+    id,
+    is_bloggable,
+  },
 }) => {
   const [voteCounts, setVoteCounts] = useState(net_votes);
   const [votingStatus, setVotingStatus] = useState({
@@ -140,10 +149,15 @@ const Card = ({
 
   return (
     <div className="flex justify-between border-b p-4">
-      <div className="flex flex-col gap-x-1">
-        <Typography style="h3" weight="semibold" onClick={handleClick}>
-          {title}
-        </Typography>
+      <div className="flex flex-col gap-y-1">
+        <div className="flex gap-x-2">
+          <Typography style="h3" weight="semibold" onClick={handleClick}>
+            {title}
+          </Typography>
+          {is_bloggable && (
+            <Tag label="Blog it" style="success" type="outline" />
+          )}
+        </div>
         <div className="flex items-center justify-start gap-4">
           {categories.map(category => (
             <Tag key={category.id} label={category.name} />

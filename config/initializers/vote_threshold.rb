@@ -1,3 +1,3 @@
 # frozen_string_literal: true
 
-VOTE_THRESHOLD = 10
+VOTE_THRESHOLD = 1

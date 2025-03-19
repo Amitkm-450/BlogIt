@@ -28,7 +28,7 @@ const create = payload => {
 const update = (slug, payload) =>
   axios.put(`/posts/${slug}`, {
     post: {
-      payload,
+      ...payload,
       category_ids: payload.selectedCategories?.map(option => option.value),
       status: payload.postStatus,
     },

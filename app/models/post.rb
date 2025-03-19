@@ -18,7 +18,7 @@ class Post < ApplicationRecord
   validate :slug_not_changed
 
   before_create :set_slug
-  before_save :toggle_bloggable_status, if: :votes_changed?
+  after_save :toggle_bloggable_status, if: :votes_changed?
 
   def author_name
     user.name
@@ -49,15 +49,19 @@ end
       end
     end
 
+    def toggle_bloggable_status
+      update_column(:is_bloggable, dynamic_net_votes >= VOTE_THRESHOLD)
+   end
+
+    def dynamic_net_votes
+      votes.where(vote_type: "upvote").count - votes.where(vote_type: "downvote").count
+    end
+
     def net_votes
       upvotes - downvotes
     end
 
-    def toggle_bloggable_status
-      self.is_bloggable = net_votes >= VOTE_THRESHOLD
-    end
-
     def votes_changed?
-      will_save_change_to_upvotes? || will_save_change_to_downvotes?
+      votes.exists?
     end
 end
