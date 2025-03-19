@@ -6,7 +6,7 @@ class PostsController < ApplicationController
 
     posts = PostFilterService.new(posts, params, current_user).process!
 
-    render status: :ok, json: { posts: posts.as_json(include: [:categories], methods: [:author_name]) }
+    render status: :ok, json: { posts: posts.as_json(include: [:categories], methods: [:author_name, :net_votes]) }
 end
 
   def create
@@ -29,7 +29,8 @@ end
   def show
     post = Post.find_by!(slug: params[:slug])
     authorize post
-    render status: :ok, json: { post: post.as_json(include: [:categories, :user]) }
+    user_vote = post.votes.find_by(user: current_user)&.vote_type
+    render status: :ok, json: { post: post.as_json(include: [:categories, :user]), user_vote: user_vote }
   end
 
   def destroy

@@ -8,7 +8,9 @@ Rails.application.routes.draw do
       delete :bulk_delete
       patch :bulk_update_status
     end
+    resource :vote, only: [:create]
   end
+
   resources :categories, only: [:index, :create]
   resources :organizations, only: :index
   resources :users, only: [:create, :show]

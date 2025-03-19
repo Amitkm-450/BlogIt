@@ -32,7 +32,7 @@ const List = ({ selectedCategories }) => {
       setLoading(false);
     }
   };
-
+  logger.log(posts);
   useEffect(() => {
     const handleClickOutside = event => {
       if (menuRef.current && !menuRef.current.contains(event.target)) {

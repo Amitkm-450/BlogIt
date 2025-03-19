@@ -8,6 +8,7 @@ class Post < ApplicationRecord
 
   belongs_to :user
   belongs_to :organization
+  has_many :votes, dependent: :destroy
   has_and_belongs_to_many :categories, join_table: "categories_posts"
 
   validates :title, presence: true, length: { maximum: MAX_TITLE_LENGTH }
@@ -17,6 +18,7 @@ class Post < ApplicationRecord
   validate :slug_not_changed
 
   before_create :set_slug
+  before_save :toggle_bloggable_status, if: :votes_changed?
 
   def author_name
     user.name
@@ -45,5 +47,17 @@ end
       if will_save_change_to_slug? && self.persisted?
         errors.add(:slug, I18n.t("task.slug.immutable"))
       end
+    end
+
+    def net_votes
+      upvotes - downvotes
+    end
+
+    def toggle_bloggable_status
+      self.is_bloggable = net_votes >= VOTE_THRESHOLD
+    end
+
+    def votes_changed?
+      will_save_change_to_upvotes? || will_save_change_to_downvotes?
     end
 end

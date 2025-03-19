@@ -96,7 +96,7 @@ const MyPosts = () => {
 
   const handlePublish = async id => {
     try {
-      await postsApi.update(id, { status: "published" });
+      await postsApi.update(id, { postStatus: "published" });
       setPosts(prev =>
         prev.map(post =>
           post.slug === id
@@ -114,7 +114,7 @@ const MyPosts = () => {
 
   const handleUnpublish = async id => {
     try {
-      await postsApi.update(id, { status: "draft" });
+      await postsApi.update(id, { postStatus: "draft" });
       setPosts(prev =>
         prev.map(post =>
           post.slug === id ? { ...post, status: "Draft" } : post
