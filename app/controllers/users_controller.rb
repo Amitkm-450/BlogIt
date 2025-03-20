@@ -5,7 +5,6 @@ class UsersController < ApplicationController
 
   def create
     user = User.new(user_params)
-    # dummy org_id
     user.organization_id = 1
     user.save!
     render_notice(t("successfully_created", entity: "User"))

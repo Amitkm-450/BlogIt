@@ -10,42 +10,19 @@
 #     MovieGenre.find_or_create_by!(name: genre_name)
 #   end
 
-# Create Organizations
-org = Organization.create!(name: "Tech Organization")
+def create_sample_organizations!
+  puts "Seeding with sample organizations..."
+  create_organization!(name: "Tech Corp")
+  create_organization!(name: "Startup Inc")
+  create_organization!(name: "OpenAI")
+  puts "Done! Organizations have been created."
+end
 
-# Create Users
-user1 = User.create!(
-  name: "John Doe",
-  email: "john1@example.com",
-  password_digest: BCrypt::Password.create("password"),
-  organization: org
-)
+def create_organization!(options = {})
+  Organization.find_or_create_by!(options)
+end
 
-# Create Categories
-category1 = Category.create!(name: "Tech", organization: org)
-category2 = Category.create!(name: "Science", organization: org)
-category3 = Category.create!(name: "Lifestyle", organization: org)
+# Run the organization seeding
+create_sample_organizations!
 
-# Create Posts
-post1 = Post.create!(
-  title: "AI is the Future",
-  description: "Artificial Intelligence is transforming the world.",
-  user: user1,
-  organization: org,
-  slug: "ai-is-the-future"
-)
-
-post2 = Post.create!(
-  title: "Climate Change",
-  description: "Global warming is affecting the environment.",
-  user: user1,
-  organization: org,
-  slug: "climate-change"
-)
-
-# Assign Categories to Posts (Many-to-Many Relationship)
-post1.categories << category1
-post1.categories << category2
-
-post2.categories << category2
-post2.categories << category3
+puts "Database successfully seeded!"
