@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 
-import { Edit } from "@bigbinary/neeto-icons";
+import { Download, Edit } from "@bigbinary/neeto-icons";
 import { Spinner, Typography, Button, Tag, Avatar } from "@bigbinary/neetoui";
 import { useParams, useHistory } from "react-router-dom";
 
@@ -36,6 +36,10 @@ const Show = () => {
     history.push(`/posts/${slug}/edit`);
   };
 
+  const handleDownload = () => {
+    history.push(`/posts/${slug}/report`);
+  };
+
   if (pageLoading) {
     return <Spinner />;
   }
@@ -56,15 +60,23 @@ const Show = () => {
             </Typography>
             {post.status === "draft" && <Tag label="draft" style="danger" />}
           </div>
-          {post.user.email === getFromLocalStorage("authEmail") && (
+          <div className="flex justify-evenly">
             <Button
-              className="p-2 text-gray-500"
-              icon={Edit}
+              icon={Download}
               size="medium"
               style="text"
-              onClick={handlePostEdit}
+              onClick={handleDownload}
             />
-          )}
+            {post.user.email === getFromLocalStorage("authEmail") && (
+              <Button
+                className="p-2 text-gray-500"
+                icon={Edit}
+                size="medium"
+                style="text"
+                onClick={handlePostEdit}
+              />
+            )}
+          </div>
         </div>
         {/* Author and Date */}
         <div className="mt-2 flex items-center space-x-2 text-gray-500">

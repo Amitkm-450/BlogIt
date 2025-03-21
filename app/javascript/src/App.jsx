@@ -9,6 +9,7 @@ import { PrivateRoute } from "components/commons";
 
 import BlogPage from "./components/Blogs";
 import MyPosts from "./components/Blogs/MyBlogs";
+import DownloadReport from "./components/Post/DownloadReport";
 import EditPost from "./components/Post/EditPost";
 import PostForm from "./components/Post/PostForms";
 import PreviewPost from "./components/Post/PreviewPost";
@@ -26,8 +27,8 @@ const App = () => {
         <Route exact component={PostShow} path="/posts/:slug/show" />
         <Route exact component={EditPost} path="/posts/:slug/edit" />
         <Route exact component={PreviewPost} path="/posts/:slug/preview" />
+        <Route exact component={DownloadReport} path="/posts/:slug/report" />;
         <Route exact path="/posts/create" render={() => <PostForm />} />
-        <Route exact path="/about" render={() => <div>About</div>} />
         <Route exact component={Signup} path="/signup" />
         <Route exact component={Login} path="/login" />
         <Route exact component={MyPosts} path="/posts/my-blogs" />

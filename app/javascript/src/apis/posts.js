@@ -50,6 +50,18 @@ const bulkUpdateStatus = (postSlugs, status) =>
     params: { post_slugs: postSlugs, status },
   });
 
+const generatePdf = slug => {
+  logger.log("Inside generate");
+
+  return axios.post(`/posts/${slug}/report`, {});
+};
+
+const download = slug => {
+  logger.log("Inside download");
+
+  return axios.get(`/posts/${slug}/report/download`, { responseType: "blob" });
+};
+
 const postsApi = {
   fetch,
   create,
@@ -58,6 +70,8 @@ const postsApi = {
   destroy,
   bulkDelete,
   bulkUpdateStatus,
+  generatePdf,
+  download,
 };
 
 export default postsApi;

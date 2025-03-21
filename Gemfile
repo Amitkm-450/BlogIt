@@ -80,3 +80,9 @@ gem "shakapacker", "~> 6.6.0"
 # For periodic sidekiq jobs
 gem "sidekiq", "~> 6.5.12"
 gem "simplecov", require: false, group: :test
+# PDF generation gem
+gem "wicked_pdf"
+# wicked_pdf uses the following binary
+gem "wkhtmltopdf-binary"
+# To load the environment variables
+gem "dotenv-rails"

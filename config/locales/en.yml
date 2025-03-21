@@ -41,3 +41,8 @@ en:
     incorrect_credentials: "Incorrect credentials, try again."
   authorization:
     denied: "Access denied. You are not authorized to perform this action."
+  report:
+    render: "Rendering the report"
+    generate: "Generating the PDF report"
+    upload: "Uploading to server"
+    attach: "Attaching the report to the user"

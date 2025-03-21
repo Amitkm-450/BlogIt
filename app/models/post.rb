@@ -1,6 +1,7 @@
 # frozen_string_literal: true
 
 class Post < ApplicationRecord
+  scope :accessible_to, ->(user_id) { where("task_owner_id = ? OR assigned_user_id = ?", user_id, user_id) }
   MAX_TITLE_LENGTH = 125
   MAX_DESCRIPTION_LENGTH = 10000
 
@@ -10,6 +11,7 @@ class Post < ApplicationRecord
   belongs_to :organization
   has_many :votes, dependent: :destroy
   has_and_belongs_to_many :categories, join_table: "categories_posts"
+  has_one_attached :report
 
   validates :title, presence: true, length: { maximum: MAX_TITLE_LENGTH }
   validates :description, presence: true, length: { maximum: MAX_DESCRIPTION_LENGTH }

@@ -1,0 +1,23 @@
+
+<% content_for :title, "Post Report - #{@post.title}" %>
+
+<h1><%= @post.title %></h1>
+
+<p class="meta">
+  Written by <strong><%= @post.user.name %></strong> |
+  Published on <%= @post.created_at.strftime("%B %d, %Y") %>
+</p>
+
+<% if @post.categories.any? %>
+  <p class="meta">
+    Categories: <%= @post.categories.map(&:name).join(", ") %>
+  </p>
+<% end %>
+
+<p class="description">
+  <%= @post.description %>
+</p>
+
+<div class="footer">
+  <p>Generated on <%= Time.current.strftime("%B %d, %Y - %I:%M %p") %></p>
+</div>
