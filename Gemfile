@@ -77,4 +77,6 @@ gem "pg", group: [:production]
 gem "pundit"
 gem "react-rails", "~> 2.7.1"
 gem "shakapacker", "~> 6.6.0"
+# For periodic sidekiq jobs
+gem "sidekiq", "~> 6.5.12"
 gem "simplecov", require: false, group: :test
