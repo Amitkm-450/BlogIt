@@ -386,6 +386,7 @@ DEPENDENCIES
   pundit
   rails (~> 7.1.5, >= 7.1.5.1)
   react-rails (~> 2.7.1)
+  redis (~> 4.0)
   rubocop
   rubocop-rails
   selenium-webdriver

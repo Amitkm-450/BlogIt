@@ -86,3 +86,4 @@ gem "wicked_pdf"
 gem "wkhtmltopdf-binary"
 # To load the environment variables
 gem "dotenv-rails"
+gem "redis", "~> 4.0"
