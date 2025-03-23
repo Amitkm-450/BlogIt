@@ -4,6 +4,8 @@ import { Download, Edit } from "@bigbinary/neeto-icons";
 import { Spinner, Typography, Button, Tag, Avatar } from "@bigbinary/neetoui";
 import { useParams, useHistory } from "react-router-dom";
 
+import DownloadReportModal from "./DownloadReportModal";
+
 import postsApi from "../../apis/posts";
 import { getFromLocalStorage } from "../../utils/storage";
 import PageLayout from "../commons/PageLayout";
@@ -11,6 +13,7 @@ import PageLayout from "../commons/PageLayout";
 const Show = () => {
   const [post, setPost] = useState(null);
   const [pageLoading, setPageLoading] = useState(true);
+  const [showDownloadModal, setShowDownloadModal] = useState(false);
   const { slug } = useParams();
   const history = useHistory();
 
@@ -37,7 +40,7 @@ const Show = () => {
   };
 
   const handleDownload = () => {
-    history.push(`/posts/${slug}/report`);
+    setShowDownloadModal(true);
   };
 
   if (pageLoading) {
@@ -100,6 +103,10 @@ const Show = () => {
           {post.description}
         </Typography>
       </div>
+      <DownloadReportModal
+        isOpen={showDownloadModal}
+        onClose={() => setShowDownloadModal(false)}
+      />
     </PageLayout>
   );
 };
