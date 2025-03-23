@@ -7,56 +7,64 @@ import {
   AddMenu,
   ListDetails,
 } from "@bigbinary/neeto-icons";
-import { Button } from "@bigbinary/neetoui";
+import { Button, Tooltip } from "@bigbinary/neetoui";
 import { useLocation, Link } from "react-router-dom";
 
 const Sidebar = ({ onCategoryClick }) => {
-  const location = useLocation(); // Get the current path
+  const location = useLocation();
 
-  const isActive = path => location.pathname === path; // Check if path is active
+  const isActive = path => location.pathname === path;
 
   return (
     <div className="flex h-full w-auto flex-col items-center bg-gray-200 p-4 text-white">
       <Book color="black" size={40} />
       <nav className="flex flex-col space-y-4 p-6">
-        <Link to="/">
+        <Tooltip content="Home" position="right">
+          <Link to="/">
+            <Button
+              icon={List}
+              size="large"
+              style="text"
+              className={`active:bg-gray-600 ${
+                isActive("/") ? "bg-gray-400 text-black" : ""
+              }`}
+            />
+          </Link>
+        </Tooltip>
+        <Tooltip content="Create Post" position="right">
+          <Link to="/posts/create">
+            <Button
+              icon={AddMenu}
+              size="large"
+              style="text"
+              className={`active:bg-gray-600 ${
+                isActive("/posts/create") ? "bg-gray-400 text-black" : ""
+              }`}
+            />
+          </Link>
+        </Tooltip>
+        <Tooltip content="Categories" position="right">
           <Button
-            icon={List}
-            size="large"
+            icon={Category}
             style="text"
-            className={`active:bg-gray-600 ${
-              isActive("/") ? "bg-gray-400 text-black" : ""
+            className={`w-full rounded p-2 text-left ${
+              isActive("/categories") ? "bg-gray-400 text-black" : ""
             }`}
+            onClick={onCategoryClick}
           />
-        </Link>
-        <Link to="/posts/create">
-          <Button
-            icon={AddMenu}
-            size="large"
-            style="text"
-            className={`active:bg-gray-600 ${
-              isActive("/posts/create") ? "bg-gray-400 text-black" : ""
-            }`}
-          />
-        </Link>
-        <Button
-          icon={Category}
-          style="text"
-          className={`w-full rounded p-2 text-left ${
-            isActive("/categories") ? "bg-gray-400 text-black" : ""
-          }`}
-          onClick={onCategoryClick}
-        />
-        <Link to="/posts/my-blogs">
-          <Button
-            icon={ListDetails}
-            size="large"
-            style="text"
-            className={`active:bg-gray-600 ${
-              isActive("/posts/my-blogs") ? "bg-gray-400 text-black" : ""
-            }`}
-          />
-        </Link>
+        </Tooltip>
+        <Tooltip content="My Blogs" position="right">
+          <Link to="/posts/my-blogs">
+            <Button
+              icon={ListDetails}
+              size="large"
+              style="text"
+              className={`active:bg-gray-600 ${
+                isActive("/posts/my-blogs") ? "bg-gray-400 text-black" : ""
+              }`}
+            />
+          </Link>
+        </Tooltip>
       </nav>
     </div>
   );

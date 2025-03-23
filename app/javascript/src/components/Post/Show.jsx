@@ -1,7 +1,14 @@
 import React, { useEffect, useState } from "react";
 
 import { Download, Edit } from "@bigbinary/neeto-icons";
-import { Spinner, Typography, Button, Tag, Avatar } from "@bigbinary/neetoui";
+import {
+  Spinner,
+  Typography,
+  Button,
+  Tag,
+  Avatar,
+  Tooltip,
+} from "@bigbinary/neetoui";
 import { useParams, useHistory } from "react-router-dom";
 
 import DownloadReportModal from "./DownloadReportModal";
@@ -64,20 +71,24 @@ const Show = () => {
             {post.status === "draft" && <Tag label="draft" style="danger" />}
           </div>
           <div className="flex justify-evenly">
-            <Button
-              icon={Download}
-              size="medium"
-              style="text"
-              onClick={handleDownload}
-            />
-            {post.user.email === getFromLocalStorage("authEmail") && (
+            <Tooltip content="download" position="top">
               <Button
-                className="p-2 text-gray-500"
-                icon={Edit}
+                icon={Download}
                 size="medium"
                 style="text"
-                onClick={handlePostEdit}
+                onClick={handleDownload}
               />
+            </Tooltip>
+            {post.user.email === getFromLocalStorage("authEmail") && (
+              <Tooltip content="edit" position="top">
+                <Button
+                  className="p-2 text-gray-500"
+                  icon={Edit}
+                  size="medium"
+                  style="text"
+                  onClick={handlePostEdit}
+                />
+              </Tooltip>
             )}
           </div>
         </div>

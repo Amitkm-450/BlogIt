@@ -160,7 +160,7 @@ const Card = ({
         </div>
         <div className="flex items-center justify-start gap-4">
           {categories.map(category => (
-            <Tag key={category.id} label={category.name} />
+            <Tag key={category.id} label={category.name} style="success" />
           ))}
         </div>
         <Typography className="mt-1 text-gray-600">{author_name}</Typography>
