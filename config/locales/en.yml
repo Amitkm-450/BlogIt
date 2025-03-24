@@ -32,6 +32,7 @@ en:
     slug:
       immutable: "is immutable!"
   generic_error: "Something went wrong. Please try again later."
+  not_found: "Couldn't find %{entity}"
   successfully_created: "%{entity} was successfully created!"
   successfully_updated: "%{entity} was successfully updated!"
   successfully_showed: "%{entity} was successfully showed!"
