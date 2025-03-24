@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useRef } from "react";
 
-import { Button, Typography } from "@bigbinary/neetoui";
+import { Button, Spinner, Typography } from "@bigbinary/neetoui";
 import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
 
 import Card from "./Card";
@@ -70,8 +70,8 @@ const List = ({ selectedCategories }) => {
 
   if (loading) {
     return (
-      <div className="h-screen w-screen">
-        <Typography>Loading..</Typography>
+      <div className="flex h-screen w-screen items-center justify-center">
+        <Spinner />
       </div>
     );
   }

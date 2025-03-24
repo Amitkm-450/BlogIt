@@ -51,7 +51,11 @@ const Show = () => {
   };
 
   if (pageLoading) {
-    return <Spinner />;
+    return (
+      <div className="flex h-screen items-center justify-center">
+        <Spinner />
+      </div>
+    );
   }
 
   return (

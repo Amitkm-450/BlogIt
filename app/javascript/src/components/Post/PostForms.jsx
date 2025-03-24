@@ -78,7 +78,7 @@ const PostForm = () => {
 
   if (loading) {
     return (
-      <div>
+      <div className="flex h-screen items-center justify-center">
         <Spinner />
       </div>
     );

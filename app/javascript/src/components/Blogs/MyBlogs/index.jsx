@@ -136,7 +136,13 @@ const MyPosts = () => {
 
   const { Menu, MenuItem, Divider } = ActionDropdown;
 
-  if (loading) return <Spinner />;
+  if (loading) {
+    return (
+      <div className="flex h-screen w-screen items-center justify-center">
+        <Spinner />;
+      </div>
+    );
+  }
 
   return (
     <PageLayout>
