@@ -7,4 +7,5 @@ class Post < ApplicationRecord
   validates :title, length: { maximum: MAX_TITLE_LENGTH }, presence: true
   validates :description, length: { maximum: MAX_DESCRIPTION_LENGTH }, presence: true
   validates :is_bloggable, inclusion: { in: [true, false] }
+  validates :slug, uniqueness: true
 end
