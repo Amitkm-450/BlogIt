@@ -1,6 +1,7 @@
+@use "@bigbinary/neetoui";
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-@import "@bigbinary/neetoui";
 @import "react-toastify/dist/ReactToastify.min.css";
