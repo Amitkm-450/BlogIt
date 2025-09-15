@@ -2,6 +2,7 @@ import "../stylesheets/application.scss";
 import ReactRailsUJS from "react_ujs";
 import App from "../src/App";
 
+import "../src/common/i18n";
 import { setAuthHeaders, registerIntercepts } from "apis/axios";
 import { initializeLogger } from "common/logger";
 

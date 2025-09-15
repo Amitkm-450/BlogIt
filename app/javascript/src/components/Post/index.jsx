@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 
 import { Spinner, Typography } from "@bigbinary/neetoui";
 import Logger from "js-logger";
-// import { append } from "ramda";
+import { useTranslation } from "react-i18next";
 
 import PostCard from "./Card";
 
@@ -12,13 +12,13 @@ const List = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [posts, setPosts] = useState([]);
 
+  const { t } = useTranslation();
+
   useEffect(() => {
     const fetchPosts = async () => {
       try {
         const response = await postsApi.fetch();
         setPosts(response);
-        Logger.log(response);
-        Logger.log(posts);
       } catch (error) {
         Logger.log(error);
       } finally {
@@ -44,7 +44,7 @@ const List = () => {
           style="h1"
           weight="bold"
         >
-          Blog posts
+          {t("blogPosts")}
         </Typography>
       </div>
       <div className="space-y-4">
