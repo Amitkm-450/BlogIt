@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_09_14_165350) do
+ActiveRecord::Schema[7.1].define(version: 2025_09_15_112901) do
   create_table "posts", force: :cascade do |t|
     t.string "title", null: false
     t.text "description", null: false
@@ -19,5 +19,8 @@ ActiveRecord::Schema[7.1].define(version: 2025_09_14_165350) do
     t.boolean "is_bloggable", default: false, null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "slug", null: false
+    t.index ["slug"], name: "index_posts_on_slug", unique: true
   end
+
 end
