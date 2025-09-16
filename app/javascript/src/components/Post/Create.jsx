@@ -24,7 +24,12 @@ const Create = () => {
   const handleSubmit = async values => {
     try {
       await postsApi.create({
-        post: values,
+        post: {
+          ...values,
+          user_id: 1,
+          organization_id: 1,
+          category_ids: values.categories.map(category => category.value),
+        },
       });
       history.replace("/");
     } catch (error) {
