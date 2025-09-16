@@ -11,11 +11,13 @@
   "form": {
     "placeholder": {
       "title": "Entre title",
-      "description": "Enter description"
+      "description": "Enter description",
+      "categories": "Enter categories"
     },
     "label": {
       "title": "Title*",
-      "description": "Description*"
+      "description": "Description*",
+      "categories": "Categories*"
     }
   },
   "button": {

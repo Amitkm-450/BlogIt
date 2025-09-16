@@ -4,8 +4,7 @@ class Api::V1::PostsController < ApplicationController
   before_action :load_post!, only: %i[show destroy]
 
   def index
-    posts = Post.includes(:user, :organization).all
-    render_json(posts)
+    @posts = Post.includes(:user, :organization, :categories).all
   end
 
   def create
@@ -26,7 +25,7 @@ class Api::V1::PostsController < ApplicationController
   private
 
     def post_params
-      params.require(:post).permit(:title, :description)
+      params.require(:post).permit(:title, :description, :user_id, :organization_id, category_ids: [])
     end
 
     def load_post!
