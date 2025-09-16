@@ -1,11 +1,12 @@
 import React from "react";
 
 import { Typography } from "@bigbinary/neetoui";
-import dayjs from "dayjs";
 import { useHistory } from "react-router-dom";
 
+import { fromatDate } from "../../utils/date";
+
 const Card = ({ title, description, created_at, slug }) => {
-  const creationDate = dayjs(created_at).format("D MMMM YYYY");
+  const creationDate = fromatDate(created_at);
   const history = useHistory();
 
   return (

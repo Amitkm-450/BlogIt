@@ -4,7 +4,7 @@ class Api::V1::PostsController < ApplicationController
   before_action :load_post!, only: %i[show destroy]
 
   def index
-    posts = Post.all
+    posts = Post.includes(:user, :organization).all
     render_json(posts)
   end
 
@@ -15,7 +15,7 @@ class Api::V1::PostsController < ApplicationController
   end
 
   def show
-    render_json({ post: @post })
+    render
   end
 
   def destroy
