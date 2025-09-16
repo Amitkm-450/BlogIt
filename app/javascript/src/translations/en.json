@@ -1,7 +1,26 @@
 {
   "sidebar": {
     "profile": "Profile",
-    "postsList": "Posts List"
+    "postsList": "Posts list",
+    "postCreate": "Create post"
   },
-  "blogPosts": "Blog posts"
+  "header": {
+    "blogPosts": "Blog posts",
+    "newBlogPost": "New blog post"
+  },
+  "form": {
+    "placeholder": {
+      "title": "Entre title",
+      "description": "Enter description"
+    },
+    "label": {
+      "title": "Title*",
+      "description": "Description*"
+    }
+  },
+  "button": {
+    "cancel": "Cancel",
+    "submit": "Submit",
+    "addNewBlog": "Add new blog post"
+  }
 }

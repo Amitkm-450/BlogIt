@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 
-import { Spinner, Typography } from "@bigbinary/neetoui";
+import { Button, Spinner, Typography } from "@bigbinary/neetoui";
 import Logger from "js-logger";
 import { useTranslation } from "react-i18next";
 
@@ -44,8 +44,14 @@ const List = () => {
           style="h1"
           weight="bold"
         >
-          {t("blogPosts")}
+          {t("header.blogPosts")}
         </Typography>
+        <Button
+          className="bg-black text-white"
+          label={t("button.addNewBlog")}
+          style="secondary"
+          to="/posts/new"
+        />
       </div>
       <div className="space-y-4">
         {posts.map((post, index) => (
