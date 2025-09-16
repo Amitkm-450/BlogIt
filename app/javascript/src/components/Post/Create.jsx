@@ -1,8 +1,9 @@
 import React, { useState } from "react";
 
-import { Spinner, Typography } from "@bigbinary/neetoui";
-import { Form, Input, Textarea, Button } from "@bigbinary/neetoui/formik";
-import { useParams, useHistory } from "react-router-dom";
+import { Button, Spinner, Typography } from "@bigbinary/neetoui";
+import { Form, Input, Textarea } from "@bigbinary/neetoui/formik";
+import Logger from "js-logger";
+import { useHistory } from "react-router-dom";
 
 import postsApi from "../../apis/posts";
 import {
@@ -12,20 +13,17 @@ import {
 
 const Create = () => {
   const [loading, setLoading] = useState(false);
-  const { slug } = useParams();
   const history = useHistory();
 
-  const handleSubmit = async e => {
-    e.preventDefault();
+  const handleSubmit = async values => {
     setLoading(true);
     try {
-      await postsApi.crate(slug, {
-        title: "",
-        description: "",
+      await postsApi.create({
+        post: values,
       });
       history.replace("/");
     } catch (error) {
-      logger.error(error);
+      Logger.error(error);
     } finally {
       setLoading(false);
     }
@@ -62,7 +60,6 @@ const Create = () => {
             initialValues: PostInitialData,
             validationSchema: PostValidationSchema,
           }}
-          onSubmit={handleSubmit}
         >
           {({ values, setFieldValue }) => (
             <div>
@@ -97,7 +94,7 @@ const Create = () => {
                 <Button
                   className="bg-black text-white"
                   label="Submit"
-                  type="submit"
+                  onClick={() => handleSubmit(values)}
                 />
               </div>
             </div>
