@@ -5,7 +5,7 @@ class Api::V1::PostsController < ApplicationController
 
   def index
     posts = Post.all
-    render json: posts
+    render_json(posts)
   end
 
   def create
