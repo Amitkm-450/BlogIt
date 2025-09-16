@@ -1,11 +1,12 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import { Button, Spinner, Typography } from "@bigbinary/neetoui";
-import { Form, Input, Textarea } from "@bigbinary/neetoui/formik";
+import { Form, Input, Select, Textarea } from "@bigbinary/neetoui/formik";
 import Logger from "js-logger";
 import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
 
+import categoriesApi from "../../apis/categories";
 import postsApi from "../../apis/posts";
 import {
   PostInitialData,
@@ -14,12 +15,13 @@ import {
 import { PageLayout } from "../commons";
 
 const Create = () => {
-  const [loading, setLoading] = useState(false);
+  const [categoryLoading, setCategoryLoading] = useState(true);
+  const [categories, setCategories] = useState([]);
+
   const history = useHistory();
   const { t } = useTranslation();
 
   const handleSubmit = async values => {
-    setLoading(true);
     try {
       await postsApi.create({
         post: values,
@@ -27,8 +29,6 @@ const Create = () => {
       history.replace("/");
     } catch (error) {
       Logger.error(error);
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -39,7 +39,27 @@ const Create = () => {
     setFieldValue(name, value);
   };
 
-  if (loading) {
+  const categoriesOption = categories?.map(category => ({
+    value: category.id,
+    label: category.name,
+  }));
+
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const categories = await categoriesApi.fetch();
+        setCategories(categories);
+      } catch (error) {
+        Logger.log(error);
+      } finally {
+        setCategoryLoading(false);
+      }
+    };
+
+    fetchCategories();
+  }, []);
+
+  if (categoryLoading) {
     return (
       <div className="flex h-screen items-center justify-center">
         <Spinner />
@@ -67,23 +87,35 @@ const Create = () => {
           {({ values, setFieldValue }) => (
             <div>
               <div className="mb-4">
-                <Typography style="body1" weight="semibold">
-                  {t("form.label.title")}
-                </Typography>
                 <Input
+                  label={t("form.label.title")}
                   name="title"
                   placeholder={t("form.placeholder.title")}
+                  size="large"
                   value={values.title}
                   onChange={event => handleChange(event, setFieldValue)}
                 />
               </div>
+              <div className="flex flex-col">
+                <div className="mb-1 mt-1 w-full">
+                  <Select
+                    isMulti
+                    isSearchable
+                    label={t("form.label.categories")}
+                    menuPosition="fixed"
+                    name="categories"
+                    options={categoriesOption}
+                    placeholder={t("form.placeholder.categories")}
+                    size="large"
+                  />
+                </div>
+              </div>
               <div className="mb-4">
-                <Typography style="body1" weight="semibold">
-                  {t("form.label.description")}
-                </Typography>
                 <Textarea
+                  label={t("form.label.description")}
                   name="description"
                   placeholder={t("form.placeholder.description")}
+                  size="large"
                   value={values.description}
                   onChange={event => handleChange(event, setFieldValue)}
                 />

@@ -11,9 +11,11 @@ export const PostValidationSchema = yup.object().shape({
     .string()
     .max(10000, "Description must be at most 10000 characters")
     .required("Description is required"),
+  categories: yup.array().required("Category is required"),
 });
 
 export const PostInitialData = {
   title: "",
   description: "",
+  categories: [],
 };
