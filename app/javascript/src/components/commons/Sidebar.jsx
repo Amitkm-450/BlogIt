@@ -1,6 +1,6 @@
 import React from "react";
 
-import { Book, List, User } from "@bigbinary/neeto-icons";
+import { Book, Edit, List, User } from "@bigbinary/neeto-icons";
 import { Button } from "@bigbinary/neetoui";
 import { useTranslation } from "react-i18next";
 
@@ -17,6 +17,16 @@ const Sidebar = () => {
         to="/posts"
         tooltipProps={{
           content: t("sidebar.postsList"),
+          position: "right",
+        }}
+      />
+      <Button
+        icon={Edit}
+        size="large"
+        style="secondary"
+        to="/posts/new"
+        tooltipProps={{
+          content: t("sidebar.postCreate"),
           position: "right",
         }}
       />

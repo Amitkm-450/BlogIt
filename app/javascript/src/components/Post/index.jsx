@@ -44,7 +44,7 @@ const List = () => {
           style="h1"
           weight="bold"
         >
-          {t("blogPosts")}
+          {t("header.blogPosts")}
         </Typography>
       </div>
       <div className="space-y-4">
