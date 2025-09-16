@@ -9,7 +9,7 @@ const Sidebar = () => {
 
   return (
     <div className="flex h-screen w-24 flex-col items-center gap-1 border-r-2 border-gray-200 px-1 py-2">
-      <Button icon={Book} size="large" style="tertiary" to="/" />
+      <Button icon={Book} size="large" style="tertiary" to="/posts" />
       <Button
         icon={List}
         size="large"
