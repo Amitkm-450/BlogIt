@@ -8,7 +8,7 @@ class Api::V1::PostsController < ApplicationController
   end
 
   def create
-    post = Post.new(post_params)
+    post = Post.new(post_params.merge({ user_id: current_user.id }))
     post.save!
     render_notice(t("successfully_created", entity: "Post"))
   end
@@ -25,7 +25,7 @@ class Api::V1::PostsController < ApplicationController
   private
 
     def post_params
-      params.require(:post).permit(:title, :description, :user_id, :organization_id, category_ids: [])
+      params.require(:post).permit(:title, :description, :organization_id, category_ids: [])
     end
 
     def load_post!
