@@ -7,14 +7,14 @@ class Api::V1::CategoriesController < ApplicationController
   end
 
   def create
-    category = Category.new(category_param)
+    category = Category.new(category_params)
     category.save!
-    render_notice("Category was successfully created")
+    render_notice(t("successfully_created", entity: "Category"))
   end
 
   private
 
-    def category_param
+    def category_params
       params.require(:category).permit(:name)
     end
 end

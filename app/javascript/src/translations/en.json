@@ -45,5 +45,26 @@
     "cancel": "Cancel",
     "submit": "Submit",
     "addNewBlog": "Add new blog post"
+  },
+  "signup": {
+    "header": "Sign Up",
+    "link": "Or Login Now",
+    "form": {
+      "label": {
+        "name": "Name",
+        "email": "Email",
+        "password": "Password",
+        "passwordConfirmation": "Password Confirmation"
+      },
+      "placeholder": {
+        "name": "Oliver",
+        "email": "oliver@example.com",
+        "password": "********",
+        "passwordConfirmation": "********"
+      }
+    },
+    "button": {
+      "register": "Register"
+    }
   }
 }
