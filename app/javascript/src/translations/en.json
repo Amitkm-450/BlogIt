@@ -2,7 +2,28 @@
   "sidebar": {
     "profile": "Profile",
     "postsList": "Posts list",
-    "postCreate": "Create post"
+    "postCreate": "Create post",
+    "category": "Category"
+  },
+  "categorySidebar": {
+    "header": "Categories",
+    "searchInput": {
+      "placeholder": "Search categories"
+    },
+    "selectedCategories": {
+      "placeholder": "Selected categories"
+    },
+    "modal": {
+      "header": "New Category",
+      "input": {
+        "placeholder": "Enter category name",
+        "label": "Category title"
+      },
+      "button": {
+        "addCategory": "Add",
+        "cancel": "Cancel"
+      }
+    }
   },
   "header": {
     "blogPosts": "Blog posts",
