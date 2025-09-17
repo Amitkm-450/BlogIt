@@ -8,7 +8,7 @@ Rails.application.routes.draw do
       resources :categories, only: %i[index create]
       resources :organizations, only: [:index]
       resources :users, only: %i[create]
-      resource :session, only: :create
+      resource :session, only: %i[create destroy]
     end
   end
   # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.
