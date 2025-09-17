@@ -22,7 +22,9 @@ const Login = () => {
         userName: user.name,
       });
       setAuthHeaders();
-      history.push("/");
+      setTimeout(() => {
+        history.push("/");
+      }, 500);
     } catch (error) {
       logger.error(error);
     } finally {

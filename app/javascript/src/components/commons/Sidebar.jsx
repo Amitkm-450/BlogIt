@@ -1,10 +1,11 @@
 import React, { useState } from "react";
 
 import { Book, Edit, List, MenuLayout, User } from "@bigbinary/neeto-icons";
-import { Button } from "@bigbinary/neetoui";
+import { Button, Typography } from "@bigbinary/neetoui";
+import classNames from "classnames";
 import { useTranslation } from "react-i18next";
-import { Link } from "react-router-dom/cjs/react-router-dom";
-import { setToLocalStorage } from "utils/storage";
+import { Link } from "react-router-dom";
+import { setToLocalStorage, getFromLocalStorage } from "utils/storage";
 
 import authApi from "../../apis/auth";
 import { resetAuthTokens } from "../../apis/axios";
@@ -71,23 +72,39 @@ const Sidebar = ({ setIsCategorySidebarOpen }) => {
         className="mt-auto"
         icon={User}
         style="secondary"
-        to="/user"
         tooltipProps={{
           content: t("sidebar.profile"),
           position: "right",
         }}
         onClick={() => setIsMenuVisible(prev => !prev)}
       />
-      {isMenuVisible && (
-        <div className="absolute bottom-1 left-20 z-20 mt-2 w-48 rounded-md border border-gray-300 bg-gray-500 py-1 shadow-xl">
-          <Link
-            className="block cursor-pointer px-3 py-1.5 text-sm text-gray-800 hover:bg-gray-400"
-            onClick={handleLogout}
-          >
-            Log out
-          </Link>
+      <div
+        className={classNames(
+          "absolute bottom-1 left-20 z-20 mt-2 flex w-48 flex-col rounded-md border border-gray-300 bg-white px-2 py-1 shadow-xl",
+          {
+            block: isMenuVisible,
+            hidden: !isMenuVisible,
+          }
+        )}
+      >
+        <div className="flex space-x-2">
+          <Button icon={User} size="large" style="secondary" />
+          <div className="flex flex-col">
+            <Typography style="body2" weight="bold">
+              {getFromLocalStorage("authUserName")}
+            </Typography>
+            <Typography className="text-gray-500 " style="body2">
+              {getFromLocalStorage("authEmail")}
+            </Typography>
+          </div>
         </div>
-      )}
+        <Link
+          className="block cursor-pointer px-3 py-1.5 text-sm text-gray-800 hover:bg-gray-400"
+          onClick={handleLogout}
+        >
+          {t("logout")}
+        </Link>
+      </div>
     </div>
   );
 };

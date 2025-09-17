@@ -83,5 +83,6 @@
     "button": {
       "submit": "Sign in"
     }
-  }
+  },
+  "logout": "Log out"
 }
