@@ -7,12 +7,15 @@ import Logger from "js-logger";
 import { includes, without, append } from "ramda";
 import { useTranslation } from "react-i18next";
 
+import AddCategoryModel from "./AddCategoryModal";
+
 import categoriesApi from "../../../apis/categories";
 
 const Sidebar = ({ isCategorySidebarOpen }) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedCategories, setSelectedCategories] = useState([]);
 
   const { t } = useTranslation();
@@ -68,7 +71,13 @@ const Sidebar = ({ isCategorySidebarOpen }) => {
         <Typography className="text-lg font-semibold" style="h2">
           {t("categorySidebar.header")}
         </Typography>
-        <Button icon={Plus} style="icon" onClick={() => {}} />
+        <Button
+          icon={Plus}
+          style="icon"
+          onClick={() => {
+            setIsModalOpen(true);
+          }}
+        />
       </div>
       <div className="mt-4">
         <Input
@@ -102,6 +111,10 @@ const Sidebar = ({ isCategorySidebarOpen }) => {
           </li>
         ))}
       </ul>
+      <AddCategoryModel
+        {...{ isModalOpen }}
+        onClose={() => setIsModalOpen(false)}
+      />
     </div>
   );
 };

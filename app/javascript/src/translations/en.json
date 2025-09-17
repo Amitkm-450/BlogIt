@@ -12,6 +12,17 @@
     },
     "selectedCategories": {
       "placeholder": "Selected categories"
+    },
+    "modal": {
+      "header": "New Category",
+      "input": {
+        "placeholder": "Enter category name",
+        "label": "Category title"
+      },
+      "button": {
+        "addCategory": "Add",
+        "cancel": "Cancel"
+      }
     }
   },
   "header": {
