@@ -22,19 +22,18 @@ const App = () => {
   return (
     <Router>
       <Switch>
+        <Route exact component={Home} path="/posts" />
+        <Route exact component={CreatePost} path="/posts/new" />
+        <Route exact component={ShowPost} path="/posts/:slug" />
         <Route exact component={Signup} path="/signup" />
         <Route exact component={Login} path="/login" />
+        <Redirect exact from="/" to="/posts" />
         <PrivateRoute
           component={Home}
           condition={isLoggedIn}
           path="/"
           redirectRoute="/login"
         />
-        <Route exact component={Home} path="/posts" />
-        <Route exact component={CreatePost} path="/posts/new" />
-        <Route exact component={ShowPost} path="/posts/:slug" />
-        <Route exact path="/about" render={() => <div>About</div>} />
-        <Redirect exact from="/" to="/posts" />
       </Switch>
     </Router>
   );
