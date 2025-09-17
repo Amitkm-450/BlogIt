@@ -66,5 +66,22 @@
     "button": {
       "register": "Register"
     }
+  },
+  "login": {
+    "header": "Sign in",
+    "link": "Or Register now",
+    "form": {
+      "label": {
+        "email": "Email",
+        "password": "Password"
+      },
+      "placeholder": {
+        "email": "oliver@example.com",
+        "password": "********"
+      }
+    },
+    "button": {
+      "submit": "Sign in"
+    }
   }
 }

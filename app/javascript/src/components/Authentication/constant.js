@@ -25,3 +25,16 @@ export const SignupValidationSchema = yup.object().shape({
     .required("Password confirmation is required")
     .oneOf([yup.ref("password"), null], "Passwords must match"),
 });
+
+export const LoginInitialData = {
+  email: "",
+  password: "",
+};
+
+export const LoginValidationSchema = yup.object().shape({
+  email: yup
+    .string()
+    .required("Email is required")
+    .email("Enter a valid email address"),
+  password: yup.string().required("Password is required"),
+});
