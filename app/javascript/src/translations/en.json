@@ -2,7 +2,17 @@
   "sidebar": {
     "profile": "Profile",
     "postsList": "Posts list",
-    "postCreate": "Create post"
+    "postCreate": "Create post",
+    "category": "Category"
+  },
+  "categorySidebar": {
+    "header": "Categories",
+    "searchInput": {
+      "placeholder": "Search categories"
+    },
+    "selectedCategories": {
+      "placeholder": "Selected categories"
+    }
   },
   "header": {
     "blogPosts": "Blog posts",
