@@ -1,10 +1,10 @@
 json.post do
   json.extract! @post,
     :id,
-    :slug,
     :title,
     :description,
-    :created_at
+    :created_at,
+    :status
 
   json.user do
     json.extract! @post.user,

@@ -84,5 +84,8 @@
       "submit": "Sign in"
     }
   },
-  "logout": "Log out"
+  "logout": "Log out",
+  "editButton": {
+    "tooltip": "Edit"
+  }
 }
