@@ -1,10 +1,12 @@
 import React, { useEffect, useRef, useState } from "react";
 
+import { MenuHorizontal } from "@bigbinary/neeto-icons";
 import {
   Button,
   Spinner,
   Typography,
   ActionDropdown,
+  Dropdown,
 } from "@bigbinary/neetoui";
 import { Form, Input, Select, Textarea } from "@bigbinary/neetoui/formik";
 import Logger from "js-logger";
@@ -52,6 +54,15 @@ const Edit = () => {
         quiet: true,
       });
       history.replace("/");
+    } catch (error) {
+      Logger.error(error);
+    }
+  };
+
+  const handleDelete = async () => {
+    try {
+      await postsApi.destroy(slug);
+      history.replace("/posts");
     } catch (error) {
       Logger.error(error);
     }
@@ -145,6 +156,16 @@ const Edit = () => {
                 </MenuItem>
               </Menu>
             </ActionDropdown>
+            <Dropdown buttonStyle="secondary" icon={MenuHorizontal}>
+              <Dropdown.MenuItem>
+                <Dropdown.MenuItem.Button
+                  className="text-red-600"
+                  onClick={handleDelete}
+                >
+                  Delete
+                </Dropdown.MenuItem.Button>
+              </Dropdown.MenuItem>
+            </Dropdown>
           </div>
         </div>
         <div className="w-full rounded-lg bg-white p-6 shadow">
