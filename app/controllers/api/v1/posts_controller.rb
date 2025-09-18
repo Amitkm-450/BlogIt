@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class Api::V1::PostsController < ApplicationController
-  before_action :load_post!, only: %i[show destroy]
+  before_action :load_post!, only: %i[show destroy update]
 
   def index
     @posts = Post.includes(:user, :organization, :categories).all
@@ -20,6 +20,11 @@ class Api::V1::PostsController < ApplicationController
   def destroy
     @post.destroy
     render_notice("Post was successfully deleted")
+  end
+
+  def update
+    @post.update!(post_params)
+    render_notice("Post was successfully updated")
   end
 
   private
