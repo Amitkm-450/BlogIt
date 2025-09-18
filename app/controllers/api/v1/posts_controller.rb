@@ -24,13 +24,13 @@ class Api::V1::PostsController < ApplicationController
 
   def update
     @post.update!(post_params)
-    render_notice("Post was successfully updated")
+    render_notice("Post was successfully updated") unless params.key?(:quiet)
   end
 
   private
 
     def post_params
-      params.require(:post).permit(:title, :description, :organization_id, category_ids: [])
+      params.require(:post).permit(:title, :description, :organization_id, :status, category_ids: [])
     end
 
     def load_post!

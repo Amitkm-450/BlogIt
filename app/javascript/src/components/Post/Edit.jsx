@@ -1,13 +1,12 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 
-import { Spinner, Typography } from "@bigbinary/neetoui";
 import {
-  Form,
-  Input,
-  Select,
-  Textarea,
   Button,
-} from "@bigbinary/neetoui/formik";
+  Spinner,
+  Typography,
+  ActionDropdown,
+} from "@bigbinary/neetoui";
+import { Form, Input, Select, Textarea } from "@bigbinary/neetoui/formik";
 import Logger from "js-logger";
 import { useTranslation } from "react-i18next";
 import { useHistory, useParams } from "react-router-dom";
@@ -22,25 +21,14 @@ const Edit = () => {
   const [postLoading, setPostLoading] = useState(false);
   const [categories, setCategories] = useState([]);
   const [postInitialData, setPostInitialData] = useState(null);
+  const [status, setStatus] = useState("");
+
+  const formikRef = useRef(null);
 
   const history = useHistory();
   const { slug } = useParams();
 
   const { t } = useTranslation();
-
-  const handleSubmit = async values => {
-    try {
-      await postsApi.update(slug, {
-        post: {
-          ...values,
-          category_ids: values.categories.map(category => category.value),
-        },
-      });
-      history.replace("/");
-    } catch (error) {
-      Logger.error(error);
-    }
-  };
 
   const handleCancel = () => history.goBack();
 
@@ -48,6 +36,26 @@ const Edit = () => {
     value: category.id,
     label: category.name,
   }));
+
+  const handleChangeStatus = async () => {
+    try {
+      const values = formikRef.current?.values;
+      await postsApi.update({
+        slug,
+        payload: {
+          post: {
+            ...values,
+            category_ids: values.categories.map(category => category.value),
+            status,
+          },
+        },
+        quiet: true,
+      });
+      history.replace("/");
+    } catch (error) {
+      Logger.error(error);
+    }
+  };
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -74,6 +82,7 @@ const Edit = () => {
               value: category.id,
             })) || [],
         });
+        setStatus(post.status);
       } catch (error) {
         Logger.log(error);
       } finally {
@@ -93,13 +102,50 @@ const Edit = () => {
     );
   }
 
+  const { Menu, MenuItem, Divider } = ActionDropdown;
+  const { Button: MenuItemButton } = MenuItem;
+
   return (
     <PageLayout>
       <div className="flex flex-col items-start px-4">
-        <div className="flex justify-between">
+        <div className="flex w-full justify-between">
           <Typography className="mb-4 text-2xl font-bold" style="h4">
             {t("header.editBlogPost")}
           </Typography>
+          <div className="flex items-center space-x-2">
+            <Button
+              label={t("button.cancel")}
+              style="secondary"
+              onClick={handleCancel}
+            />
+            <ActionDropdown
+              buttonStyle="secondary"
+              label={status === "draft" ? "Save as draft" : "Publish"}
+              onClick={handleChangeStatus}
+            >
+              <Menu>
+                <MenuItem>
+                  <MenuItemButton
+                    onClick={() => {
+                      setStatus("published");
+                    }}
+                  >
+                    Publish
+                  </MenuItemButton>
+                </MenuItem>
+                <Divider />
+                <MenuItem>
+                  <MenuItemButton
+                    onClick={() => {
+                      setStatus("draft");
+                    }}
+                  >
+                    Save as draft
+                  </MenuItemButton>
+                </MenuItem>
+              </Menu>
+            </ActionDropdown>
+          </div>
         </div>
         <div className="w-full rounded-lg bg-white p-6 shadow">
           <Form
@@ -108,7 +154,7 @@ const Edit = () => {
               enableReinitialize: true,
               initialValues: postInitialData,
               validationSchema: PostValidationSchema,
-              onSubmit: handleSubmit,
+              innerRef: formikRef,
             }}
           >
             <div className="mb-4">
@@ -139,18 +185,6 @@ const Edit = () => {
                 name="description"
                 placeholder={t("form.placeholder.description")}
                 size="large"
-              />
-            </div>
-            <div className="flex justify-end gap-2">
-              <Button
-                label={t("button.cancel")}
-                style="secondary"
-                onClick={handleCancel}
-              />
-              <Button
-                className="bg-black text-white"
-                label={t("button.submit")}
-                type="submit"
               />
             </div>
           </Form>

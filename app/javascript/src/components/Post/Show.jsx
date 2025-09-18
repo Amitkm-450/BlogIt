@@ -65,8 +65,8 @@ const Show = () => {
                   size="large"
                   style="warning"
                   className={classNames({
-                    block: status === "published",
-                    none: status !== "published",
+                    block: status !== "published",
+                    hidden: status === "published",
                   })}
                 />
               </div>
