@@ -13,6 +13,7 @@ import { Login, Signup } from "./components/Authentication";
 import { PrivateRoute } from "./components/commons";
 import Home from "./components/Home";
 import CreatePost from "./components/Post/Create";
+import PostEdit from "./components/Post/Edit";
 import ShowPost from "./components/Post/Show";
 
 const App = () => {
@@ -29,6 +30,13 @@ const App = () => {
           component={CreatePost}
           condition={isLoggedIn}
           path="/posts/new"
+          redirectRoute="/login"
+        />
+        <PrivateRoute
+          exact
+          component={PostEdit}
+          condition={isLoggedIn}
+          path="/posts/:slug/edit"
           redirectRoute="/login"
         />
         <PrivateRoute

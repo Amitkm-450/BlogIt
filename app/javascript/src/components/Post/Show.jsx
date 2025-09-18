@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from "react";
 
-import { Avatar, Spinner, Tag, Typography } from "@bigbinary/neetoui";
+import { Edit } from "@bigbinary/neeto-icons";
+import { Avatar, Spinner, Tag, Typography, Button } from "@bigbinary/neetoui";
+import classNames from "classnames";
+import { useTranslation } from "react-i18next";
 import { useParams, useHistory } from "react-router-dom";
 
 import postsApi from "../../apis/posts";
@@ -14,9 +17,11 @@ const Show = () => {
   const { slug } = useParams();
   const history = useHistory();
 
+  const { t } = useTranslation();
+
   const fetchPostDetails = async () => {
     try {
-      const { post } = await postsApi.show(slug);
+      const { post = {} } = await postsApi.show(slug);
       setPost(post);
     } catch (error) {
       logger.error(error);
@@ -38,19 +43,44 @@ const Show = () => {
     );
   }
 
+  const { categories, title, status, user, created_at, description } = post;
+
   return (
     <PageLayout>
       <div className="mx-auto max-w-3xl p-6">
         <div className="flex space-x-2">
-          {post.categories?.map(({ id, name }) => (
+          {categories?.map(({ id, name }) => (
             <Tag className="bg-gray-100 text-gray-700" key={id} label={name} />
           ))}
         </div>
         <div className="mt-4 flex items-center justify-between">
-          <div>
-            <Typography className="font-bold" style="h1">
-              {post.title}
-            </Typography>
+          <div className="flex w-full justify-between">
+            <div className="flex items-center space-x-4">
+              <Typography className="font-bold" style="h1">
+                {title}
+              </Typography>
+              <div>
+                <Tag
+                  label={status}
+                  size="large"
+                  style="warning"
+                  className={classNames({
+                    block: status !== "published",
+                    hidden: status === "published",
+                  })}
+                />
+              </div>
+            </div>
+            <Button
+              icon={Edit}
+              size="large"
+              style="text"
+              to={`/posts/${slug}/edit`}
+              tooltipProps={{
+                content: t("editButton.tooltip"),
+                position: "top",
+              }}
+            />
           </div>
         </div>
         <div className="mt-2 flex items-center space-x-2 text-gray-500">
@@ -59,16 +89,16 @@ const Show = () => {
           </div>
           <div className="flex-col">
             <Typography className="font-bold text-black" style="body2">
-              {post.user.name}
+              {user.name}
             </Typography>
-            <Typography style="body2">{fromatDate(post.created_at)}</Typography>
+            <Typography style="body2">{fromatDate(created_at)}</Typography>
           </div>
         </div>
         <Typography
           className="mt-4 leading-relaxed text-gray-800"
           style="body1"
         >
-          {post.description}
+          {description}
         </Typography>
       </div>
     </PageLayout>

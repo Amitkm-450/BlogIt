@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class Api::V1::PostsController < ApplicationController
-  before_action :load_post!, only: %i[show destroy]
+  before_action :load_post!, only: %i[show destroy update]
 
   def index
     @posts = Post.includes(:user, :organization, :categories).all
@@ -22,10 +22,15 @@ class Api::V1::PostsController < ApplicationController
     render_notice("Post was successfully deleted")
   end
 
+  def update
+    @post.update!(post_params)
+    render_notice("Post was successfully updated") unless params.key?(:quiet)
+  end
+
   private
 
     def post_params
-      params.require(:post).permit(:title, :description, :organization_id, category_ids: [])
+      params.require(:post).permit(:title, :description, :organization_id, :status, category_ids: [])
     end
 
     def load_post!

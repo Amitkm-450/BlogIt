@@ -27,7 +27,8 @@
   },
   "header": {
     "blogPosts": "Blog posts",
-    "newBlogPost": "New blog post"
+    "newBlogPost": "New blog post",
+    "editBlogPost": "Edit blog post"
   },
   "form": {
     "placeholder": {
@@ -84,5 +85,8 @@
       "submit": "Sign in"
     }
   },
-  "logout": "Log out"
+  "logout": "Log out",
+  "editButton": {
+    "tooltip": "Edit"
+  }
 }
