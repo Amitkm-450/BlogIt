@@ -1,57 +1,44 @@
+import { PostInitialData, PostValidationSchema } from "constants/constant";
+
 import React, { useEffect, useRef, useState } from "react";
 
-import { MenuHorizontal } from "@bigbinary/neeto-icons";
 import {
+  ActionDropdown,
   Button,
   Spinner,
   Typography,
-  ActionDropdown,
-  Dropdown,
 } from "@bigbinary/neetoui";
 import { Form, Input, Select, Textarea } from "@bigbinary/neetoui/formik";
+import categoriesApi from "apis/categories";
+import postsApi from "apis/posts";
 import Logger from "js-logger";
 import { useTranslation } from "react-i18next";
-import { useHistory, useParams } from "react-router-dom";
+import { useHistory } from "react-router-dom";
 
-import categoriesApi from "../../apis/categories";
-import postsApi from "../../apis/posts";
-import { PostValidationSchema } from "../../constants/constant";
-import { PageLayout } from "../commons";
+import { PageLayout } from "../../commons";
 
-const Edit = () => {
+const Create = () => {
   const [categoryLoading, setCategoryLoading] = useState(true);
-  const [postLoading, setPostLoading] = useState(false);
   const [categories, setCategories] = useState([]);
-  const [postInitialData, setPostInitialData] = useState(null);
-  const [status, setStatus] = useState("");
+  const [status, setStatus] = useState("draft");
+
+  const history = useHistory();
+  const { t } = useTranslation();
 
   const formikRef = useRef(null);
 
-  const history = useHistory();
-  const { slug } = useParams();
-
-  const { t } = useTranslation();
-
-  const handleCancel = () => history.goBack();
-
-  const categoriesOption = categories?.map(category => ({
-    value: category.id,
-    label: category.name,
-  }));
+  const handleCancel = () => history.push("/");
 
   const handleChangeStatus = async () => {
     try {
       const values = formikRef.current?.values;
-      await postsApi.update({
-        slug,
-        payload: {
-          post: {
-            ...values,
-            category_ids: values.categories.map(category => category.value),
-            status,
-          },
+      await postsApi.create({
+        post: {
+          ...values,
+          category_ids: values.categories.map(category => category.value),
+          organization_id: 1,
+          status,
         },
-        quiet: true,
       });
       history.replace("/");
     } catch (error) {
@@ -59,14 +46,10 @@ const Edit = () => {
     }
   };
 
-  const handleDelete = async () => {
-    try {
-      await postsApi.destroy(slug);
-      history.replace("/posts");
-    } catch (error) {
-      Logger.error(error);
-    }
-  };
+  const categoriesOption = categories?.map(category => ({
+    value: category.id,
+    label: category.name,
+  }));
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -80,32 +63,10 @@ const Edit = () => {
       }
     };
 
-    const fetchPostDetails = async () => {
-      setPostLoading(true);
-      try {
-        const { post } = await postsApi.show(slug);
-        setPostInitialData({
-          title: post.title || "",
-          description: post.description || "",
-          categories:
-            post.categories?.map(category => ({
-              label: category.name,
-              value: category.id,
-            })) || [],
-        });
-        setStatus(post.status);
-      } catch (error) {
-        Logger.log(error);
-      } finally {
-        setPostLoading(false);
-      }
-    };
-
     fetchCategories();
-    fetchPostDetails();
   }, []);
 
-  if (categoryLoading || postLoading) {
+  if (categoryLoading) {
     return (
       <div className="flex h-screen items-center justify-center">
         <Spinner />
@@ -121,7 +82,7 @@ const Edit = () => {
       <div className="flex flex-col items-start px-4">
         <div className="flex w-full justify-between">
           <Typography className="mb-4 text-2xl font-bold" style="h4">
-            {t("header.editBlogPost")}
+            {t("header.newBlogPost")}
           </Typography>
           <div className="flex items-center space-x-2">
             <Button
@@ -156,24 +117,14 @@ const Edit = () => {
                 </MenuItem>
               </Menu>
             </ActionDropdown>
-            <Dropdown buttonStyle="secondary" icon={MenuHorizontal}>
-              <Dropdown.MenuItem>
-                <Dropdown.MenuItem.Button
-                  className="text-red-600"
-                  onClick={handleDelete}
-                >
-                  Delete
-                </Dropdown.MenuItem.Button>
-              </Dropdown.MenuItem>
-            </Dropdown>
           </div>
         </div>
-        <div className="w-full rounded-lg bg-white p-6 shadow">
+        <div className="mx-auto w-full rounded-lg bg-white p-6 shadow">
           <Form
             formikProps={{
               validateOnBlur: true,
               enableReinitialize: true,
-              initialValues: postInitialData,
+              initialValues: PostInitialData,
               validationSchema: PostValidationSchema,
               innerRef: formikRef,
             }}
@@ -215,4 +166,4 @@ const Edit = () => {
   );
 };
 
-export default Edit;
+export default Create;

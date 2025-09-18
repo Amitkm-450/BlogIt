@@ -10,10 +10,10 @@ import {
 import { getFromLocalStorage } from "utils/storage";
 
 import { Login, Signup } from "./components/Authentication";
+import UserBlogs from "./components/Blogs";
 import { PrivateRoute } from "./components/commons";
 import Home from "./components/Home";
-import CreatePost from "./components/Post/Create";
-import PostEdit from "./components/Post/Edit";
+import { Edit as PostEdit, Create as CreatePost } from "./components/Post/Form";
 import ShowPost from "./components/Post/Show";
 
 const App = () => {
@@ -30,6 +30,13 @@ const App = () => {
           component={CreatePost}
           condition={isLoggedIn}
           path="/posts/new"
+          redirectRoute="/login"
+        />
+        <PrivateRoute
+          exact
+          component={UserBlogs}
+          condition={isLoggedIn}
+          path="/posts/my-blogs"
           redirectRoute="/login"
         />
         <PrivateRoute
