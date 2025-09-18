@@ -4,7 +4,7 @@ class Api::V1::PostsController < ApplicationController
   before_action :load_post!, only: %i[show destroy update]
 
   def index
-    @posts = Post.includes(:user, :organization, :categories).all
+    @posts = Post.where(user_id: current_user.id).includes(:user, :organization, :categories).all
   end
 
   def create
