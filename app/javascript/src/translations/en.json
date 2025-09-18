@@ -3,7 +3,8 @@
     "profile": "Profile",
     "postsList": "Posts list",
     "postCreate": "Create post",
-    "category": "Category"
+    "category": "Category",
+    "myBlogPosts": "My blogs"
   },
   "categorySidebar": {
     "header": "Categories",
@@ -28,7 +29,8 @@
   "header": {
     "blogPosts": "Blog posts",
     "newBlogPost": "New blog post",
-    "editBlogPost": "Edit blog post"
+    "editBlogPost": "Edit blog post",
+    "myBlogPosts": "My blog posts"
   },
   "form": {
     "placeholder": {

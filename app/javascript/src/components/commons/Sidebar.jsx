@@ -1,6 +1,13 @@
 import React, { useState } from "react";
 
-import { Book, Edit, List, MenuLayout, User } from "@bigbinary/neeto-icons";
+import {
+  Book,
+  Edit,
+  Folder,
+  List,
+  MenuLayout,
+  User,
+} from "@bigbinary/neeto-icons";
 import { Button, Typography } from "@bigbinary/neetoui";
 import classNames from "classnames";
 import { useTranslation } from "react-i18next";
@@ -65,6 +72,16 @@ const Sidebar = ({ setIsCategorySidebarOpen }) => {
           }}
           onClick={() => {
             setIsCategorySidebarOpen(prev => !prev);
+          }}
+        />
+        <Button
+          icon={Folder}
+          size="large"
+          style="secondary"
+          to="/posts/my-blogs"
+          tooltipProps={{
+            content: t("sidebar.myBlogPosts"),
+            position: "right",
           }}
         />
       </div>
