@@ -1,7 +1,13 @@
 import React, { useEffect, useState } from "react";
 
-import { Button, Spinner, Typography } from "@bigbinary/neetoui";
-import { Form, Input, Select, Textarea } from "@bigbinary/neetoui/formik";
+import { Spinner, Typography } from "@bigbinary/neetoui";
+import {
+  Button,
+  Form,
+  Input,
+  Select,
+  Textarea,
+} from "@bigbinary/neetoui/formik";
 import Logger from "js-logger";
 import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
@@ -74,72 +80,73 @@ const Create = () => {
 
   return (
     <PageLayout>
-      <div className="mx-auto w-full max-w-3xl rounded-lg bg-white p-6 shadow">
+      <div className="flex flex-col items-start px-4">
         <div className="flex justify-between">
           <Typography className="mb-4 text-2xl font-bold" style="h4">
             {t("header.newBlogPost")}
           </Typography>
-          <div className="flex items-center space-x-2" />
         </div>
-        <Form
-          formikProps={{
-            validateOnBlur: true,
-            enableReinitialize: true,
-            initialValues: PostInitialData,
-            validationSchema: PostValidationSchema,
-          }}
-        >
-          {({ values, setFieldValue }) => (
-            <div>
-              <div className="mb-4">
-                <Input
-                  label={t("form.label.title")}
-                  name="title"
-                  placeholder={t("form.placeholder.title")}
-                  size="large"
-                  value={values.title}
-                  onChange={event => handleChange(event, setFieldValue)}
-                />
-              </div>
-              <div className="flex flex-col">
-                <div className="mb-1 mt-1 w-full">
-                  <Select
-                    isMulti
-                    isSearchable
-                    label={t("form.label.categories")}
-                    menuPosition="fixed"
-                    name="categories"
-                    options={categoriesOption}
-                    placeholder={t("form.placeholder.categories")}
+        <div className="mx-auto w-full rounded-lg bg-white p-6 shadow">
+          <Form
+            formikProps={{
+              validateOnBlur: true,
+              enableReinitialize: true,
+              initialValues: PostInitialData,
+              validationSchema: PostValidationSchema,
+            }}
+          >
+            {({ values, setFieldValue }) => (
+              <div>
+                <div className="mb-4">
+                  <Input
+                    label={t("form.label.title")}
+                    name="title"
+                    placeholder={t("form.placeholder.title")}
                     size="large"
+                    value={values.title}
+                    onChange={event => handleChange(event, setFieldValue)}
+                  />
+                </div>
+                <div className="flex flex-col">
+                  <div className="mb-1 mt-1 w-full">
+                    <Select
+                      isMulti
+                      isSearchable
+                      label={t("form.label.categories")}
+                      menuPosition="fixed"
+                      name="categories"
+                      options={categoriesOption}
+                      placeholder={t("form.placeholder.categories")}
+                      size="large"
+                    />
+                  </div>
+                </div>
+                <div className="mb-4">
+                  <Textarea
+                    label={t("form.label.description")}
+                    name="description"
+                    placeholder={t("form.placeholder.description")}
+                    size="large"
+                    value={values.description}
+                    onChange={event => handleChange(event, setFieldValue)}
+                  />
+                </div>
+                <div className="flex justify-end gap-2">
+                  <Button
+                    label={t("button.cancel")}
+                    style="secondary"
+                    onClick={handleCancel}
+                  />
+                  <Button
+                    className="bg-black text-white"
+                    label={t("button.submit")}
+                    onClick={() => handleSubmit(values)}
                   />
                 </div>
               </div>
-              <div className="mb-4">
-                <Textarea
-                  label={t("form.label.description")}
-                  name="description"
-                  placeholder={t("form.placeholder.description")}
-                  size="large"
-                  value={values.description}
-                  onChange={event => handleChange(event, setFieldValue)}
-                />
-              </div>
-              <div className="flex justify-end gap-2">
-                <Button
-                  label={t("button.cancel")}
-                  style="secondary"
-                  onClick={handleCancel}
-                />
-                <Button
-                  className="bg-black text-white"
-                  label={t("button.submit")}
-                  onClick={() => handleSubmit(values)}
-                />
-              </div>
-            </div>
-          )}
-        </Form>
+            )}
+          </Form>
+        </div>
       </div>
     </PageLayout>
   );
