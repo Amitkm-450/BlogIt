@@ -13,7 +13,11 @@ import { Login, Signup } from "./components/Authentication";
 import UserBlogs from "./components/Blogs";
 import { PrivateRoute } from "./components/commons";
 import Home from "./components/Home";
-import { Edit as PostEdit, Create as CreatePost } from "./components/Post/Form";
+import {
+  Edit as PostEdit,
+  Create as CreatePost,
+  Preview as PostReview,
+} from "./components/Post/Form";
 import ShowPost from "./components/Post/Show";
 
 const App = () => {
@@ -44,6 +48,13 @@ const App = () => {
           component={PostEdit}
           condition={isLoggedIn}
           path="/posts/:slug/edit"
+          redirectRoute="/login"
+        />
+        <PrivateRoute
+          exact
+          component={PostReview}
+          condition={isLoggedIn}
+          path="/posts/:slug/preview"
           redirectRoute="/login"
         />
         <PrivateRoute

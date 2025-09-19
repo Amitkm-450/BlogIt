@@ -30,7 +30,8 @@
     "blogPosts": "Blog posts",
     "newBlogPost": "New blog post",
     "editBlogPost": "Edit blog post",
-    "myBlogPosts": "My blog posts"
+    "myBlogPosts": "My blog posts",
+    "previewPost": "Now you are previewing the post"
   },
   "form": {
     "placeholder": {
