@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 
 import { capitalize } from "@bigbinary/neeto-cist";
-import { MenuHorizontal } from "@bigbinary/neeto-icons";
+import { Filter, MenuHorizontal } from "@bigbinary/neeto-icons";
 import {
   Dropdown,
   Spinner,
@@ -9,6 +9,9 @@ import {
   Tooltip,
   Typography,
   Tag,
+  Button,
+  ActionDropdown,
+  Checkbox,
 } from "@bigbinary/neetoui";
 import postsApi from "apis/posts";
 import Logger from "js-logger";
@@ -20,54 +23,8 @@ import { PageLayout } from "./commons";
 const Blogs = () => {
   const [userBlogs, setUserBlogs] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
-
-  const { t } = useTranslation();
-
-  const history = useHistory();
-
-  const handleChange = async (slug, status) => {
-    try {
-      await postsApi.update({
-        slug,
-        payload: {
-          post: {
-            status,
-          },
-        },
-        quiet: true,
-      });
-      history.go(0);
-    } catch (error) {
-      Logger.error(error);
-    }
-  };
-
-  const handleDelete = async slug => {
-    try {
-      await postsApi.destroy(slug);
-      history.replace("/posts");
-    } catch (error) {
-      Logger.error(error);
-    }
-  };
-
-  useEffect(() => {
-    const fetchPosts = async () => {
-      setIsLoading(true);
-      try {
-        const response = await postsApi.fetch();
-        setUserBlogs(response);
-      } catch (error) {
-        Logger.log(error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-    fetchPosts();
-  }, []);
-
-  const { Menu, MenuItem, Divider } = Dropdown;
-  const { Button: MenuItemButton } = MenuItem;
+  const [selectedRowKeys, setSelectedRowKeys] = useState([]);
+  // const [selectedRowSlugs, setSelectedRowSlugs] = useState([]);
 
   const columnData = [
     {
@@ -165,6 +122,78 @@ const Blogs = () => {
     },
   ];
 
+  const [checkedColumns, setCheckedColumns] = useState(() =>
+    columnData.reduce((acc, { title }) => {
+      acc[title] = true;
+
+      return acc;
+    }, {})
+  );
+
+  const { t } = useTranslation();
+
+  const history = useHistory();
+
+  const handleChange = async (slug, status) => {
+    try {
+      await postsApi.update({
+        slug,
+        payload: {
+          post: {
+            status,
+          },
+        },
+        quiet: true,
+      });
+      history.go(0);
+    } catch (error) {
+      Logger.error(error);
+    }
+  };
+
+  const handleCheck = title => {
+    setCheckedColumns(prev => ({
+      ...prev,
+      [title]: !prev[title],
+    }));
+  };
+
+  const handleDelete = async slug => {
+    try {
+      await postsApi.destroy(slug);
+      history.replace("/posts");
+    } catch (error) {
+      Logger.error(error);
+    }
+  };
+
+  const handleRowSelect = selectedRowKeys => {
+    setSelectedRowKeys(selectedRowKeys);
+    // setSelectedRowSlugs(selectedRows.map(selectedRow => selectedRow.slug));
+  };
+
+  useEffect(() => {
+    const fetchPosts = async () => {
+      setIsLoading(true);
+      try {
+        const response = await postsApi.fetch();
+        setUserBlogs(response);
+      } catch (error) {
+        Logger.log(error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    fetchPosts();
+  }, []);
+
+  const { Menu, MenuItem, Divider } = Dropdown;
+  const { Button: MenuItemButton } = MenuItem;
+
+  const filteredColumnData = columnData.filter(
+    column => checkedColumns[column.title]
+  );
+
   if (isLoading) {
     return (
       <div className="flex h-full items-center justify-center">
@@ -181,8 +210,47 @@ const Blogs = () => {
             {t("header.myBlogPosts")}
           </Typography>
         </div>
+        <div className="flex w-full items-center justify-between py-2">
+          <Typography style="body2" weight="semibold">
+            {selectedRowKeys.length ? selectedRowKeys.length : userBlogs.length}{" "}
+            articles
+          </Typography>
+          <div className="flex items-center space-x-2">
+            <ActionDropdown buttonStyle="secondary" label="Column">
+              <ActionDropdown.Menu>
+                {columnData.map(({ title }) => (
+                  <ActionDropdown.MenuItem
+                    key={title}
+                    onClick={() => handleCheck(title)}
+                  >
+                    <ActionDropdown.MenuItem.Button
+                      prefix={
+                        <Checkbox
+                          checked={checkedColumns[title]}
+                          disabled={title === "Title"}
+                          size={20}
+                        />
+                      }
+                    >
+                      {title}
+                    </ActionDropdown.MenuItem.Button>
+                  </ActionDropdown.MenuItem>
+                ))}
+              </ActionDropdown.Menu>
+            </ActionDropdown>
+            <Button icon={Filter} style="secondary" />
+          </div>
+        </div>
       </div>
-      <Table columnData={columnData} rowData={userBlogs} />
+      <Table
+        rowSelection
+        columnData={filteredColumnData}
+        rowData={userBlogs}
+        selectedRowKeys={selectedRowKeys}
+        onRowSelect={(selectedRowKeys, selectedRows) =>
+          handleRowSelect(selectedRowKeys, selectedRows)
+        }
+      />
     </PageLayout>
   );
 };
