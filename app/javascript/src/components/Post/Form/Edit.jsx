@@ -2,7 +2,7 @@ import { PostValidationSchema } from "constants/constant";
 
 import React, { useEffect, useRef, useState } from "react";
 
-import { MenuHorizontal } from "@bigbinary/neeto-icons";
+import { MenuHorizontal, Redirection } from "@bigbinary/neeto-icons";
 import {
   Button,
   Spinner,
@@ -16,6 +16,7 @@ import postsApi from "apis/posts";
 import Logger from "js-logger";
 import { useTranslation } from "react-i18next";
 import { useHistory, useParams } from "react-router-dom";
+import { getFromLocalStorage } from "utils/storage";
 
 import { PageLayout } from "../../commons";
 
@@ -67,6 +68,22 @@ const Edit = () => {
     } catch (error) {
       Logger.error(error);
     }
+  };
+
+  const handleRedirect = () => {
+    const values = formikRef.current?.values;
+    history.push({
+      pathname: `/posts/${slug}/preview`,
+      state: {
+        post: {
+          ...values,
+          status,
+          user: {
+            name: getFromLocalStorage("authUserName"),
+          },
+        },
+      },
+    });
   };
 
   useEffect(() => {
@@ -125,6 +142,7 @@ const Edit = () => {
             {t("header.editBlogPost")}
           </Typography>
           <div className="flex items-center space-x-2">
+            <Button icon={Redirection} style="link" onClick={handleRedirect} />
             <Button
               label={t("button.cancel")}
               style="secondary"

@@ -74,13 +74,13 @@ const Blogs = () => {
       dataIndex: "title",
       key: "title",
       title: "Title",
-      render: (title, slug) => {
+      render: (title, post) => {
         if (title.length > 30) {
           return (
             <Tooltip content={title} position="right">
               <a
                 className="block max-w-xs truncate"
-                href={`/posts/${slug}/edit`}
+                href={`/posts/${post.slug}/edit`}
               >
                 {`${title.slice(0, 30)}...`}
               </a>
@@ -89,7 +89,10 @@ const Blogs = () => {
         }
 
         return (
-          <a className="block max-w-xs truncate" href={`/posts/${slug}/edit`}>
+          <a
+            className="block max-w-xs truncate"
+            href={`/posts/${post.slug}/edit`}
+          >
             {title}
           </a>
         );
