@@ -45,6 +45,23 @@
       "categories": "Categories*"
     }
   },
+  "filterForm": {
+    "header": "Filters",
+    "label": {
+      "title": "Title",
+      "categories": "Category",
+      "status": "Status"
+    },
+    "placeholder": {
+      "title": "Search by title",
+      "categories": "Search by category",
+      "status": "Search by status"
+    },
+    "button": {
+      "done": "Done",
+      "clearFilter": "Clear filters"
+    }
+  },
   "button": {
     "cancel": "Cancel",
     "submit": "Submit",
@@ -89,7 +106,8 @@
     }
   },
   "logout": "Log out",
-  "editButton": {
-    "tooltip": "Edit"
+  "toolTip": {
+    "editButton": "Edit",
+    "filterButton": "Filter"
   }
 }

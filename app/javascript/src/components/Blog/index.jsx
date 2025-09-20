@@ -18,13 +18,16 @@ import Logger from "js-logger";
 import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
 
-import { PageLayout } from "./commons";
+import SearchFilterPan from "./SearchFilterPan";
+
+import { PageLayout } from "../commons";
 
 const Blogs = () => {
   const [userBlogs, setUserBlogs] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
   // const [selectedRowSlugs, setSelectedRowSlugs] = useState([]);
+  const [isSearchPanOpen, setIsSearchPanOpen] = useState(false);
 
   const columnData = [
     {
@@ -167,6 +170,8 @@ const Blogs = () => {
     }
   };
 
+  const handleFilterApplied = () => {};
+
   const handleRowSelect = selectedRowKeys => {
     setSelectedRowKeys(selectedRowKeys);
     // setSelectedRowSlugs(selectedRows.map(selectedRow => selectedRow.slug));
@@ -238,11 +243,20 @@ const Blogs = () => {
                 ))}
               </ActionDropdown.Menu>
             </ActionDropdown>
-            <Button icon={Filter} style="secondary" />
+            <Button
+              icon={Filter}
+              style="secondary"
+              tooltipProps={{
+                content: t("toolTip.editButton"),
+                position: "top",
+              }}
+              onClick={() => setIsSearchPanOpen(prev => !prev)}
+            />
           </div>
         </div>
       </div>
       <Table
+        enableColumnResize
         rowSelection
         columnData={filteredColumnData}
         rowData={userBlogs}
@@ -250,6 +264,11 @@ const Blogs = () => {
         onRowSelect={(selectedRowKeys, selectedRows) =>
           handleRowSelect(selectedRowKeys, selectedRows)
         }
+      />
+      <SearchFilterPan
+        isOpen={isSearchPanOpen}
+        onClose={() => setIsSearchPanOpen(false)}
+        {...{ handleFilterApplied }}
       />
     </PageLayout>
   );

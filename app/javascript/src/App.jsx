@@ -10,7 +10,7 @@ import {
 import { getFromLocalStorage } from "utils/storage";
 
 import { Login, Signup } from "./components/Authentication";
-import UserBlogs from "./components/Blogs";
+import UserBlogs from "./components/Blog";
 import { PrivateRoute } from "./components/commons";
 import Home from "./components/Home";
 import {

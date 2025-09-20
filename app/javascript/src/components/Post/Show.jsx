@@ -77,7 +77,7 @@ const Show = () => {
               style="text"
               to={`/posts/${slug}/edit`}
               tooltipProps={{
-                content: t("editButton.tooltip"),
+                content: t("toolTip.editButton"),
                 position: "top",
               }}
             />
