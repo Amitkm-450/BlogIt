@@ -17,6 +17,24 @@ const update = ({ slug, payload, quiet = false }) => {
 
 const destroy = slug => axios.delete(`/posts/${slug}`);
 
-const postsApi = { fetch, create, show, update, destroy };
+const bulkDestroy = postIds =>
+  axios.delete("/posts/bulk_destroy", { params: { post_ids: postIds } });
+
+const bulkStatusUpdate = (postIds, status) =>
+  axios.patch(
+    "/posts/bulk_status_update",
+    { post: { status } },
+    { params: { post_ids: postIds } }
+  );
+
+const postsApi = {
+  fetch,
+  create,
+  show,
+  update,
+  destroy,
+  bulkDestroy,
+  bulkStatusUpdate,
+};
 
 export default postsApi;

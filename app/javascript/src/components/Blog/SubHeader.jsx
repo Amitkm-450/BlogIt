@@ -22,6 +22,8 @@ const SubHeader = ({
   handleChange,
   handleCheck,
   checkedColumns,
+  handleBulkDelete,
+  handleBulkUpdate,
 }) => {
   const { t } = useTranslation();
 
@@ -149,7 +151,7 @@ const SubHeader = ({
                 <MenuItemButton
                   className="text-black"
                   style="link"
-                  onClick={() => {}}
+                  onClick={() => handleBulkUpdate("draft")}
                 >
                   {t("subHeader.status.draft")}
                 </MenuItemButton>
@@ -159,7 +161,7 @@ const SubHeader = ({
                 <MenuItemButton
                   className="text-black"
                   style="link"
-                  onClick={() => {}}
+                  onClick={() => handleBulkUpdate("published")}
                 >
                   {t("subHeader.status.publish")}
                 </MenuItemButton>
@@ -172,7 +174,7 @@ const SubHeader = ({
             label={t("subHeader.bulkDelete")}
             size="small"
             style="danger-text"
-            onClick={() => {}}
+            onClick={handleBulkDelete}
           />
         </div>
       </div>

@@ -2,9 +2,9 @@
 
 class Api::V1::PostsController < ApplicationController
   before_action :load_post!, only: %i[show destroy update]
-
+  before_action :load_posts!, only: %i[index bulk_destroy bulk_status_update]
   def index
-    @posts = Post.where(user_id: current_user.id).includes(:user, :organization, :categories)
+    @posts = @posts.includes(:user, :organization, :categories)
 
     if params[:title].present?
       @posts = @posts.where("LOWER(title) LIKE ?", "%#{params[:title].downcase}%")
@@ -41,6 +41,16 @@ class Api::V1::PostsController < ApplicationController
     render_notice("Post was successfully updated") unless params.key?(:quiet)
   end
 
+  def bulk_destroy
+    @posts.destroy_all
+    render_notice("Posts deleted successfully")
+  end
+
+  def bulk_status_update
+    @posts.update_all(status: post_params[:status], updated_at: Time.current)
+    render_notice("Posts updated successfully")
+  end
+
   private
 
     def post_params
@@ -49,5 +59,10 @@ class Api::V1::PostsController < ApplicationController
 
     def load_post!
       @post = Post.find_by!(slug: params[:slug])
+    end
+
+    def load_posts!
+      @posts = Post.where(user_id: current_user.id)
+      @posts = @posts.where(id: params[:post_ids]) if params[:post_ids].present?
     end
 end
