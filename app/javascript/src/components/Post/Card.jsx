@@ -1,9 +1,9 @@
 import React from "react";
 
-import { Tag, Typography } from "@bigbinary/neetoui";
+import { DownArrow, UpArrow } from "@bigbinary/neeto-icons";
+import { Button, Tag, Typography } from "@bigbinary/neetoui";
 import { useHistory } from "react-router-dom";
-
-import { fromatDate } from "../../utils/date";
+import { fromatDate } from "utils/date";
 
 const Card = ({ title, user, created_at, slug, categories }) => {
   const creationDate = fromatDate(created_at);
@@ -29,6 +29,31 @@ const Card = ({ title, user, created_at, slug, categories }) => {
         <Typography className="text-sm text-gray-400">
           {creationDate}
         </Typography>
+      </div>
+      <div className="flex flex-col items-center">
+        <Button
+          className="font-extrabold text-green-900"
+          icon={UpArrow}
+          style="text"
+          tooltipProps={{
+            content: "Up",
+            position: "left",
+          }}
+          onClick={() => {}}
+        />
+        <Typography style="body2" weight="bold">
+          {0}
+        </Typography>
+        <Button
+          className="font-bold text-red-900"
+          icon={DownArrow}
+          style="text"
+          tooltipProps={{
+            content: "Down",
+            position: "right",
+          }}
+          onClick={() => {}}
+        />
       </div>
     </div>
   );
