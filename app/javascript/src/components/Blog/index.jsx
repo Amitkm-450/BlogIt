@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 
 import { capitalize } from "@bigbinary/neeto-cist";
-import { Filter, MenuHorizontal } from "@bigbinary/neeto-icons";
+import { MenuHorizontal } from "@bigbinary/neeto-icons";
 import {
   Dropdown,
   Spinner,
@@ -9,22 +9,23 @@ import {
   Tooltip,
   Typography,
   Tag,
-  Button,
-  ActionDropdown,
-  Checkbox,
 } from "@bigbinary/neetoui";
 import postsApi from "apis/posts";
 import Logger from "js-logger";
 import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
 
-import { PageLayout } from "./commons";
+import SearchFilterPan from "./SearchFilterPan";
+import SubHeader from "./SubHeader";
+
+import { PageLayout } from "../commons";
 
 const Blogs = () => {
   const [userBlogs, setUserBlogs] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
   // const [selectedRowSlugs, setSelectedRowSlugs] = useState([]);
+  const [isSearchPanOpen, setIsSearchPanOpen] = useState(false);
 
   const columnData = [
     {
@@ -167,23 +168,36 @@ const Blogs = () => {
     }
   };
 
+  const handleFilterApplied = values => {
+    const params = {
+      ...(values.title && { title: values.title }),
+      ...(values.categories?.length > 0 && {
+        category_ids: values.categories.map(category => category.value),
+      }),
+      ...(values.status && { status: values.status }),
+    };
+
+    fetchPosts(params);
+  };
+
   const handleRowSelect = selectedRowKeys => {
     setSelectedRowKeys(selectedRowKeys);
     // setSelectedRowSlugs(selectedRows.map(selectedRow => selectedRow.slug));
   };
 
+  const fetchPosts = async params => {
+    setIsLoading(true);
+    try {
+      const response = await postsApi.fetch(params);
+      setUserBlogs(response);
+    } catch (error) {
+      Logger.log(error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   useEffect(() => {
-    const fetchPosts = async () => {
-      setIsLoading(true);
-      try {
-        const response = await postsApi.fetch();
-        setUserBlogs(response);
-      } catch (error) {
-        Logger.log(error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
     fetchPosts();
   }, []);
 
@@ -210,39 +224,20 @@ const Blogs = () => {
             {t("header.myBlogPosts")}
           </Typography>
         </div>
-        <div className="flex w-full items-center justify-between py-2">
-          <Typography style="body2" weight="semibold">
-            {selectedRowKeys.length ? selectedRowKeys.length : userBlogs.length}{" "}
-            articles
-          </Typography>
-          <div className="flex items-center space-x-2">
-            <ActionDropdown buttonStyle="secondary" label="Column">
-              <ActionDropdown.Menu>
-                {columnData.map(({ title }) => (
-                  <ActionDropdown.MenuItem
-                    key={title}
-                    onClick={() => handleCheck(title)}
-                  >
-                    <ActionDropdown.MenuItem.Button
-                      prefix={
-                        <Checkbox
-                          checked={checkedColumns[title]}
-                          disabled={title === "Title"}
-                          size={20}
-                        />
-                      }
-                    >
-                      {title}
-                    </ActionDropdown.MenuItem.Button>
-                  </ActionDropdown.MenuItem>
-                ))}
-              </ActionDropdown.Menu>
-            </ActionDropdown>
-            <Button icon={Filter} style="secondary" />
-          </div>
-        </div>
+        <SubHeader
+          {...{
+            setIsSearchPanOpen,
+            selectedRowKeys,
+            userBlogs,
+            handleDelete,
+            handleChange,
+            handleCheck,
+            checkedColumns,
+          }}
+        />
       </div>
       <Table
+        enableColumnResize
         rowSelection
         columnData={filteredColumnData}
         rowData={userBlogs}
@@ -250,6 +245,11 @@ const Blogs = () => {
         onRowSelect={(selectedRowKeys, selectedRows) =>
           handleRowSelect(selectedRowKeys, selectedRows)
         }
+      />
+      <SearchFilterPan
+        isOpen={isSearchPanOpen}
+        onClose={() => setIsSearchPanOpen(false)}
+        {...{ handleFilterApplied }}
       />
     </PageLayout>
   );

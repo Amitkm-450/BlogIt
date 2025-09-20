@@ -4,7 +4,21 @@ class Api::V1::PostsController < ApplicationController
   before_action :load_post!, only: %i[show destroy update]
 
   def index
-    @posts = Post.where(user_id: current_user.id).includes(:user, :organization, :categories).all
+    @posts = Post.where(user_id: current_user.id).includes(:user, :organization, :categories)
+
+    if params[:title].present?
+      @posts = @posts.where("LOWER(title) LIKE ?", "%#{params[:title].downcase}%")
+    end
+
+    if params[:status].present?
+      @posts = @posts.where(status: params[:status])
+    end
+
+    if params[:category_ids].present?
+      @posts = @posts.joins(:categories).where(categories: { id: params[:category_ids] }).distinct
+    end
+
+    @posts
   end
 
   def create

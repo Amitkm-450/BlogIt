@@ -19,3 +19,20 @@ export const PostInitialData = {
   description: "",
   categories: [],
 };
+
+export const FilterInitialValues = {
+  title: "",
+  categories: [],
+  status: {},
+};
+
+export const FilterValidationSchema = yup.object().shape({
+  title: yup.string().max(100, "Title cannot exceed 100 characters"),
+  categories: yup.array(),
+  status: yup
+    .object({
+      label: yup.string(),
+      value: yup.string().oneOf(["draft", "published"]),
+    })
+    .nullable(),
+});
