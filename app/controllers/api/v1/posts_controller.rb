@@ -47,7 +47,7 @@ class Api::V1::PostsController < ApplicationController
   end
 
   def bulk_status_update
-    @posts.update_all(status: post_params[:status])
+    @posts.update_all(status: post_params[:status], updated_at: Time.current)
     render_notice("Posts updated successfully")
   end
 
