@@ -4,7 +4,12 @@ Rails.application.routes.draw do
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
   namespace :api do
     namespace :v1 do
-      resources :posts, only: %i[index create show update destroy], param: :slug
+      resources :posts, only: %i[index create show update destroy], param: :slug do
+        collection do
+          delete :bulk_destroy
+          patch :bulk_status_update
+        end
+      end
       resources :categories, only: %i[index create]
       resources :organizations, only: [:index]
       resources :users, only: %i[create]

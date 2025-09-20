@@ -24,7 +24,7 @@ const Blogs = () => {
   const [userBlogs, setUserBlogs] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
-  // const [selectedRowSlugs, setSelectedRowSlugs] = useState([]);
+  const [selectedRowIds, setSelectedRowIds] = useState([]);
   const [isSearchPanOpen, setIsSearchPanOpen] = useState(false);
 
   const columnData = [
@@ -168,6 +168,24 @@ const Blogs = () => {
     }
   };
 
+  const handleBulkDelete = async () => {
+    try {
+      await postsApi.bulkDestroy(selectedRowIds);
+      history.go(0);
+    } catch (error) {
+      Logger.log(error);
+    }
+  };
+
+  const handleBulkUpdate = async status => {
+    try {
+      await postsApi.bulkStatusUpdate(selectedRowIds, status);
+      history.go(0);
+    } catch (error) {
+      Logger.log(error);
+    }
+  };
+
   const handleFilterApplied = values => {
     const params = {
       ...(values.title && { title: values.title }),
@@ -180,9 +198,9 @@ const Blogs = () => {
     fetchPosts(params);
   };
 
-  const handleRowSelect = selectedRowKeys => {
+  const handleRowSelect = (selectedRowKeys, selectedRows) => {
     setSelectedRowKeys(selectedRowKeys);
-    // setSelectedRowSlugs(selectedRows.map(selectedRow => selectedRow.slug));
+    setSelectedRowIds(selectedRows.map(selectedRow => selectedRow.id));
   };
 
   const fetchPosts = async params => {
@@ -233,6 +251,8 @@ const Blogs = () => {
             handleChange,
             handleCheck,
             checkedColumns,
+            handleBulkDelete,
+            handleBulkUpdate,
           }}
         />
       </div>
