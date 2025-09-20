@@ -1,7 +1,7 @@
 import React from "react";
 
 import { capitalize } from "@bigbinary/neeto-cist";
-import { Filter, MenuHorizontal } from "@bigbinary/neeto-icons";
+import { Delete, Filter, MenuHorizontal } from "@bigbinary/neeto-icons";
 import {
   ActionDropdown,
   Button,
@@ -11,6 +11,7 @@ import {
   Tooltip,
   Typography,
 } from "@bigbinary/neetoui";
+import classNames from "classnames";
 import { useTranslation } from "react-i18next";
 
 const SubHeader = ({
@@ -125,10 +126,56 @@ const SubHeader = ({
 
   return (
     <div className="flex w-full items-center justify-between py-2">
-      <Typography style="body2" weight="semibold">
-        {selectedRowKeys.length ? selectedRowKeys.length : userBlogs.length}{" "}
-        articles
-      </Typography>
+      <div className="flex items-center space-x-4">
+        <Typography style="body2" weight="semibold">
+          {selectedRowKeys.length
+            ? `${selectedRowKeys.length} articles selected of ${userBlogs.length}`
+            : `${userBlogs.length} articles`}
+        </Typography>
+        <div
+          className={classNames("flex space-x-2", {
+            block: selectedRowKeys.length !== 0,
+            hidden: selectedRowKeys.length === 0,
+          })}
+        >
+          <Dropdown
+            buttonStyle="secondary"
+            label={t("subHeader.bulkUpdate")}
+            position="bottom-end"
+            strategy="fixed"
+          >
+            <Menu>
+              <MenuItem>
+                <MenuItemButton
+                  className="text-black"
+                  style="link"
+                  onClick={() => {}}
+                >
+                  {t("subHeader.status.draft")}
+                </MenuItemButton>
+              </MenuItem>
+              <Divider />
+              <MenuItem>
+                <MenuItemButton
+                  className="text-black"
+                  style="link"
+                  onClick={() => {}}
+                >
+                  {t("subHeader.status.publish")}
+                </MenuItemButton>
+              </MenuItem>
+            </Menu>
+          </Dropdown>
+          <Button
+            className="bg-red-200"
+            icon={() => <Delete />}
+            label={t("subHeader.bulkDelete")}
+            size="small"
+            style="danger-text"
+            onClick={() => {}}
+          />
+        </div>
+      </div>
       <div className="flex items-center space-x-2">
         <ActionDropdown buttonStyle="secondary" label="Column">
           <ActionDropdown.Menu>
