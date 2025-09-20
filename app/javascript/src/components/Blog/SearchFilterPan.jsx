@@ -11,7 +11,7 @@ import categoriesApi from "apis/categories";
 import Logger from "js-logger";
 import { useTranslation } from "react-i18next";
 
-const SearchFilterPan = ({ isOpen, onClose }) => {
+const SearchFilterPan = ({ isOpen, onClose, handleFilterApplied }) => {
   const [categories, setCategories] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
 
@@ -39,8 +39,13 @@ const SearchFilterPan = ({ isOpen, onClose }) => {
     fetchCategories();
   }, []);
 
-  const handleApplyFilters = () => {
-    // handleFilterApplied(values);
+  const handleApplyFilters = values => {
+    const filters = {
+      title: values.title.length > 0 ? values.title : undefined,
+      categories: values.categories.length > 0 ? values.categories : undefined,
+      status: values.status?.value,
+    };
+    handleFilterApplied(filters);
     onClose();
   };
 

@@ -23,7 +23,7 @@ export const PostInitialData = {
 export const FilterInitialValues = {
   title: "",
   categories: [],
-  status: [],
+  status: {},
 };
 
 export const FilterValidationSchema = yup.object().shape({
