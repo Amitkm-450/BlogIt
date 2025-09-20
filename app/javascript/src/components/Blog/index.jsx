@@ -168,25 +168,36 @@ const Blogs = () => {
     }
   };
 
-  const handleFilterApplied = () => {};
+  const handleFilterApplied = values => {
+    const params = {
+      ...(values.title && { title: values.title }),
+      ...(values.categories?.length > 0 && {
+        category_ids: values.categories.map(category => category.value),
+      }),
+      ...(values.status && { status: values.status }),
+    };
+
+    fetchPosts(params);
+  };
 
   const handleRowSelect = selectedRowKeys => {
     setSelectedRowKeys(selectedRowKeys);
     // setSelectedRowSlugs(selectedRows.map(selectedRow => selectedRow.slug));
   };
 
+  const fetchPosts = async params => {
+    setIsLoading(true);
+    try {
+      const response = await postsApi.fetch(params);
+      setUserBlogs(response);
+    } catch (error) {
+      Logger.log(error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   useEffect(() => {
-    const fetchPosts = async () => {
-      setIsLoading(true);
-      try {
-        const response = await postsApi.fetch();
-        setUserBlogs(response);
-      } catch (error) {
-        Logger.log(error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
     fetchPosts();
   }, []);
 
