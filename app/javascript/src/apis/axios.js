@@ -30,6 +30,10 @@ const handleSuccessResponse = response => {
     }
   }
 
+  if (response.data instanceof Blob) {
+    return response;
+  }
+
   return response.data;
 };
 

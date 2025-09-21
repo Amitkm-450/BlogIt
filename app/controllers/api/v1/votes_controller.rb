@@ -19,12 +19,10 @@ class Api::V1::VotesController < ApplicationController
   private
 
     def vote_params
-      puts params
       params.require(:vote).permit(:value)
     end
 
     def load_post!
       @post = Post.find(params[:post_id])
-      puts @post
     end
 end

@@ -1,7 +1,7 @@
 # frozen_string_literal: true
 
 class Api::V1::Posts::ReportsController < ApplicationController
-  before_action :load_post
+  before_action :load_post!
 
   def create
     ReportsJob.perform_async(@post.id, report_path.to_s)
@@ -23,7 +23,7 @@ class Api::V1::Posts::ReportsController < ApplicationController
 
   private
 
-    def load_post
+    def load_post!
       @post = Post.find_by!(slug: params[:slug])
     end
 

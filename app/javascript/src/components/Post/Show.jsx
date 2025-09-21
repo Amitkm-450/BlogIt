@@ -116,10 +116,13 @@ const Show = () => {
           {description}
         </Typography>
       </div>
-      <DownloadModal
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-      />
+      {isModalOpen && (
+        <DownloadModal
+          isOpen={isModalOpen}
+          onClose={() => setIsModalOpen(false)}
+          {...{ slug }}
+        />
+      )}
     </PageLayout>
   );
 };
