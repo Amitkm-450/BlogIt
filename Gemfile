@@ -69,3 +69,7 @@ gem "bcrypt", "~> 3.1.13"
 gem "react-rails", "~> 2.7.1"
 
 gem "sidekiq", "~> 7.0"
+# PDF generation gem
+gem "wicked_pdf"
+# wicked_pdf uses the following binary
+gem "wkhtmltopdf-binary"
