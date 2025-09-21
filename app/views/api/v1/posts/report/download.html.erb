@@ -1,0 +1,41 @@
+<div class="mb-4 font-bold text-xl">Post Details:</div>
+
+<div class="p-4 mb-8 bg-white neeto-ui-shadow-s rounded">
+  <div class="flex flex-col mb-4">
+    <div class="mb-2 font-semibold">Title:</div>
+    <div class="text-gray-800"><%= @post.title %></div>
+  </div>
+
+  <div class="flex flex-col mb-4">
+    <div class="mb-2 font-semibold">Description:</div>
+    <div class="text-gray-700 leading-relaxed"><%= @post.description %></div>
+  </div>
+
+  <div class="flex flex-col mb-4">
+    <div class="mb-2 font-semibold">Author:</div>
+    <div class="text-gray-700"><%= @post.user.name %></div>
+  </div>
+
+  <div class="flex flex-col mb-4">
+    <div class="mb-2 font-semibold">Status:</div>
+    <div>
+      <span class="px-2 py-1 rounded text-white <%= @post.status == 'published' ? 'bg-green-500' : 'bg-yellow-500' %>">
+        <%= @post.status.capitalize %>
+      </span>
+    </div>
+  </div>
+
+  <div class="flex flex-col mb-4">
+    <div class="mb-2 font-semibold">Categories:</div>
+    <div class="flex flex-wrap">
+      <% @post.categories.each do |category| %>
+      <span class="mr-2 mb-2 px-2 py-1 bg-gray-100 rounded text-gray-700"><%= category.name %></span>
+      <% end %>
+    </div>
+  </div>
+
+  <div class="flex flex-col">
+    <div class="mb-2 font-semibold">Created At:</div>
+    <div class="text-gray-500"><%= @post.created_at.strftime("%b %d, %Y") %></div>
+  </div>
+</div>

@@ -9,6 +9,12 @@ Rails.application.routes.draw do
           delete :bulk_destroy
           patch :bulk_status_update
         end
+
+        member do
+          resource :report, only: %i[create], module: :posts do
+            get :download, on: :member
+          end
+        end
       end
       resources :categories, only: %i[index create]
       resources :organizations, only: [:index]

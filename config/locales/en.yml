@@ -37,3 +37,8 @@ en:
   session:
     could_not_auth: "Could not authenticate with the provided credentials."
     incorrect_credentials: "Incorrect credentials, try again."
+  report:
+    render: "Rendering the report"
+    generate: "Generating the PDF report"
+    upload: "Uploading to server"
+    attach: "Attaching the report to the user"

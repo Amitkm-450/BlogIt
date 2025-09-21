@@ -30,6 +30,11 @@ const bulkStatusUpdate = (postIds, status) =>
     { params: { post_ids: postIds } }
   );
 
+const generatePdf = slug => axios.post(`/posts/${slug}/report`, {});
+
+const download = slug =>
+  axios.get(`/posts/${slug}/report/download`, { responseType: "blob" });
+
 const postsApi = {
   fetch,
   create,
@@ -38,6 +43,8 @@ const postsApi = {
   destroy,
   bulkDestroy,
   bulkStatusUpdate,
+  generatePdf,
+  download,
 };
 
 export default postsApi;
