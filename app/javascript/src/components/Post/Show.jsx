@@ -1,16 +1,19 @@
 import React, { useEffect, useState } from "react";
 
-import { Edit } from "@bigbinary/neeto-icons";
+import { Download, Edit } from "@bigbinary/neeto-icons";
 import { Avatar, Spinner, Tag, Typography, Button } from "@bigbinary/neetoui";
 import classNames from "classnames";
 import { useTranslation } from "react-i18next";
 import { useParams, useHistory } from "react-router-dom";
+
+import DownloadModal from "./DownloadModal";
 
 import postsApi from "../../apis/posts";
 import { fromatDate } from "../../utils/date";
 import { PageLayout } from "../commons";
 
 const Show = () => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [post, setPost] = useState(null);
   const [pageLoading, setPageLoading] = useState(true);
 
@@ -71,16 +74,28 @@ const Show = () => {
                 />
               </div>
             </div>
-            <Button
-              icon={Edit}
-              size="large"
-              style="text"
-              to={`/posts/${slug}/edit`}
-              tooltipProps={{
-                content: t("toolTip.editButton"),
-                position: "top",
-              }}
-            />
+            <div className="flex space-x-2">
+              <Button
+                icon={Download}
+                size="large"
+                style="text"
+                tooltipProps={{
+                  content: t("toolTip.downloadButton"),
+                  position: "top",
+                }}
+                onClick={() => setIsModalOpen(true)}
+              />
+              <Button
+                icon={Edit}
+                size="large"
+                style="text"
+                to={`/posts/${slug}/edit`}
+                tooltipProps={{
+                  content: t("toolTip.editButton"),
+                  position: "top",
+                }}
+              />
+            </div>
           </div>
         </div>
         <div className="mt-2 flex items-center space-x-2 text-gray-500">
@@ -101,6 +116,10 @@ const Show = () => {
           {description}
         </Typography>
       </div>
+      <DownloadModal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+      />
     </PageLayout>
   );
 };

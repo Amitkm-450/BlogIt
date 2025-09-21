@@ -108,7 +108,8 @@
   "logout": "Log out",
   "toolTip": {
     "editButton": "Edit",
-    "filterButton": "Filter"
+    "filterButton": "Filter",
+    "downloadButton": "Download"
   },
   "subHeader": {
     "bulkUpdate": "Change status",
