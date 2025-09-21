@@ -4,7 +4,7 @@ class Api::V1::Posts::ReportsController < ApplicationController
   before_action :load_post!
 
   def create
-    ReportsJob.perform_async(@post.id)
+    ReportsJob.perform_async(@post.id, @current_user.id)
     render_notice(t("in_progress", action: "Report generation"))
   end
 

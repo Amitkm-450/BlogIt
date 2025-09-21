@@ -68,6 +68,7 @@ end
 gem "bcrypt", "~> 3.1.13"
 gem "react-rails", "~> 2.7.1"
 
+gem "redis", "~> 5.0"
 gem "sidekiq", "~> 7.0"
 # PDF generation gem
 gem "wicked_pdf"
