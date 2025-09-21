@@ -206,7 +206,7 @@ const Blogs = () => {
   const fetchPosts = async params => {
     setIsLoading(true);
     try {
-      const response = await postsApi.fetch(params);
+      const response = await postsApi.fetch({ params, scope: "user" });
       setUserBlogs(response);
     } catch (error) {
       Logger.log(error);

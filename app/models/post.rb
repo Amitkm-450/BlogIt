@@ -11,6 +11,7 @@ class Post < ApplicationRecord
 
   belongs_to :user
   belongs_to :organization
+  has_many :votes, dependent: :destroy
   has_and_belongs_to_many :categories
 
   validates :title, length: { maximum: MAX_TITLE_LENGTH }, presence: true
@@ -20,6 +21,10 @@ class Post < ApplicationRecord
   validate :slug_not_changed
 
   before_create :set_slug
+
+  def net_votes
+    votes.sum(:value)
+  end
 
   private
 

@@ -15,9 +15,9 @@ const List = () => {
   const { t } = useTranslation();
 
   useEffect(() => {
-    const fetchPosts = async () => {
+    const fetchPosts = async params => {
       try {
-        const response = await postsApi.fetch();
+        const response = await postsApi.fetch({ params });
         setPosts(response);
       } catch (error) {
         Logger.log(error);
