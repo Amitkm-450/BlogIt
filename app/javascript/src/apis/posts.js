@@ -1,8 +1,11 @@
 import axios from "axios";
 
-const fetch = params =>
+const fetch = ({ params, scope = "organization" }) =>
   axios.get("/posts", {
-    params,
+    params: {
+      ...params,
+      scope,
+    },
   });
 
 const create = payload => axios.post("/posts", payload);

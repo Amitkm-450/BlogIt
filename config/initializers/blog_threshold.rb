@@ -1,3 +1,5 @@
 # frozen_string_literal: true
 
-BLOG_THRESHOLD = 1
+module BlogConstants
+  BLOG_THRESHOLD = 1
+end

@@ -3,6 +3,7 @@
 class Api::V1::PostsController < ApplicationController
   before_action :load_post!, only: %i[show destroy update]
   before_action :load_posts!, only: %i[index bulk_destroy bulk_status_update]
+
   def index
     @posts = @posts.includes(:user, :organization, :categories)
 
@@ -62,7 +63,11 @@ class Api::V1::PostsController < ApplicationController
     end
 
     def load_posts!
-      @posts = Post.where(user_id: current_user.id)
+      if params[:scope] == "organization"
+        @posts = Post.all
+      else
+        @posts = Post.where(user_id: current_user.id)
+      end
       @posts = @posts.where(id: params[:post_ids]) if params[:post_ids].present?
     end
 end

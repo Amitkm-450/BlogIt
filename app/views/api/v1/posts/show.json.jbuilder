@@ -4,7 +4,8 @@ json.post do
     :title,
     :description,
     :created_at,
-    :status
+    :status,
+    :is_bloggable
 
   json.user do
     json.extract! @post.user,
