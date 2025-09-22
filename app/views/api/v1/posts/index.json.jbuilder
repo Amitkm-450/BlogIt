@@ -1,6 +1,9 @@
+# frozen_string_literal: true
+
 json.array! @posts do |post|
   # Extract main post attributes
-  json.extract! post, :id, :title, :description, :slug, :upvotes, :downvotes, :is_bloggable, :created_at, :updated_at, :status
+  json.extract! post, :id, :title, :description, :slug, :upvotes, :downvotes, :is_bloggable, :created_at, :updated_at,
+    :status
 
   # User
   json.user do

@@ -74,3 +74,5 @@ gem "sidekiq", "~> 7.0"
 gem "wicked_pdf"
 # wicked_pdf uses the following binary
 gem "wkhtmltopdf-binary"
+
+gem "pundit"

@@ -32,6 +32,7 @@ const Blogs = () => {
       dataIndex: "title",
       key: "title",
       title: "Title",
+      width: 100,
       render: (title, post) => {
         if (title.length > 30) {
           return (
@@ -60,6 +61,7 @@ const Blogs = () => {
       title: "Category",
       dataIndex: "categories",
       key: "categories",
+      width: 200,
       render: categories =>
         categories?.length > 0
           ? categories.map(({ id, name }) => (
@@ -71,6 +73,7 @@ const Blogs = () => {
       dataIndex: "updated_at",
       key: "updated_at",
       title: "Last Published At",
+      width: 200,
       render: updated_at => (
         <div className="flex items-center">
           {updated_at ? new Date(updated_at).toDateString() : "—"}
@@ -81,10 +84,12 @@ const Blogs = () => {
       dataIndex: "status",
       key: "status",
       title: "Status",
+      width: 100,
       render: status => capitalize(status),
     },
     {
       title: "Actions",
+      width: 50,
       render: (_, post) => (
         <Dropdown
           buttonStyle="text"
