@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 
 import { capitalize } from "@bigbinary/neeto-cist";
 import { Delete, Filter, MenuHorizontal } from "@bigbinary/neeto-icons";
@@ -14,6 +14,8 @@ import {
 import classNames from "classnames";
 import { useTranslation } from "react-i18next";
 
+import DeleteConfirmationModal from "./DeleteConfirmationModal";
+
 const SubHeader = ({
   setIsSearchPanOpen,
   selectedRowKeys,
@@ -25,6 +27,7 @@ const SubHeader = ({
   handleBulkDelete,
   handleBulkUpdate,
 }) => {
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const { t } = useTranslation();
 
   const columnData = [
@@ -174,7 +177,7 @@ const SubHeader = ({
             label={t("subHeader.bulkDelete")}
             size="small"
             style="danger-text"
-            onClick={handleBulkDelete}
+            onClick={() => setIsDeleteModalOpen(true)}
           />
         </div>
       </div>
@@ -211,6 +214,11 @@ const SubHeader = ({
           onClick={() => setIsSearchPanOpen(prev => !prev)}
         />
       </div>
+      <DeleteConfirmationModal
+        isOpen={isDeleteModalOpen}
+        onClose={() => setIsDeleteModalOpen(false)}
+        {...{ handleBulkDelete }}
+      />
     </div>
   );
 };
