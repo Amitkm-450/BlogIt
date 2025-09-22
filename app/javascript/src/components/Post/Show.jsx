@@ -86,7 +86,7 @@ const Show = () => {
                 }}
                 onClick={() => setIsModalOpen(true)}
               />
-              {post.user_id === getFromLocalStorage("authUserId") && (
+              {user.id === getFromLocalStorage("authUserId") && (
                 <Button
                   icon={Edit}
                   size="large"
