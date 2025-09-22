@@ -65,6 +65,7 @@
   "button": {
     "cancel": "Cancel",
     "submit": "Submit",
+    "delete": "Delete",
     "addNewBlog": "Add new blog post"
   },
   "signup": {
@@ -117,6 +118,9 @@
     "status": {
       "draft": "Draft",
       "publish": "Publish"
+    },
+    "deleteModal": {
+      "header": "Are you sure ? You want to delete these posts ."
     }
   }
 }
