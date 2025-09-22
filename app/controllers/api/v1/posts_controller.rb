@@ -6,20 +6,7 @@ class Api::V1::PostsController < ApplicationController
 
   def index
     @posts = @posts.includes(:user, :organization, :categories)
-
-    if params[:title].present?
-      @posts = @posts.where("LOWER(title) LIKE ?", "%#{params[:title].downcase}%")
-    end
-
-    if params[:status].present?
-      @posts = @posts.where(status: params[:status])
-    end
-
-    if params[:category_ids].present?
-      @posts = @posts.joins(:categories).where(categories: { id: params[:category_ids] }).distinct
-    end
-
-    @posts
+    @posts = Posts::FilterService.new(@posts, params).process!
   end
 
   def create
