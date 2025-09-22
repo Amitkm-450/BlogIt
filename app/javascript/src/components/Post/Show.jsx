@@ -2,14 +2,15 @@ import React, { useEffect, useState } from "react";
 
 import { Download, Edit } from "@bigbinary/neeto-icons";
 import { Avatar, Spinner, Tag, Typography, Button } from "@bigbinary/neetoui";
+import postsApi from "apis/posts";
 import classNames from "classnames";
 import { useTranslation } from "react-i18next";
 import { useParams, useHistory } from "react-router-dom";
+import { fromatDate } from "utils/date";
+import { getFromLocalStorage } from "utils/storage";
 
 import DownloadModal from "./DownloadModal";
 
-import postsApi from "../../apis/posts";
-import { fromatDate } from "../../utils/date";
 import { PageLayout } from "../commons";
 
 const Show = () => {
@@ -85,16 +86,18 @@ const Show = () => {
                 }}
                 onClick={() => setIsModalOpen(true)}
               />
-              <Button
-                icon={Edit}
-                size="large"
-                style="text"
-                to={`/posts/${slug}/edit`}
-                tooltipProps={{
-                  content: t("toolTip.editButton"),
-                  position: "top",
-                }}
-              />
+              {post.user_id === getFromLocalStorage("authUserId") && (
+                <Button
+                  icon={Edit}
+                  size="large"
+                  style="text"
+                  to={`/posts/${slug}/edit`}
+                  tooltipProps={{
+                    content: t("toolTip.editButton"),
+                    position: "top",
+                  }}
+                />
+              )}
             </div>
           </div>
         </div>

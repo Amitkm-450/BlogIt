@@ -11,30 +11,35 @@ class Api::V1::PostsController < ApplicationController
 
   def create
     post = Post.new(post_params.merge({ user_id: current_user.id }))
+    authorize post
     post.save!
     render_notice(t("successfully_created", entity: "Post"))
   end
 
   def show
-    render
+    authorize @post
   end
 
   def destroy
+    authorize @post
     @post.destroy
     render_notice("Post was successfully deleted")
   end
 
   def update
+    authorize @post
     @post.update!(post_params)
     render_notice("Post was successfully updated") unless params.key?(:quiet)
   end
 
   def bulk_destroy
+    @posts.each { |post| authorize post, :destroy? }
     @posts.destroy_all
     render_notice("Posts deleted successfully")
   end
 
   def bulk_status_update
+    @posts.each { |post| authorize post, :update? }
     @posts.update_all(status: post_params[:status], updated_at: Time.current)
     render_notice("Posts updated successfully")
   end

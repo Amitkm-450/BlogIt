@@ -4,6 +4,7 @@ class ApplicationController < ActionController::Base
   include ApiResponders
   include ApiExceptions
   include Authenticable
+  include Pundit::Authorization
 
   private
 
