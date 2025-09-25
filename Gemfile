@@ -84,3 +84,5 @@ group :development, :test do
   # For auto-generating demo data
   gem "faker"
 end
+
+gem "pg", "~> 1.5"
