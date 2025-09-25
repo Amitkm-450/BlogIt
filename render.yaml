@@ -1,0 +1,25 @@
+services:
+  - type: web
+    name: blogit-oliver-smith
+    runtime: ruby
+    repo: https://github.com/Amitkm-450/blog-it
+    branch: main
+    plan: free
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: blogit-db
+          property: connectionString
+      - key: RAILS_MASTER_KEY
+        sync: false
+    buildCommand: ./bin/build_script
+    startCommand: bundle exec puma -C config/puma.rb
+
+databases:
+  - name: blogit-db
+    databaseName: blogit_prod_db
+    user: admin
+    plan: free
+    postgresMajorVersion: "13"
+
+version: "1"
