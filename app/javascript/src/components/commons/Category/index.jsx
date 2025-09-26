@@ -2,15 +2,14 @@ import React, { useContext, useEffect, useState } from "react";
 
 import { Plus, Search } from "@bigbinary/neeto-icons";
 import { Input, Button, Spinner, Typography } from "@bigbinary/neetoui";
+import categoriesApi from "apis/categories";
 import classNames from "classnames";
+import CategoryContext from "context/CategoryContext";
 import Logger from "js-logger";
 import { includes, without, append } from "ramda";
 import { useTranslation } from "react-i18next";
 
 import AddCategoryModel from "./AddCategoryModal";
-
-import categoriesApi from "../../../apis/categories";
-import CategoryContext from "../../../context/CategoryContext";
 
 const Sidebar = ({ isCategorySidebarOpen }) => {
   const [searchTerm, setSearchTerm] = useState("");
@@ -27,7 +26,7 @@ const Sidebar = ({ isCategorySidebarOpen }) => {
     setLoading(true);
     const fetchCategories = async () => {
       try {
-        const categories = await categoriesApi.fetch();
+        const { categories = [] } = await categoriesApi.fetch();
         setCategories(categories);
       } catch (error) {
         Logger.error(error);
