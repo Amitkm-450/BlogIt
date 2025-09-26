@@ -10,7 +10,7 @@ const Signup = ({ history }) => {
     setLoading(true);
     try {
       await authApi.signup(values);
-      history.push("/posts");
+      history.push("/");
     } catch (error) {
       logger.error(error);
     } finally {

@@ -22,11 +22,15 @@ export const useLogin = () => {
         });
 
         setAuthHeaders();
-
+        Logger.log("onSuccess Global 1");
         await queryClient.invalidateQueries([QUERY_KEYS.USER]);
+        Logger.log("onSuccess Global 2");
       } catch (error) {
         Logger.error(error);
       }
+    },
+    onError: error => {
+      Logger.error("Login failed:", error);
     },
   });
 };
