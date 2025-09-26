@@ -23,13 +23,13 @@ class Api::V1::PostsController < ApplicationController
   def destroy
     authorize @post
     @post.destroy
-    render_notice("Post was successfully deleted")
+    render_notice(t("successfully_deleted", entity: "Post"))
   end
 
   def update
     authorize @post
     @post.update!(post_params)
-    render_notice("Post was successfully updated") unless params.key?(:quiet)
+    render_notice(t("successfully_updated", entity: "Post")) unless params.key?(:quiet)
   end
 
   def bulk_destroy
