@@ -12,8 +12,9 @@ const Login = () => {
 
   const handleSubmit = values => {
     login(values, {
-      onSuccess: () => {
+      onSuccess: async () => {
         Logger.log("onSuccess per call 1");
+        await new Promise(r => setTimeout(r, 0));
         history.push("/");
         Logger.log("onSuccess per call 2");
       },
