@@ -1,32 +1,24 @@
-import React, { useState } from "react";
+import React from "react";
 
-import authApi from "apis/auth";
-import { setAuthHeaders } from "apis/axios";
 import LoginForm from "components/Authentication/Form/Login";
-import { setToLocalStorage } from "utils/storage";
+import { useHistory } from "react-router-dom";
+
+import { useLogin } from "../../hooks/reactQuery/useUsersApi";
 
 const Login = () => {
-  const [loading, setLoading] = useState(false);
+  const history = useHistory();
 
-  const handleSubmit = async values => {
-    setLoading(true);
-    try {
-      const user = await authApi.login(values);
-      setToLocalStorage({
-        authToken: user.authentication_token,
-        email: values.email.toLowerCase(),
-        userId: user.id,
-        userName: user.name,
-      });
-      setAuthHeaders();
-    } catch (error) {
-      logger.error(error);
-    } finally {
-      setLoading(false);
-    }
+  const { mutate: login } = useLogin();
+
+  const handleSubmit = values => {
+    login(values, {
+      onSuccess: () => {
+        history.push("/");
+      },
+    });
   };
 
-  return <LoginForm {...{ handleSubmit, loading }} />;
+  return <LoginForm {...{ handleSubmit }} />;
 };
 
 export default Login;

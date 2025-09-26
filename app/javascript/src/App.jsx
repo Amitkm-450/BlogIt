@@ -1,6 +1,7 @@
 import React from "react";
 
 import { either, isEmpty, isNil } from "ramda";
+import { QueryClientProvider } from "react-query";
 import {
   Route,
   Switch,
@@ -20,6 +21,7 @@ import {
   Preview as PostReview,
 } from "./components/Post/Form";
 import ShowPost from "./components/Post/Show";
+import queryClient from "./utils/queryClient";
 
 const App = () => {
   const authToken = getFromLocalStorage("authToken");
@@ -27,54 +29,56 @@ const App = () => {
 
   return (
     <Router>
-      <ToastContainer />
-      <Switch>
-        <Route exact component={Signup} path="/signup" />
-        <Route exact component={Login} path="/login" />
-        <PrivateRoute
-          exact
-          component={CreatePost}
-          condition={isLoggedIn}
-          path="/posts/new"
-          redirectRoute="/login"
-        />
-        <PrivateRoute
-          exact
-          component={UserBlogs}
-          condition={isLoggedIn}
-          path="/posts/my-blogs"
-          redirectRoute="/login"
-        />
-        <PrivateRoute
-          exact
-          component={PostEdit}
-          condition={isLoggedIn}
-          path="/posts/:slug/edit"
-          redirectRoute="/login"
-        />
-        <PrivateRoute
-          exact
-          component={PostReview}
-          condition={isLoggedIn}
-          path="/posts/:slug/preview"
-          redirectRoute="/login"
-        />
-        <PrivateRoute
-          exact
-          component={ShowPost}
-          condition={isLoggedIn}
-          path="/posts/:slug"
-          redirectRoute="/login"
-        />
-        <PrivateRoute
-          exact
-          component={Home}
-          condition={isLoggedIn}
-          path="/posts"
-          redirectRoute="/login"
-        />
-        <Redirect exact from="/" to="/posts" />
-      </Switch>
+      <QueryClientProvider client={queryClient}>
+        <ToastContainer />
+        <Switch>
+          <Route exact component={Signup} path="/signup" />
+          <Route exact component={Login} path="/login" />
+          <PrivateRoute
+            exact
+            component={CreatePost}
+            condition={isLoggedIn}
+            path="/posts/new"
+            redirectRoute="/login"
+          />
+          <PrivateRoute
+            exact
+            component={UserBlogs}
+            condition={isLoggedIn}
+            path="/posts/my-blogs"
+            redirectRoute="/login"
+          />
+          <PrivateRoute
+            exact
+            component={PostEdit}
+            condition={isLoggedIn}
+            path="/posts/:slug/edit"
+            redirectRoute="/login"
+          />
+          <PrivateRoute
+            exact
+            component={PostReview}
+            condition={isLoggedIn}
+            path="/posts/:slug/preview"
+            redirectRoute="/login"
+          />
+          <PrivateRoute
+            exact
+            component={ShowPost}
+            condition={isLoggedIn}
+            path="/posts/:slug"
+            redirectRoute="/login"
+          />
+          <PrivateRoute
+            exact
+            component={Home}
+            condition={isLoggedIn}
+            path="/posts"
+            redirectRoute="/login"
+          />
+          <Redirect exact from="/" to="/posts" />
+        </Switch>
+      </QueryClientProvider>
     </Router>
   );
 };

@@ -1,9 +1,6 @@
 import axios from "axios";
 
-const login = payload =>
-  axios.post("/session", {
-    login: payload,
-  });
+const login = payload => axios.post("/session", payload);
 
 const signup = payload =>
   axios.post("/users", {

@@ -7,7 +7,7 @@ import { Link, useHistory } from "react-router-dom";
 
 import { LoginInitialData, LoginValidationSchema } from "../constant";
 
-const Login = ({ handleSubmit, loading }) => {
+const Login = ({ handleSubmit }) => {
   const history = useHistory();
 
   const handleFormSubmit = async values => {
@@ -53,11 +53,7 @@ const Login = ({ handleSubmit, loading }) => {
             placeholder={t("login.form.placeholder.password")}
             type="password"
           />
-          <Button
-            label={t("login.button.submit")}
-            loading={loading}
-            type="submit"
-          />
+          <Button label={t("login.button.submit")} type="submit" />
         </Form>
       </div>
     </div>
