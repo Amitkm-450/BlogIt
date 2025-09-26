@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 
 import { Plus, Search } from "@bigbinary/neeto-icons";
 import { Input, Button, Spinner, Typography } from "@bigbinary/neetoui";
@@ -10,13 +10,16 @@ import { useTranslation } from "react-i18next";
 import AddCategoryModel from "./AddCategoryModal";
 
 import categoriesApi from "../../../apis/categories";
+import CategoryContext from "../../../context/CategoryContext";
 
 const Sidebar = ({ isCategorySidebarOpen }) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedCategories, setSelectedCategories] = useState([]);
+
+  const { selectedCategories, setSelectedCategories } =
+    useContext(CategoryContext);
 
   const { t } = useTranslation();
 
@@ -35,11 +38,11 @@ const Sidebar = ({ isCategorySidebarOpen }) => {
     fetchCategories();
   }, []);
 
-  const handleSelectedCategory = ({ name }) => {
+  const handleSelectedCategory = ({ id }) => {
     setSelectedCategories(prevSelected =>
-      includes(name, prevSelected)
-        ? without([name], prevSelected)
-        : append(name, prevSelected)
+      includes(id, prevSelected)
+        ? without([id], prevSelected)
+        : append(id, prevSelected)
     );
   };
 
@@ -87,19 +90,12 @@ const Sidebar = ({ isCategorySidebarOpen }) => {
           onChange={event => setSearchTerm(event.target.value)}
         />
       </div>
-      <div className="mt-4">
-        <Input
-          readOnly
-          placeholder={t("categorySidebar.selectedCategories.placeholder")}
-          value={selectedCategories.join(", ")}
-        />
-      </div>
       <ul className="mt-4 space-y-2">
         {filteredCategories.map(category => (
           <li
             key={category.id}
             className={`cursor-pointer rounded p-2 text-gray-700 shadow-sm hover:shadow-lg ${
-              selectedCategories?.includes(category.name)
+              selectedCategories?.includes(category.id)
                 ? "bg-green-400 text-white"
                 : "bg-white"
             }`}
