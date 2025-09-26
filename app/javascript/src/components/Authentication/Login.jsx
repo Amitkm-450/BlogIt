@@ -3,11 +3,8 @@ import React from "react";
 import LoginForm from "components/Authentication/Form/Login";
 import { useLogin } from "hooks/reactQuery/useUsersApi";
 import Logger from "js-logger";
-import { useHistory } from "react-router-dom";
 
 const Login = () => {
-  const history = useHistory();
-
   const { mutate: login } = useLogin();
 
   const handleSubmit = values => {
@@ -15,7 +12,7 @@ const Login = () => {
       onSuccess: async () => {
         Logger.log("onSuccess per call 1");
         await new Promise(r => setTimeout(r, 0));
-        history.push("/");
+        window.location.href = "/posts";
         Logger.log("onSuccess per call 2");
       },
     });
