@@ -89,7 +89,7 @@ const Edit = () => {
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const categories = await categoriesApi.fetch();
+        const { categories = [] } = await categoriesApi.fetch();
         setCategories(categories);
       } catch (error) {
         Logger.log(error);

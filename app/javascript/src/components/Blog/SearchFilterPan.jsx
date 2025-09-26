@@ -21,7 +21,7 @@ const SearchFilterPan = ({ isOpen, onClose, handleFilterApplied }) => {
     const fetchCategories = async () => {
       setIsLoading(true);
       try {
-        const categories = await categoriesApi.fetch();
+        const { categories = [] } = await categoriesApi.fetch();
 
         setCategories(
           categories.map(category => ({
