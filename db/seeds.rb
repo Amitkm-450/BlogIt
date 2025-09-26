@@ -9,3 +9,6 @@
 #   ["Action", "Comedy", "Drama", "Horror"].each do |genre_name|
 #     MovieGenre.find_or_create_by!(name: genre_name)
 #   end
+Organization.find_or_create_by!(name: "Pixel Compute") do |org|
+  org.description = "This is the default organization"
+end

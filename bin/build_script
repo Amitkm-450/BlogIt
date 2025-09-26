@@ -26,6 +26,9 @@ FileUtils.chdir APP_ROOT do
   puts "\n== Migrating DB =="
   system! "bundle exec rake db:migrate"
 
+  puts "\n== Seeding default data =="
+  system!("bin/rails db:seed")
+
   puts "\n== Restarting application server =="
   system! "bin/rails restart"
 end
