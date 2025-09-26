@@ -3,11 +3,18 @@ import React from "react";
 import { Button, Typography } from "@bigbinary/neetoui";
 import { Form, Input } from "@bigbinary/neetoui/formik";
 import { useTranslation } from "react-i18next";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 
 import { LoginInitialData, LoginValidationSchema } from "../constant";
 
 const Login = ({ handleSubmit, loading }) => {
+  const history = useHistory();
+
+  const handleFormSubmit = async values => {
+    await handleSubmit(values);
+    history.replace("/");
+  };
+
   const { t } = useTranslation();
 
   return (
@@ -31,7 +38,7 @@ const Login = ({ handleSubmit, loading }) => {
             enableReinitialize: true,
             initialValues: LoginInitialData,
             validationSchema: LoginValidationSchema,
-            onSubmit: handleSubmit,
+            onSubmit: handleFormSubmit,
           }}
         >
           <Input
