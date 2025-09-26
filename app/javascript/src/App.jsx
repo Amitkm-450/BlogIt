@@ -7,6 +7,7 @@ import {
   BrowserRouter as Router,
   Redirect,
 } from "react-router-dom";
+import { ToastContainer } from "react-toastify";
 import { getFromLocalStorage } from "utils/storage";
 
 import { Login, Signup } from "./components/Authentication";
@@ -26,6 +27,7 @@ const App = () => {
 
   return (
     <Router>
+      <ToastContainer />
       <Switch>
         <Route exact component={Signup} path="/signup" />
         <Route exact component={Login} path="/login" />
