@@ -24,7 +24,7 @@ const Login = () => {
       setAuthHeaders();
       setTimeout(() => {
         history.push("/");
-      }, 750);
+      }, 2000);
     } catch (error) {
       logger.error(error);
     } finally {
