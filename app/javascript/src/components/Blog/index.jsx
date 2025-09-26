@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import { capitalize } from "@bigbinary/neeto-cist";
 import { MenuHorizontal } from "@bigbinary/neeto-icons";
@@ -18,7 +18,6 @@ import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
 import SearchFilterPan from "./SearchFilterPan";
 import SubHeader from "./SubHeader";
 
-import CategoryContext from "../../context/CategoryContext";
 import { PageLayout } from "../commons";
 
 const Blogs = () => {
@@ -27,8 +26,6 @@ const Blogs = () => {
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
   const [selectedRowIds, setSelectedRowIds] = useState([]);
   const [isSearchPanOpen, setIsSearchPanOpen] = useState(false);
-
-  const { selectedCategories } = useContext(CategoryContext);
 
   const columnData = [
     {
@@ -224,8 +221,8 @@ const Blogs = () => {
   };
 
   useEffect(() => {
-    fetchPosts({ category_ids: selectedCategories });
-  }, [selectedCategories]);
+    fetchPosts();
+  }, []);
 
   const { Menu, MenuItem, Divider } = Dropdown;
   const { Button: MenuItemButton } = MenuItem;

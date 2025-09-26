@@ -1,16 +1,17 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 
 import { Button, Spinner, Typography } from "@bigbinary/neetoui";
+import postsApi from "apis/posts";
+import CategoryContext from "context/CategoryContext";
 import Logger from "js-logger";
 import { useTranslation } from "react-i18next";
 
 import PostCard from "./Card";
 
-import postsApi from "../../apis/posts";
-
 const List = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [posts, setPosts] = useState([]);
+  const { selectedCategories } = useContext(CategoryContext);
 
   const { t } = useTranslation();
 
@@ -25,8 +26,8 @@ const List = () => {
         setIsLoading(false);
       }
     };
-    fetchPosts();
-  }, []);
+    fetchPosts({ category_ids: selectedCategories });
+  }, [selectedCategories]);
 
   if (isLoading) {
     return (
