@@ -12,7 +12,7 @@ const Login = ({ handleSubmit, loading }) => {
 
   const handleFormSubmit = async values => {
     await handleSubmit(values);
-    history.replace("/");
+    history.push("/");
   };
 
   const { t } = useTranslation();
