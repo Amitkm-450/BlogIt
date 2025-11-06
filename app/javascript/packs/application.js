@@ -1,4 +1,4 @@
-import "../stylesheets/application.css";
+import "../stylesheets/application.scss";
 import ReactRailsUJS from "react_ujs";
 import App from "../src/App";
 

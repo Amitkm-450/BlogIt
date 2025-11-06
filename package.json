@@ -43,8 +43,7 @@
     "prettier-plugin-tailwindcss": "^0.1.8"
   },
   "scripts": {
-    "build": "node esbuild.config.js && yarn build:css",
-    "build:css": "tailwindcss -i ./app/javascript/stylesheets/application.css -o ./app/assets/builds/application.css --minify",
+    "build": "node esbuild.config.js",
     "dev": "vite",
     "prepare": "husky install"
   },
