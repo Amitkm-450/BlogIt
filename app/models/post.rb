@@ -22,17 +22,9 @@ class Post < ApplicationRecord
   validates :description, length: { maximum: MAX_DESCRIPTION_LENGTH }, presence: true
   validates :is_bloggable, inclusion: { in: [true, false] }
   validates :slug, uniqueness: true
-  validate :slug_not_changed
+  validates_with SlugImmutableValidator
 
   def net_votes
     votes.sum(:value)
   end
-
-  private
-
-    def slug_not_changed
-      if will_save_change_to_slug? && self.persisted?
-        errors.add(:slug, I18n.t("post.slug.immutable"))
-      end
-    end
 end
