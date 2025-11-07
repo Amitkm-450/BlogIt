@@ -3,8 +3,8 @@ import React, { useEffect, useState } from "react";
 import { DownArrow, UpArrow } from "@bigbinary/neeto-icons";
 import { Button, Tag, Typography } from "@bigbinary/neetoui";
 import postsApi from "apis/posts";
-import votesApi from "apis/votes";
 import classNames from "classnames";
+import { useCreateVote, useFetchVotes } from "hooks/reactQuery/useVotesApi";
 import Logger from "js-logger";
 import { useHistory } from "react-router-dom";
 import { fromatDate } from "utils/date";
@@ -18,32 +18,30 @@ const Card = ({ id, title, user, created_at, slug, categories }) => {
 
   const history = useHistory();
 
+  const { data: { vote } = {} } = useFetchVotes({
+    post_id: id,
+  });
+  const { mutate: createVote } = useCreateVote();
+
   const handleVote = async type => {
     let value = type === "up" ? 1 : -1;
 
     if (userVote === value) value = 0;
 
-    try {
-      const { vote } = await votesApi.create(
-        { post_id: id },
-        { vote: { value } }
-      );
-      const { post } = await postsApi.show(slug);
+    const { vote } = createVote({
+      params: { post_id: id },
+      payload: { vote: { value } },
+    });
+    const { post } = await postsApi.show(slug);
 
-      setIsBloggable(post.is_bloggable);
-      setPostVotesCount(vote.net_votes);
-      setUserVote(vote.user_vote);
-    } catch (error) {
-      Logger.error(error);
-    }
+    setIsBloggable(post.is_bloggable);
+    setPostVotesCount(vote.net_votes);
+    setUserVote(vote.user_vote);
   };
 
   useEffect(() => {
     const fetchPostVotesCount = async () => {
       try {
-        const { vote } = await votesApi.fetch({
-          post_id: id,
-        });
         const { post } = await postsApi.show(slug);
 
         setIsBloggable(post.is_bloggable);
@@ -55,7 +53,7 @@ const Card = ({ id, title, user, created_at, slug, categories }) => {
     };
 
     fetchPostVotesCount();
-  }, []);
+  }, [vote]);
 
   return (
     <div className="flex cursor-default justify-between border-b p-4">
