@@ -10,7 +10,7 @@ class Api::V1::PostsController < ApplicationController
   end
 
   def create
-    post = Post.new(post_params.merge({ user_id: current_user.id }))
+    post = current_user.posts.build(post_params)
     authorize post
     post.save!
     render_notice(t("successfully_created", entity: "Post"))
@@ -34,14 +34,15 @@ class Api::V1::PostsController < ApplicationController
 
   def bulk_destroy
     @posts.each { |post| authorize post, :destroy? }
-    @posts.destroy_all
-    render_notice("Posts deleted successfully")
+    posts_count = @posts.destroy_all.size
+    render_notice(t("successfully_deleted", entity: posts_count > 1 ? "Posts" : "Post"))
   end
 
   def bulk_status_update
     @posts.each { |post| authorize post, :update? }
-    @posts.update_all(status: post_params[:status], updated_at: Time.current)
-    render_notice("Posts updated successfully")
+    posts_count = @posts.where.not(status: post_params[:status])
+      .update_all(status: post_params[:status], updated_at: Time.current)
+    render_notice(t("successfully_updated", entity: posts_count > 1 ? "Posts" : "Post"))
   end
 
   private
@@ -56,9 +57,9 @@ class Api::V1::PostsController < ApplicationController
 
     def load_posts!
       if params[:scope] == "organization"
-        @posts = Post.all
+        @posts = current_user.organization.posts
       else
-        @posts = Post.where(user_id: current_user.id)
+        @posts = current_user.posts
       end
       @posts = @posts.where(id: params[:post_ids]) if params[:post_ids].present?
     end
