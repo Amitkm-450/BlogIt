@@ -3,6 +3,8 @@
 class Api::V1::PostsController < ApplicationController
   before_action :load_post!, only: %i[show destroy update]
   before_action :load_posts!, only: %i[index bulk_destroy bulk_status_update]
+  before_action :authorize_post!, only: %i[show destroy update]
+  before_action :authorize_posts!, only: %i[bulk_destroy bulk_status_update]
 
   def index
     @posts = @posts.includes(:user, :organization, :categories)
@@ -17,29 +19,25 @@ class Api::V1::PostsController < ApplicationController
   end
 
   def show
-    authorize @post
+    render
   end
 
   def destroy
-    authorize @post
     @post.destroy
     render_notice(t("successfully_deleted", entity: "Post"))
   end
 
   def update
-    authorize @post
     @post.update!(post_params)
     render_notice(t("successfully_updated", entity: "Post")) unless params.key?(:quiet)
   end
 
   def bulk_destroy
-    @posts.each { |post| authorize post, :destroy? }
     posts_count = @posts.destroy_all.size
     render_notice(t("successfully_deleted", entity: posts_count > 1 ? "Posts" : "Post"))
   end
 
   def bulk_status_update
-    @posts.each { |post| authorize post, :update? }
     posts_count = @posts.where.not(status: post_params[:status])
       .update_all(status: post_params[:status], updated_at: Time.current)
     render_notice(t("successfully_updated", entity: posts_count > 1 ? "Posts" : "Post"))
@@ -62,5 +60,13 @@ class Api::V1::PostsController < ApplicationController
         @posts = current_user.posts
       end
       @posts = @posts.where(id: params[:post_ids]) if params[:post_ids].present?
+    end
+
+    def authorize_post!
+      authorize @post
+    end
+
+    def authorize_posts!
+      authorize @posts
     end
 end

@@ -6,7 +6,7 @@ class Api::V1::VotesController < ApplicationController
   BLOG_THRESHOLD = 2
 
   def index
-    @vote = @post.votes.find_by!(user: current_user)
+    @vote = @post.votes.find_by(user: current_user)
   end
 
   def create

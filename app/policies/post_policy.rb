@@ -2,15 +2,15 @@
 
 # app/policies/post_policy.rb
 class PostPolicy
-  attr_reader :user, :post
+  attr_reader :user, :record
 
-  def initialize(user, post)
+  def initialize(user, record)
     @user = user
-    @post = post
+    @record = record
   end
 
   def show?
-    post.user_id == user.id || post.organization_id == 1
+    record.organization_id == user.organization_id
   end
 
   def create?
@@ -18,10 +18,20 @@ class PostPolicy
   end
 
   def update?
-    post.user_id == user.id
+    record.user_id == user.id
   end
 
   def destroy?
-    post.user_id == user.id
+    record.user_id == user.id
+  end
+
+  def bulk_destroy?
+    records = Array(record)
+    records.all? { |r| r.user_id == user.id }
+  end
+
+  def bulk_status_update?
+    records = Array(record)
+    records.all? { |r| r.user_id == user.id }
   end
 end
