@@ -7,7 +7,7 @@ import { Link } from "react-router-dom";
 
 import { SignupInitialData, SignupValidationSchema } from "../constant";
 
-const Signup = ({ handleSubmit, loading }) => {
+const Signup = ({ handleSubmit }) => {
   const { t } = useTranslation();
 
   return (
@@ -24,7 +24,7 @@ const Signup = ({ handleSubmit, loading }) => {
         </Typography>
         <div className="text-center">
           <Link
-            to="/"
+            to="/login"
             className="text-bb-purple mt-2 text-center text-sm
             font-medium transition duration-150 ease-in-out
             focus:underline focus:outline-none"
@@ -35,40 +35,42 @@ const Signup = ({ handleSubmit, loading }) => {
         <Form
           className="mt-8 flex flex-col gap-y-6"
           formikProps={{
-            validateOnBlur: true,
-            enableReinitialize: true,
             initialValues: SignupInitialData,
             validationSchema: SignupValidationSchema,
             onSubmit: handleSubmit,
           }}
         >
-          <Input
-            label={t("signup.form.label.name")}
-            name="name"
-            placeholder={t("signup.form.placeholder.name")}
-          />
-          <Input
-            label={t("signup.form.label.email")}
-            name="email"
-            placeholder={t("signup.form.placeholder.email")}
-          />
-          <Input
-            label={t("signup.form.label.password")}
-            name="password"
-            placeholder={t("signup.form.placeholder.password")}
-            type="password"
-          />
-          <Input
-            label={t("signup.form.label.passwordConfirmation")}
-            name="password_confirmation"
-            placeholder={t("signup.form.placeholder.passwordConfirmation")}
-            type="password"
-          />
-          <Button
-            label={t("signup.button.register")}
-            loading={loading}
-            type="submit"
-          />
+          {({ dirty }) => (
+            <div className="flex flex-col gap-2">
+              <Input
+                label={t("signup.form.label.name")}
+                name="name"
+                placeholder={t("signup.form.placeholder.name")}
+              />
+              <Input
+                label={t("signup.form.label.email")}
+                name="email"
+                placeholder={t("signup.form.placeholder.email")}
+              />
+              <Input
+                label={t("signup.form.label.password")}
+                name="password"
+                placeholder={t("signup.form.placeholder.password")}
+                type="password"
+              />
+              <Input
+                label={t("signup.form.label.passwordConfirmation")}
+                name="password_confirmation"
+                placeholder={t("signup.form.placeholder.passwordConfirmation")}
+                type="password"
+              />
+              <Button
+                disabled={!dirty}
+                label={t("signup.button.register")}
+                type="submit"
+              />
+            </div>
+          )}
         </Form>
       </div>
     </div>

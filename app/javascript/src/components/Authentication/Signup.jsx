@@ -1,24 +1,20 @@
-import React, { useState } from "react";
+import React from "react";
 
-import authApi from "apis/auth";
 import SignupForm from "components/Authentication/Form/Signup";
+import { useSignup } from "hooks/reactQuery/useUsersApi";
 
 const Signup = ({ history }) => {
-  const [loading, setLoading] = useState(false);
+  const { mutate: signupUser } = useSignup();
 
-  const handleSubmit = async values => {
-    setLoading(true);
-    try {
-      await authApi.signup(values);
-      history.push("/");
-    } catch (error) {
-      logger.error(error);
-    } finally {
-      setLoading(false);
-    }
+  const handleSubmit = values => {
+    signupUser(values, {
+      onSuccess: () => {
+        history.push("/login");
+      },
+    });
   };
 
-  return <SignupForm {...{ loading, handleSubmit }} />;
+  return <SignupForm {...{ handleSubmit }} />;
 };
 
 export default Signup;
