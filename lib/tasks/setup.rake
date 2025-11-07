@@ -67,7 +67,6 @@ def create_sample_data!
   ) do |post|
     post.description = "An introductory guide on microservices and how they improve scalability and team autonomy."
     post.status = "published"
-    post.is_bloggable = true
   end
 
   post2 = Post.find_or_create_by!(
@@ -77,7 +76,6 @@ def create_sample_data!
   ) do |post|
     post.description = "A concise guide on core UI design principles that help create intuitive user interfaces."
     post.status = "draft"
-    post.is_bloggable = true
   end
 
   post3 = Post.find_or_create_by!(
@@ -87,7 +85,6 @@ def create_sample_data!
   ) do |post|
     post.description = "Exploring how Artificial Intelligence will reshape job markets, industries, and skills."
     post.status = "published"
-    post.is_bloggable = true
   end
 
   puts "== Attaching Categories to Posts =="
