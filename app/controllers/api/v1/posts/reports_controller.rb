@@ -19,7 +19,7 @@ class Api::V1::Posts::ReportsController < ApplicationController
   private
 
     def load_post!
-      @post = Post.find_by!(slug: params[:slug])
+      @post = current_user.organization.posts.find_by!(slug: params[:slug])
     end
 
     def pdf_file_name
