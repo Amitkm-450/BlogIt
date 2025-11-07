@@ -1,11 +1,10 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useState } from "react";
 
 import { Plus, Search } from "@bigbinary/neeto-icons";
 import { Input, Button, Spinner, Typography } from "@bigbinary/neetoui";
-import categoriesApi from "apis/categories";
 import classNames from "classnames";
 import CategoryContext from "context/CategoryContext";
-import Logger from "js-logger";
+import { useFetchCategories } from "hooks/reactQuery/useCategoriesApi";
 import { includes, without, append } from "ramda";
 import { useTranslation } from "react-i18next";
 
@@ -13,29 +12,14 @@ import AddCategoryModel from "./AddCategoryModal";
 
 const Sidebar = ({ isCategorySidebarOpen }) => {
   const [searchTerm, setSearchTerm] = useState("");
-  const [categories, setCategories] = useState([]);
-  const [loading, setLoading] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const { data: { categories = [] } = {}, isLoading } = useFetchCategories();
 
   const { selectedCategories, setSelectedCategories } =
     useContext(CategoryContext);
 
   const { t } = useTranslation();
-
-  useEffect(() => {
-    setLoading(true);
-    const fetchCategories = async () => {
-      try {
-        const { categories = [] } = await categoriesApi.fetch();
-        setCategories(categories);
-      } catch (error) {
-        Logger.error(error);
-      } finally {
-        setLoading(false);
-      }
-    };
-    fetchCategories();
-  }, []);
 
   const handleSelectedCategory = ({ id }) => {
     setSelectedCategories(prevSelected =>
@@ -49,7 +33,7 @@ const Sidebar = ({ isCategorySidebarOpen }) => {
     category.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  if (loading) {
+  if (isLoading) {
     return (
       <div
         className={classNames("h-full w-auto flex-col border-r p-4", {

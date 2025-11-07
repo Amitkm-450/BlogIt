@@ -1,27 +1,34 @@
-import React, { useState } from "react";
+import {
+  CATEGORY_INITIAL_DATA,
+  CATEGORY_VALIDATION_SCHEMA,
+} from "constants/constant";
 
-import { Button, Modal, Input, Typography } from "@bigbinary/neetoui";
+import React, { useRef, useState } from "react";
+
+import { Button, Modal, Typography } from "@bigbinary/neetoui";
+import { Form, Input } from "@bigbinary/neetoui/formik";
+import { useCreateCategory } from "hooks/reactQuery/useCategoriesApi";
 import { useTranslation } from "react-i18next";
 
-import categoriesApi from "../../../apis/categories";
-
 const AddCategoryModel = ({ isModalOpen, onClose }) => {
-  const [categoryName, setCategoryName] = useState("");
-
+  const [isSubmittable, setIsSubmittable] = useState(false);
   const { t } = useTranslation();
 
-  const handleSubmit = async () => {
-    try {
-      await categoriesApi.create({
-        category: { name: categoryName },
-      });
+  const formRef = useRef(null);
 
-      setCategoryName("");
-      onClose();
-      window.location.href = "/";
-    } catch (error) {
-      logger.error(error);
-    }
+  const { mutate: createCategory } = useCreateCategory();
+
+  const handleSubmit = values => {
+    createCategory(
+      {
+        category: values,
+      },
+      {
+        onSuccess: () => {
+          onClose();
+        },
+      }
+    );
   };
 
   const { Header, Body, Footer } = Modal;
@@ -40,24 +47,39 @@ const AddCategoryModel = ({ isModalOpen, onClose }) => {
       </Header>
       <Body>
         <div className="space-y-4">
-          <Input
-            label={t("categorySidebar.modal.input.label")}
-            placeholder={t("categorySidebar.modal.input.placeholder")}
-            value={categoryName}
-            onChange={e => setCategoryName(e.target.value)}
-          />
+          <Form
+            formikProps={{
+              initialValues: CATEGORY_INITIAL_DATA,
+              validationSchema: CATEGORY_VALIDATION_SCHEMA,
+              onSubmit: handleSubmit,
+              innerRef: formRef,
+            }}
+          >
+            {({ dirty }) => {
+              setIsSubmittable(dirty);
+
+              return (
+                <Input
+                  label={t("categorySidebar.modal.input.label")}
+                  name="name"
+                  placeholder={t("categorySidebar.modal.input.placeholder")}
+                />
+              );
+            }}
+          </Form>
         </div>
       </Body>
       <Footer className="flex space-x-4">
         <Button
           className="bg-black text-white"
+          disabled={!isSubmittable}
           label={t("categorySidebar.modal.button.addCategory")}
-          onClick={handleSubmit}
+          onClick={() => formRef?.current.submitForm()}
         />
         <Button
           label={t("categorySidebar.modal.button.cancel")}
           style="secondary"
-          onClick={onClose}
+          onClick={() => formRef?.current.resetForm()}
         />
       </Footer>
     </Modal>

@@ -195,7 +195,7 @@ const Blogs = () => {
     const params = {
       ...(values.title && { title: values.title }),
       ...(values.categories?.length > 0 && {
-        category_ids: values.categories.map(category => category.value),
+        category_ids: values.categories.map(category => category.id),
       }),
       ...(values.status && { status: values.status }),
     };

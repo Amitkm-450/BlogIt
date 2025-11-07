@@ -11,7 +11,10 @@ export const PostValidationSchema = yup.object().shape({
     .string()
     .max(10000, "Description must be at most 10000 characters")
     .required("Description is required"),
-  categories: yup.array().required("Category is required"),
+  categories: yup
+    .array()
+    .min(1, "Category is required")
+    .required("Category is required"),
 });
 
 export const PostInitialData = {
@@ -35,4 +38,16 @@ export const FilterValidationSchema = yup.object().shape({
       value: yup.string().oneOf(["draft", "published"]),
     })
     .nullable(),
+});
+
+export const CATEGORY_INITIAL_DATA = {
+  name: "",
+};
+
+export const CATEGORY_VALIDATION_SCHEMA = yup.object().shape({
+  name: yup
+    .string()
+    .trim()
+    .max(50, "Category name must be at most 50 characters")
+    .required("Category name is required"),
 });

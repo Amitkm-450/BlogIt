@@ -3,41 +3,18 @@ import {
   FilterValidationSchema,
 } from "constants/constant";
 
-import React, { useEffect, useState } from "react";
+import React from "react";
 
 import { Pane, Spinner, Typography } from "@bigbinary/neetoui";
 import { Button, Form, Input, Select } from "@bigbinary/neetoui/formik";
-import categoriesApi from "apis/categories";
-import Logger from "js-logger";
 import { useTranslation } from "react-i18next";
 
+import { useFetchCategories } from "../../hooks/reactQuery/useCategoriesApi";
+
 const SearchFilterPan = ({ isOpen, onClose, handleFilterApplied }) => {
-  const [categories, setCategories] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
+  const { data: { categories = [] } = {}, isLoading } = useFetchCategories();
 
   const { t } = useTranslation();
-
-  useEffect(() => {
-    const fetchCategories = async () => {
-      setIsLoading(true);
-      try {
-        const { categories = [] } = await categoriesApi.fetch();
-
-        setCategories(
-          categories.map(category => ({
-            label: category.name,
-            value: category.id,
-          }))
-        );
-      } catch (error) {
-        Logger.error(error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    fetchCategories();
-  }, []);
 
   const handleApplyFilters = values => {
     const filters = {
@@ -45,6 +22,7 @@ const SearchFilterPan = ({ isOpen, onClose, handleFilterApplied }) => {
       categories: values.categories.length > 0 ? values.categories : undefined,
       status: values.status?.value,
     };
+
     handleFilterApplied(filters);
     onClose();
   };
@@ -84,6 +62,7 @@ const SearchFilterPan = ({ isOpen, onClose, handleFilterApplied }) => {
                   className="mb-4"
                   label={t("filterForm.label.categories")}
                   name="categories"
+                  optionRemapping={{ label: "name", value: "id" }}
                   options={categories}
                   placeholder={t("filterForm.placeholder.categories")}
                 />

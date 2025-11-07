@@ -11,8 +11,8 @@ import {
   Dropdown,
 } from "@bigbinary/neetoui";
 import { Form, Input, Select, Textarea } from "@bigbinary/neetoui/formik";
-import categoriesApi from "apis/categories";
 import postsApi from "apis/posts";
+import { useFetchCategories } from "hooks/reactQuery/useCategoriesApi";
 import Logger from "js-logger";
 import { useTranslation } from "react-i18next";
 import { useHistory, useParams } from "react-router-dom";
@@ -21,9 +21,7 @@ import { getFromLocalStorage } from "utils/storage";
 import { PageLayout } from "../../commons";
 
 const Edit = () => {
-  const [categoryLoading, setCategoryLoading] = useState(true);
   const [postLoading, setPostLoading] = useState(false);
-  const [categories, setCategories] = useState([]);
   const [postInitialData, setPostInitialData] = useState(null);
   const [status, setStatus] = useState("");
 
@@ -34,12 +32,8 @@ const Edit = () => {
 
   const { t } = useTranslation();
 
-  const handleCancel = () => history.goBack();
-
-  const categoriesOption = categories?.map(category => ({
-    value: category.id,
-    label: category.name,
-  }));
+  const { data: { categories = [] } = {}, isLoading: isCategoryLoading } =
+    useFetchCategories();
 
   const handleChangeStatus = async () => {
     try {
@@ -49,7 +43,7 @@ const Edit = () => {
         payload: {
           post: {
             ...values,
-            category_ids: values.categories.map(category => category.value),
+            category_ids: values.categories.map(category => category.id),
             status,
           },
         },
@@ -87,17 +81,6 @@ const Edit = () => {
   };
 
   useEffect(() => {
-    const fetchCategories = async () => {
-      try {
-        const { categories = [] } = await categoriesApi.fetch();
-        setCategories(categories);
-      } catch (error) {
-        Logger.log(error);
-      } finally {
-        setCategoryLoading(false);
-      }
-    };
-
     const fetchPostDetails = async () => {
       setPostLoading(true);
       try {
@@ -107,8 +90,8 @@ const Edit = () => {
           description: post.description || "",
           categories:
             post.categories?.map(category => ({
-              label: category.name,
-              value: category.id,
+              name: category.name,
+              id: category.id,
             })) || [],
         });
         setStatus(post.status);
@@ -118,12 +101,10 @@ const Edit = () => {
         setPostLoading(false);
       }
     };
-
-    fetchCategories();
     fetchPostDetails();
   }, []);
 
-  if (categoryLoading || postLoading) {
+  if (isCategoryLoading || postLoading) {
     return (
       <div className="flex h-screen items-center justify-center">
         <Spinner />
@@ -146,12 +127,12 @@ const Edit = () => {
             <Button
               label={t("button.cancel")}
               style="secondary"
-              onClick={handleCancel}
+              onClick={() => formikRef?.current.resetForm()}
             />
             <ActionDropdown
               buttonStyle="secondary"
               label={status === "draft" ? "Save as draft" : "Publish"}
-              onClick={handleChangeStatus}
+              onClick={() => formikRef?.current.submitForm()}
             >
               <Menu>
                 <MenuItem>
@@ -195,6 +176,7 @@ const Edit = () => {
               initialValues: postInitialData,
               validationSchema: PostValidationSchema,
               innerRef: formikRef,
+              onSubmit: handleChangeStatus,
             }}
           >
             <div className="mb-4">
@@ -213,7 +195,8 @@ const Edit = () => {
                   label={t("form.label.categories")}
                   menuPosition="fixed"
                   name="categories"
-                  options={categoriesOption}
+                  optionRemapping={{ label: "name", value: "id" }}
+                  options={categories}
                   placeholder={t("form.placeholder.categories")}
                   size="large"
                 />
