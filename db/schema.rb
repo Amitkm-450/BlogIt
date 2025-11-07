@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_09_21_161854) do
+ActiveRecord::Schema[7.1].define(version: 2025_11_07_072723) do
   create_table "active_storage_attachments", force: :cascade do |t|
     t.string "name", null: false
     t.string "record_type", null: false
@@ -43,6 +43,8 @@ ActiveRecord::Schema[7.1].define(version: 2025_09_21_161854) do
     t.string "name"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "organization_id", null: false
+    t.index ["organization_id"], name: "index_categories_on_organization_id"
   end
 
   create_table "categories_posts", id: false, force: :cascade do |t|
@@ -82,7 +84,9 @@ ActiveRecord::Schema[7.1].define(version: 2025_09_21_161854) do
     t.string "email", null: false
     t.string "password_digest", null: false
     t.string "authentication_token"
+    t.integer "organization_id"
     t.index ["email"], name: "index_users_on_email", unique: true
+    t.index ["organization_id"], name: "index_users_on_organization_id"
   end
 
   create_table "votes", force: :cascade do |t|
@@ -98,8 +102,10 @@ ActiveRecord::Schema[7.1].define(version: 2025_09_21_161854) do
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "categories", "organizations"
   add_foreign_key "posts", "organizations"
   add_foreign_key "posts", "users"
+  add_foreign_key "users", "organizations"
   add_foreign_key "votes", "posts"
   add_foreign_key "votes", "users"
 end

@@ -51,7 +51,7 @@ const Show = () => {
 
   return (
     <PageLayout>
-      <div className="mx-auto max-w-3xl p-6">
+      <div className="mx-auto max-w-5xl p-6">
         <div className="flex space-x-2">
           {categories?.map(({ id, name }) => (
             <Tag className="bg-gray-100 text-gray-700" key={id} label={name} />

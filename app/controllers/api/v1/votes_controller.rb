@@ -23,6 +23,6 @@ class Api::V1::VotesController < ApplicationController
     end
 
     def load_post!
-      @post = Post.find(params[:post_id])
+      @post = current_user.organization.posts.find(params[:post_id])
     end
 end

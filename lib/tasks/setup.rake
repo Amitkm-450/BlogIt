@@ -54,10 +54,10 @@ def create_sample_data!
   )
 
   puts "== Creating Categories =="
-  tech     = Category.find_or_create_by!(name: "Technology")
-  design   = Category.find_or_create_by!(name: "Design")
-  business = Category.find_or_create_by!(name: "Business")
-  ai       = Category.find_or_create_by!(name: "Artificial Intelligence")
+  tech     = Category.find_or_create_by!(name: "Technology", organization_id: organization.id)
+  design   = Category.find_or_create_by!(name: "Design", organization_id: organization.id)
+  business = Category.find_or_create_by!(name: "Business", organization_id: organization.id)
+  ai       = Category.find_or_create_by!(name: "Artificial Intelligence", organization_id: organization.id)
 
   puts "== Creating Posts =="
   post1 = Post.find_or_create_by!(
@@ -67,7 +67,6 @@ def create_sample_data!
   ) do |post|
     post.description = "An introductory guide on microservices and how they improve scalability and team autonomy."
     post.status = "published"
-    post.is_bloggable = true
   end
 
   post2 = Post.find_or_create_by!(
@@ -77,7 +76,6 @@ def create_sample_data!
   ) do |post|
     post.description = "A concise guide on core UI design principles that help create intuitive user interfaces."
     post.status = "draft"
-    post.is_bloggable = true
   end
 
   post3 = Post.find_or_create_by!(
@@ -87,7 +85,6 @@ def create_sample_data!
   ) do |post|
     post.description = "Exploring how Artificial Intelligence will reshape job markets, industries, and skills."
     post.status = "published"
-    post.is_bloggable = true
   end
 
   puts "== Attaching Categories to Posts =="
@@ -112,6 +109,7 @@ def create_user!(options = {})
     email: "oliver@example.com",
     password: "welcome",
     password_confirmation: "welcome",
+    organization_id: Organization.first.id
   }
   attributes = user_attributes.merge(options)
   User.create!(attributes)
