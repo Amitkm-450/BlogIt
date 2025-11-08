@@ -2,7 +2,7 @@ import { PostValidationSchema, getPostInitialData } from "constants/constant";
 
 import React, { useEffect, useRef, useState } from "react";
 
-import { MenuHorizontal, Redirection } from "@bigbinary/neeto-icons";
+import { ExternalLink, MenuHorizontal } from "@bigbinary/neeto-icons";
 import {
   Button,
   Spinner,
@@ -19,9 +19,12 @@ import { getFromLocalStorage } from "utils/storage";
 
 import { useDeletePost } from "../../../hooks/reactQuery/usePostsApi";
 import { PageLayout } from "../../commons";
+import DeleteConfirmationModal from "../../commons/DeleteConfirmationModal";
 
 const Edit = () => {
+  const [isSingleDeleteModalOpen, setIsSingleDeleteModalOpen] = useState(false);
   const [status, setStatus] = useState("");
+
   const formikRef = useRef(null);
 
   const history = useHistory();
@@ -103,7 +106,15 @@ const Edit = () => {
             {t("header.editBlogPost")}
           </Typography>
           <div className="flex items-center space-x-2">
-            <Button icon={Redirection} style="link" onClick={handleRedirect} />
+            <Button
+              icon={ExternalLink}
+              style="link"
+              tooltipProps={{
+                content: "Preview",
+                position: "top",
+              }}
+              onClick={handleRedirect}
+            />
             <Button
               label={t("button.cancel")}
               style="secondary"
@@ -140,7 +151,7 @@ const Edit = () => {
               <Dropdown.MenuItem>
                 <Dropdown.MenuItem.Button
                   className="text-red-600"
-                  onClick={handleDelete}
+                  onClick={() => setIsSingleDeleteModalOpen(true)}
                 >
                   Delete
                 </Dropdown.MenuItem.Button>
@@ -193,6 +204,11 @@ const Edit = () => {
           </Form>
         </div>
       </div>
+      <DeleteConfirmationModal
+        isOpen={isSingleDeleteModalOpen}
+        setIsOpen={setIsSingleDeleteModalOpen}
+        onSubmit={handleDelete}
+      />
     </PageLayout>
   );
 };

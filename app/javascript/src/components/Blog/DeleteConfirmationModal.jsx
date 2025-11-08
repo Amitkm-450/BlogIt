@@ -8,7 +8,7 @@ const DeleteConfirmationModal = ({ isOpen, onClose, handleBulkDelete }) => {
 
   return (
     <Modal isOpen={isOpen} size="medium" onClose={onClose}>
-      <div className="flex flex-col space-y-4 p-2">
+      <div className="flex flex-col space-y-4 px-4 py-3">
         <Typography style="body2" weight="bold">
           {t("subHeader.deleteModal.header")}
         </Typography>

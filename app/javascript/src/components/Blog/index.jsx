@@ -29,11 +29,14 @@ import SearchFilterPan from "./SearchFilterPan";
 import SubHeader from "./SubHeader";
 
 import { PageLayout } from "../commons";
+import PostDeleteConfirmationModal from "../commons/DeleteConfirmationModal";
 
 const Blogs = () => {
-  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [isBulkDeleteModalOpen, setIsBulkDeleteModalOpen] = useState(false);
+  const [isSingleDeleteModalOpen, setIsSingleDeleteModalOpen] = useState(false);
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
   const [selectedRowIds, setSelectedRowIds] = useState([]);
+  const [selectedPostSlug, setSelectedPostSlug] = useState("");
   const [isSearchPanOpen, setIsSearchPanOpen] = useState(false);
 
   const history = useHistory();
@@ -197,13 +200,14 @@ const Blogs = () => {
   };
 
   const handleDelete = slug => {
-    deletePost(slug);
+    setIsSingleDeleteModalOpen(true);
+    setSelectedPostSlug(slug);
   };
 
   const handleBulkDelete = () => {
     bulkDestroyPosts(selectedRowIds, {
       onSuccess: () => {
-        setIsDeleteModalOpen(false);
+        setIsBulkDeleteModalOpen(false);
         setSelectedRowKeys([]);
         setSelectedRowIds([]);
       },
@@ -267,8 +271,8 @@ const Blogs = () => {
             handleCheck,
             checkedColumns,
             handleBulkUpdate,
-            setIsDeleteModalOpen,
           }}
+          setIsDeleteModalOpen={setIsBulkDeleteModalOpen}
         />
       </div>
       <Table
@@ -287,9 +291,14 @@ const Blogs = () => {
         {...{ handleFilterApplied }}
       />
       <DeleteConfirmationModal
-        isOpen={isDeleteModalOpen}
-        onClose={() => setIsDeleteModalOpen(false)}
+        isOpen={isBulkDeleteModalOpen}
+        onClose={() => setIsBulkDeleteModalOpen(false)}
         {...{ handleBulkDelete }}
+      />
+      <PostDeleteConfirmationModal
+        isOpen={isSingleDeleteModalOpen}
+        setIsOpen={setIsSingleDeleteModalOpen}
+        onSubmit={() => deletePost(selectedPostSlug)}
       />
     </PageLayout>
   );

@@ -122,5 +122,11 @@
     "deleteModal": {
       "header": "Are you sure ? You want to delete these posts ."
     }
+  },
+  "posts": {
+    "deleteAlert": {
+      "header": "Delete post?",
+      "subHeader": "<typography>You are permanently deleting this post. This action cannot be undone. Are you sure you want to continue?</typography>"
+    }
   }
 }
