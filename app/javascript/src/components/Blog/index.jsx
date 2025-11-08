@@ -145,9 +145,7 @@ const Blogs = () => {
       await postsApi.update({
         slug,
         payload: {
-          post: {
-            status,
-          },
+          status,
         },
         quiet: true,
       });

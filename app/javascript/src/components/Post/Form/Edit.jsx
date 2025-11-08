@@ -41,13 +41,10 @@ const Edit = () => {
       await postsApi.update({
         slug,
         payload: {
-          post: {
-            ...values,
-            category_ids: values.categories.map(category => category.id),
-            status,
-          },
+          ...values,
+          category_ids: values.categories.map(category => category.id),
+          status,
         },
-        quiet: true,
       });
       history.replace("/");
     } catch (error) {

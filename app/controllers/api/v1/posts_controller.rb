@@ -2,7 +2,7 @@
 
 class Api::V1::PostsController < ApplicationController
   before_action :load_post!, only: %i[show destroy update]
-  before_action :load_posts!, only: %i[index bulk_destroy bulk_status_update]
+  before_action :load_posts, only: %i[index bulk_destroy bulk_status_update]
   before_action :authorize_post!, only: %i[show destroy update]
   before_action :authorize_posts!, only: %i[bulk_destroy bulk_status_update]
 
@@ -29,7 +29,7 @@ class Api::V1::PostsController < ApplicationController
 
   def update
     @post.update!(post_params)
-    render_notice(t("successfully_updated", entity: "Post")) unless params.key?(:quiet)
+    render_notice(t("successfully_updated", entity: "Post")) unless params[:quiet]
   end
 
   def bulk_destroy
@@ -53,7 +53,7 @@ class Api::V1::PostsController < ApplicationController
       @post = Post.find_by!(slug: params[:slug])
     end
 
-    def load_posts!
+    def load_posts
       if params[:scope] == "organization"
         @posts = current_user.organization.posts
       else

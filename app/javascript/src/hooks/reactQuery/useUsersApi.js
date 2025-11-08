@@ -11,7 +11,7 @@ export const useLogin = () => {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: payload => authApi.login({ login: payload }),
+    mutationFn: payload => authApi.login(payload),
     onSuccess: async (response, values) => {
       setToLocalStorage({
         authToken: response.authentication_token,

@@ -30,7 +30,7 @@ const Card = ({ id, title, user, created_at, slug, categories }) => {
 
     const { vote } = createVote({
       params: { post_id: id },
-      payload: { vote: { value } },
+      payload: { value },
     });
     const { post } = await postsApi.show(slug);
 

@@ -3,7 +3,7 @@ import axios from "axios";
 import endPoints from "../endPoints";
 
 const create = (params, payload) =>
-  axios.post(endPoints.votes, payload, { params });
+  axios.post(endPoints.votes, { vote: payload }, { params });
 
 const fetch = params => axios.get(endPoints.votes, { params });
 

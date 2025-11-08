@@ -11,14 +11,14 @@ const fetch = ({ params, scope = "organization" }) =>
     },
   });
 
-const create = payload => axios.post(endPoints.posts.root, payload);
+const create = payload => axios.post(endPoints.posts.root, { post: payload });
 
 const show = slug => axios.get(buildUrl(endPoints.posts.show, { slug }));
 
 const update = ({ slug, payload, quiet = false }) => {
   const path = buildUrl(endPoints.posts.show, { slug, quiet });
 
-  return axios.patch(path, payload);
+  return axios.patch(path, { post: payload });
 };
 
 const destroy = slug => axios.delete(buildUrl(endPoints.posts.show, { slug }));

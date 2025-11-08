@@ -24,8 +24,8 @@ const Preview = () => {
           <Typography style="body1">{t("header.previewPost")}</Typography>
         </div>
         <div className="flex space-x-2">
-          {categories?.map(({ id, label }) => (
-            <Tag className="bg-gray-100 text-gray-700" key={id} label={label} />
+          {categories?.map(({ id, name }) => (
+            <Tag className="bg-gray-100 text-gray-700" key={id} label={name} />
           ))}
         </div>
         <div className="mt-4 flex items-center justify-between">

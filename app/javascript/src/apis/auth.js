@@ -2,7 +2,7 @@ import axios from "axios";
 
 import endPoints from "../endPoints";
 
-const login = payload => axios.post(endPoints.sessions, payload);
+const login = payload => axios.post(endPoints.sessions, { login: payload });
 
 const signup = payload =>
   axios.post(endPoints.users, {

@@ -32,12 +32,10 @@ const Create = () => {
     try {
       const values = formikRef.current?.values;
       await postsApi.create({
-        post: {
-          ...values,
-          category_ids: values.categories.map(category => category.id),
-          organization_id: 1,
-          status,
-        },
+        ...values,
+        category_ids: values.categories.map(category => category.id),
+        organization_id: 1,
+        status,
       });
       history.replace("/");
     } catch (error) {

@@ -19,16 +19,11 @@ const AddCategoryModel = ({ isModalOpen, onClose }) => {
   const { mutate: createCategory } = useCreateCategory();
 
   const handleSubmit = values => {
-    createCategory(
-      {
-        category: values,
+    createCategory(values, {
+      onSuccess: () => {
+        onClose();
       },
-      {
-        onSuccess: () => {
-          onClose();
-        },
-      }
-    );
+    });
   };
 
   const { Header, Body, Footer } = Modal;
