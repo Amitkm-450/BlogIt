@@ -7,7 +7,7 @@ module Posts
       @params = params
     end
 
-    def process!
+    def process
       filter_by_title
       filter_by_status
       filter_by_category

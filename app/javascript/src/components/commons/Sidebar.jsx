@@ -10,32 +10,26 @@ import {
 } from "@bigbinary/neeto-icons";
 import { Button, Typography } from "@bigbinary/neetoui";
 import classNames from "classnames";
+import { useLogout } from "hooks/reactQuery/useUsersApi";
 import { useTranslation } from "react-i18next";
-import { Link } from "react-router-dom";
-import { setToLocalStorage, getFromLocalStorage } from "utils/storage";
-
-import authApi from "../../apis/auth";
-import { resetAuthTokens } from "../../apis/axios";
+import { useHistory } from "react-router-dom";
+import { getFromLocalStorage } from "utils/storage";
 
 const Sidebar = ({ setIsCategorySidebarOpen }) => {
   const [isMenuVisible, setIsMenuVisible] = useState(false);
 
   const { t } = useTranslation();
 
-  const handleLogout = async () => {
-    try {
-      await authApi.logout();
-      setToLocalStorage({
-        authToken: null,
-        email: null,
-        userId: null,
-        userName: null,
-      });
-      resetAuthTokens();
-      window.location.href = "/login";
-    } catch (error) {
-      logger.error(error);
-    }
+  const history = useHistory();
+
+  const { mutate: logoutUser } = useLogout();
+
+  const handleLogout = () => {
+    logoutUser(undefined, {
+      onSuccess: () => {
+        history.push("/login");
+      },
+    });
   };
 
   return (
@@ -97,7 +91,7 @@ const Sidebar = ({ setIsCategorySidebarOpen }) => {
       />
       <div
         className={classNames(
-          "absolute bottom-1 left-20 z-20 mt-2 flex w-48 flex-col rounded-md border border-gray-300 bg-white px-2 py-1 shadow-xl",
+          "absolute bottom-1 left-20 z-20 mt-2 flex w-48 flex-col gap-2 rounded-md border border-gray-300 bg-white px-2 py-1 shadow-xl",
           {
             block: isMenuVisible,
             hidden: !isMenuVisible,
@@ -115,12 +109,12 @@ const Sidebar = ({ setIsCategorySidebarOpen }) => {
             </Typography>
           </div>
         </div>
-        <Link
+        <Button
           className="block cursor-pointer px-3 py-1.5 text-sm text-gray-800 hover:bg-gray-400"
+          label={t("logout")}
+          style="secondary"
           onClick={handleLogout}
-        >
-          {t("logout")}
-        </Link>
+        />
       </div>
     </div>
   );

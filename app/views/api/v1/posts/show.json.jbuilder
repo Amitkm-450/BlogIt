@@ -5,7 +5,7 @@ json.post do
     :id,
     :title,
     :description,
-    :created_at,
+    :updated_at,
     :status,
     :is_bloggable
 

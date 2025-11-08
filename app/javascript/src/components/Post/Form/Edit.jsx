@@ -1,4 +1,4 @@
-import { PostValidationSchema } from "constants/constant";
+import { PostValidationSchema, getPostInitialData } from "constants/constant";
 
 import React, { useEffect, useRef, useState } from "react";
 
@@ -11,22 +11,17 @@ import {
   Dropdown,
 } from "@bigbinary/neetoui";
 import { Form, Input, Select, Textarea } from "@bigbinary/neetoui/formik";
-import categoriesApi from "apis/categories";
-import postsApi from "apis/posts";
-import Logger from "js-logger";
+import { useFetchCategories } from "hooks/reactQuery/useCategoriesApi";
+import { useFetchPost, useUpdatePost } from "hooks/reactQuery/usePostsApi";
 import { useTranslation } from "react-i18next";
 import { useHistory, useParams } from "react-router-dom";
 import { getFromLocalStorage } from "utils/storage";
 
+import { useDeletePost } from "../../../hooks/reactQuery/usePostsApi";
 import { PageLayout } from "../../commons";
 
 const Edit = () => {
-  const [categoryLoading, setCategoryLoading] = useState(true);
-  const [postLoading, setPostLoading] = useState(false);
-  const [categories, setCategories] = useState([]);
-  const [postInitialData, setPostInitialData] = useState(null);
   const [status, setStatus] = useState("");
-
   const formikRef = useRef(null);
 
   const history = useHistory();
@@ -34,40 +29,39 @@ const Edit = () => {
 
   const { t } = useTranslation();
 
-  const handleCancel = () => history.goBack();
+  const { data: { post } = {}, isLoading: isPostLoading } = useFetchPost(slug);
 
-  const categoriesOption = categories?.map(category => ({
-    value: category.id,
-    label: category.name,
-  }));
+  const { data: { categories = [] } = {}, isLoading: isCategoryLoading } =
+    useFetchCategories();
 
-  const handleChangeStatus = async () => {
-    try {
-      const values = formikRef.current?.values;
-      await postsApi.update({
+  const { mutate: updatePost } = useUpdatePost();
+  const { mutate: deletePost } = useDeletePost();
+
+  const handleChangeStatus = () => {
+    const values = formikRef.current?.values;
+    updatePost(
+      {
         slug,
         payload: {
-          post: {
-            ...values,
-            category_ids: values.categories.map(category => category.value),
-            status,
-          },
+          ...values,
+          category_ids: values.categories.map(category => category.id),
+          status,
         },
-        quiet: true,
-      });
-      history.replace("/");
-    } catch (error) {
-      Logger.error(error);
-    }
+      },
+      {
+        onSuccess: () => {
+          history.replace("/");
+        },
+      }
+    );
   };
 
-  const handleDelete = async () => {
-    try {
-      await postsApi.destroy(slug);
-      history.replace("/posts");
-    } catch (error) {
-      Logger.error(error);
-    }
+  const handleDelete = () => {
+    deletePost(slug, {
+      onSuccess: () => {
+        history.replace("/posts");
+      },
+    });
   };
 
   const handleRedirect = () => {
@@ -87,43 +81,10 @@ const Edit = () => {
   };
 
   useEffect(() => {
-    const fetchCategories = async () => {
-      try {
-        const { categories = [] } = await categoriesApi.fetch();
-        setCategories(categories);
-      } catch (error) {
-        Logger.log(error);
-      } finally {
-        setCategoryLoading(false);
-      }
-    };
+    setStatus(post?.status);
+  }, [post]);
 
-    const fetchPostDetails = async () => {
-      setPostLoading(true);
-      try {
-        const { post } = await postsApi.show(slug);
-        setPostInitialData({
-          title: post.title || "",
-          description: post.description || "",
-          categories:
-            post.categories?.map(category => ({
-              label: category.name,
-              value: category.id,
-            })) || [],
-        });
-        setStatus(post.status);
-      } catch (error) {
-        Logger.log(error);
-      } finally {
-        setPostLoading(false);
-      }
-    };
-
-    fetchCategories();
-    fetchPostDetails();
-  }, []);
-
-  if (categoryLoading || postLoading) {
+  if (isCategoryLoading || isPostLoading) {
     return (
       <div className="flex h-screen items-center justify-center">
         <Spinner />
@@ -146,12 +107,12 @@ const Edit = () => {
             <Button
               label={t("button.cancel")}
               style="secondary"
-              onClick={handleCancel}
+              onClick={() => formikRef?.current.resetForm()}
             />
             <ActionDropdown
               buttonStyle="secondary"
               label={status === "draft" ? "Save as draft" : "Publish"}
-              onClick={handleChangeStatus}
+              onClick={() => formikRef?.current.submitForm()}
             >
               <Menu>
                 <MenuItem>
@@ -192,9 +153,10 @@ const Edit = () => {
             formikProps={{
               validateOnBlur: true,
               enableReinitialize: true,
-              initialValues: postInitialData,
+              initialValues: getPostInitialData(post),
               validationSchema: PostValidationSchema,
               innerRef: formikRef,
+              onSubmit: handleChangeStatus,
             }}
           >
             <div className="mb-4">
@@ -213,7 +175,8 @@ const Edit = () => {
                   label={t("form.label.categories")}
                   menuPosition="fixed"
                   name="categories"
-                  options={categoriesOption}
+                  optionRemapping={{ label: "name", value: "id" }}
+                  options={categories}
                   placeholder={t("form.placeholder.categories")}
                   size="large"
                 />

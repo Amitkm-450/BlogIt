@@ -1,39 +1,45 @@
 import axios from "axios";
 
+import endPoints from "../endPoints";
+import { buildUrl } from "../utils/url";
+
 const fetch = ({ params, scope = "organization" }) =>
-  axios.get("/posts", {
+  axios.get(endPoints.posts.root, {
     params: {
       ...params,
       scope,
     },
   });
 
-const create = payload => axios.post("/posts", payload);
+const create = payload => axios.post(endPoints.posts.root, { post: payload });
 
-const show = slug => axios.get(`/posts/${slug}`);
+const show = slug => axios.get(buildUrl(endPoints.posts.show, { slug }));
 
 const update = ({ slug, payload, quiet = false }) => {
-  const path = quiet ? `/posts/${slug}?quiet` : `/posts/${slug}`;
+  const path = buildUrl(endPoints.posts.show, { slug, quiet });
 
-  return axios.patch(path, payload);
+  return axios.patch(path, { post: payload });
 };
 
-const destroy = slug => axios.delete(`/posts/${slug}`);
+const destroy = slug => axios.delete(buildUrl(endPoints.posts.show, { slug }));
 
 const bulkDestroy = postIds =>
-  axios.delete("/posts/bulk_destroy", { params: { post_ids: postIds } });
+  axios.delete(endPoints.posts.bulkDestroy, { params: { post_ids: postIds } });
 
 const bulkStatusUpdate = (postIds, status) =>
   axios.patch(
-    "/posts/bulk_status_update",
+    endPoints.posts.bulkStatusUpdate,
     { post: { status } },
     { params: { post_ids: postIds } }
   );
 
-const generatePdf = slug => axios.post(`/posts/${slug}/report`, {});
+const generatePdf = slug =>
+  axios.post(buildUrl(endPoints.posts.report, { slug }), {});
 
 const download = slug =>
-  axios.get(`/posts/${slug}/report/download`, { responseType: "blob" });
+  axios.get(buildUrl(endPoints.posts.reportDownload, { slug }), {
+    responseType: "blob",
+  });
 
 const postsApi = {
   fetch,

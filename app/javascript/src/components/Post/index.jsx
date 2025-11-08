@@ -1,35 +1,31 @@
-import React, { useContext, useEffect, useState } from "react";
+import React from "react";
 
 import { Button, Spinner, Typography } from "@bigbinary/neetoui";
-import postsApi from "apis/posts";
-import CategoryContext from "context/CategoryContext";
-import Logger from "js-logger";
+import { useFetchCategories } from "hooks/reactQuery/useCategoriesApi";
+import { useFetchPosts } from "hooks/reactQuery/usePostsApi";
+import useQueryParams from "hooks/useQueryParams";
 import { useTranslation } from "react-i18next";
 
 import PostCard from "./Card";
 
 const List = () => {
-  const [isLoading, setIsLoading] = useState(true);
-  const [posts, setPosts] = useState([]);
-  const { selectedCategories } = useContext(CategoryContext);
+  const { categories: queryCategories = "" } = useQueryParams();
+
+  const { data: { categories = [] } = {} } = useFetchCategories();
+
+  const filterParams = {
+    category_ids: categories
+      .filter(({ name }) => queryCategories.split(",").includes(name))
+      .map(({ id }) => id),
+  };
+
+  const { data: posts = [], isLoading: isPostsLoading } = useFetchPosts({
+    params: filterParams,
+  });
 
   const { t } = useTranslation();
 
-  useEffect(() => {
-    const fetchPosts = async params => {
-      try {
-        const response = await postsApi.fetch({ params });
-        setPosts(response);
-      } catch (error) {
-        Logger.log(error);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-    fetchPosts({ category_ids: selectedCategories });
-  }, [selectedCategories]);
-
-  if (isLoading) {
+  if (isPostsLoading) {
     return (
       <div className="flex h-full w-full items-center justify-center">
         <Spinner />

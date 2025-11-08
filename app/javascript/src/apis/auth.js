@@ -1,13 +1,15 @@
 import axios from "axios";
 
-const login = payload => axios.post("/session", payload);
+import endPoints from "../endPoints";
+
+const login = payload => axios.post(endPoints.sessions, { login: payload });
 
 const signup = payload =>
-  axios.post("/users", {
+  axios.post(endPoints.users, {
     user: payload,
   });
 
-const logout = () => axios.delete(`/session`);
+const logout = () => axios.delete(endPoints.sessions);
 
 const authApi = {
   login,

@@ -1,11 +1,11 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 
 import { Download, Edit } from "@bigbinary/neeto-icons";
 import { Avatar, Spinner, Tag, Typography, Button } from "@bigbinary/neetoui";
-import postsApi from "apis/posts";
 import classNames from "classnames";
+import { useFetchPost } from "hooks/reactQuery/usePostsApi";
 import { useTranslation } from "react-i18next";
-import { useParams, useHistory } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { fromatDate } from "utils/date";
 import { getFromLocalStorage } from "utils/storage";
 
@@ -15,31 +15,14 @@ import { PageLayout } from "../commons";
 
 const Show = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [post, setPost] = useState(null);
-  const [pageLoading, setPageLoading] = useState(true);
 
   const { slug } = useParams();
-  const history = useHistory();
 
   const { t } = useTranslation();
 
-  const fetchPostDetails = async () => {
-    try {
-      const { post = {} } = await postsApi.show(slug);
-      setPost(post);
-    } catch (error) {
-      logger.error(error);
-      history.push("/");
-    } finally {
-      setPageLoading(false);
-    }
-  };
+  const { data: { post = {} } = {}, isLoading } = useFetchPost(slug);
 
-  useEffect(() => {
-    fetchPostDetails();
-  }, [slug]);
-
-  if (pageLoading) {
+  if (isLoading) {
     return (
       <div className="flex h-full items-center justify-center">
         <Spinner />
@@ -47,7 +30,7 @@ const Show = () => {
     );
   }
 
-  const { categories, title, status, user, created_at, description } = post;
+  const { categories, title, status, user, updatedAt, description } = post;
 
   return (
     <PageLayout>
@@ -109,7 +92,7 @@ const Show = () => {
             <Typography className="font-bold text-black" style="body2">
               {user.name}
             </Typography>
-            <Typography style="body2">{fromatDate(created_at)}</Typography>
+            <Typography style="body2">{fromatDate(updatedAt)}</Typography>
           </div>
         </div>
         <Typography

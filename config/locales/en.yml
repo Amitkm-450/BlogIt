@@ -43,3 +43,4 @@ en:
     generate: "Generating the PDF report"
     upload: "Uploading to server"
     attach: "Attaching the report to the user"
+  not_found: "%{entity} not found"

@@ -11,20 +11,31 @@ export const PostValidationSchema = yup.object().shape({
     .string()
     .max(10000, "Description must be at most 10000 characters")
     .required("Description is required"),
-  categories: yup.array().required("Category is required"),
+  categories: yup
+    .array()
+    .min(1, "Category is required")
+    .required("Category is required"),
 });
 
-export const PostInitialData = {
-  title: "",
-  description: "",
-  categories: [],
-};
+export const getPostInitialData = (post = {}) => ({
+  title: post.title || "",
+  description: post.description || "",
+  categories:
+    post.categories?.map(category => ({
+      name: category.name,
+      id: category.id,
+    })) || [],
+});
 
-export const FilterInitialValues = {
-  title: "",
-  categories: [],
-  status: {},
-};
+export const getFilterInitialValues = ({
+  searchTerm,
+  selectedCategories,
+  status,
+} = {}) => ({
+  title: searchTerm || "",
+  categories: selectedCategories || [],
+  status: status || {},
+});
 
 export const FilterValidationSchema = yup.object().shape({
   title: yup.string().max(100, "Title cannot exceed 100 characters"),
@@ -35,4 +46,16 @@ export const FilterValidationSchema = yup.object().shape({
       value: yup.string().oneOf(["draft", "published"]),
     })
     .nullable(),
+});
+
+export const CATEGORY_INITIAL_DATA = {
+  name: "",
+};
+
+export const CATEGORY_VALIDATION_SCHEMA = yup.object().shape({
+  name: yup
+    .string()
+    .trim()
+    .max(50, "Category name must be at most 50 characters")
+    .required("Category name is required"),
 });

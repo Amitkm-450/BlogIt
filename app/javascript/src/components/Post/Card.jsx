@@ -1,61 +1,42 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 
 import { DownArrow, UpArrow } from "@bigbinary/neeto-icons";
 import { Button, Tag, Typography } from "@bigbinary/neetoui";
-import postsApi from "apis/posts";
-import votesApi from "apis/votes";
 import classNames from "classnames";
-import Logger from "js-logger";
+import { useCreateVote, useFetchVotes } from "hooks/reactQuery/useVotesApi";
 import { useHistory } from "react-router-dom";
 import { fromatDate } from "utils/date";
 
-const Card = ({ id, title, user, created_at, slug, categories }) => {
-  const [postVotesCount, setPostVotesCount] = useState(0);
-  const [userVote, setUserVote] = useState(0);
-  const [isBloggable, setIsBloggable] = useState(false);
-
-  const creationDate = fromatDate(created_at);
-
+const Card = ({
+  id,
+  title,
+  user,
+  updatedAt,
+  slug,
+  categories,
+  isBloggable,
+}) => {
   const history = useHistory();
+
+  const { data: { vote: { netVotes = 0, userVote = 0 } = {} } = {} } =
+    useFetchVotes({
+      post_id: id,
+    });
+
+  const { mutate: createVote } = useCreateVote();
 
   const handleVote = async type => {
     let value = type === "up" ? 1 : -1;
 
     if (userVote === value) value = 0;
 
-    try {
-      const { vote } = await votesApi.create(
-        { post_id: id },
-        { vote: { value } }
-      );
-      const { post } = await postsApi.show(slug);
-
-      setIsBloggable(post.is_bloggable);
-      setPostVotesCount(vote.net_votes);
-      setUserVote(vote.user_vote);
-    } catch (error) {
-      Logger.error(error);
-    }
+    createVote({
+      params: { post_id: id },
+      payload: { value },
+    });
   };
 
-  useEffect(() => {
-    const fetchPostVotesCount = async () => {
-      try {
-        const { vote } = await votesApi.fetch({
-          post_id: id,
-        });
-        const { post } = await postsApi.show(slug);
-
-        setIsBloggable(post.is_bloggable);
-        setPostVotesCount(vote.net_votes);
-        setUserVote(vote.user_vote);
-      } catch (error) {
-        Logger.error(error);
-      }
-    };
-
-    fetchPostVotesCount();
-  }, []);
+  const creationDate = fromatDate(updatedAt);
 
   return (
     <div className="flex cursor-default justify-between border-b p-4">
@@ -97,7 +78,7 @@ const Card = ({ id, title, user, created_at, slug, categories }) => {
           }}
         />
         <Typography style="body2" weight="bold">
-          {postVotesCount}
+          {netVotes}
         </Typography>
         <Button
           icon={DownArrow}

@@ -1,10 +1,11 @@
 import axios from "axios";
 
-// params = { post_id: 1 }
-// payload = { vote: { value: 1 } }
-const create = (params, payload) => axios.post("/votes", payload, { params });
+import endPoints from "../endPoints";
 
-const fetch = params => axios.get("/votes", { params });
+const create = (params, payload) =>
+  axios.post(endPoints.votes, { vote: payload }, { params });
+
+const fetch = params => axios.get(endPoints.votes, { params });
 
 const votesApi = { create, fetch };
 

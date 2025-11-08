@@ -1,6 +1,6 @@
-import { PostInitialData, PostValidationSchema } from "constants/constant";
+import { PostValidationSchema, getPostInitialData } from "constants/constant";
 
-import React, { useEffect, useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 
 import {
   ActionDropdown,
@@ -9,17 +9,14 @@ import {
   Typography,
 } from "@bigbinary/neetoui";
 import { Form, Input, Select, Textarea } from "@bigbinary/neetoui/formik";
-import categoriesApi from "apis/categories";
-import postsApi from "apis/posts";
-import Logger from "js-logger";
+import { useFetchCategories } from "hooks/reactQuery/useCategoriesApi";
+import { useCreatePost } from "hooks/reactQuery/usePostsApi";
 import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
 
 import { PageLayout } from "../../commons";
 
 const Create = () => {
-  const [categoryLoading, setCategoryLoading] = useState(true);
-  const [categories, setCategories] = useState([]);
   const [status, setStatus] = useState("draft");
 
   const history = useHistory();
@@ -27,46 +24,29 @@ const Create = () => {
 
   const formikRef = useRef(null);
 
-  const handleCancel = () => history.push("/");
+  const { data: { categories = [] } = {}, isLoading: isCategoryLoading } =
+    useFetchCategories();
 
-  const handleChangeStatus = async () => {
-    try {
-      const values = formikRef.current?.values;
-      await postsApi.create({
-        post: {
-          ...values,
-          category_ids: values.categories.map(category => category.value),
-          organization_id: 1,
-          status,
+  const { mutate: createPost } = useCreatePost();
+
+  const handleChangeStatus = () => {
+    const values = formikRef.current?.values;
+    createPost(
+      {
+        ...values,
+        category_ids: values.categories.map(category => category.id),
+        organization_id: 1,
+        status,
+      },
+      {
+        onSuccess: () => {
+          history.replace("/posts");
         },
-      });
-      history.replace("/");
-    } catch (error) {
-      Logger.error(error);
-    }
+      }
+    );
   };
 
-  const categoriesOption = categories?.map(category => ({
-    value: category.id,
-    label: category.name,
-  }));
-
-  useEffect(() => {
-    const fetchCategories = async () => {
-      try {
-        const { categories = [] } = await categoriesApi.fetch();
-        setCategories(categories);
-      } catch (error) {
-        Logger.log(error);
-      } finally {
-        setCategoryLoading(false);
-      }
-    };
-
-    fetchCategories();
-  }, []);
-
-  if (categoryLoading) {
+  if (isCategoryLoading) {
     return (
       <div className="flex h-screen items-center justify-center">
         <Spinner />
@@ -88,12 +68,12 @@ const Create = () => {
             <Button
               label={t("button.cancel")}
               style="secondary"
-              onClick={handleCancel}
+              onClick={() => formikRef?.current.resetForm()}
             />
             <ActionDropdown
               buttonStyle="secondary"
               label={status === "draft" ? "Save as draft" : "Publish"}
-              onClick={handleChangeStatus}
+              onClick={() => formikRef?.current.submitForm()}
             >
               <Menu>
                 <MenuItem>
@@ -124,9 +104,10 @@ const Create = () => {
             formikProps={{
               validateOnBlur: true,
               enableReinitialize: true,
-              initialValues: PostInitialData,
+              initialValues: getPostInitialData(),
               validationSchema: PostValidationSchema,
               innerRef: formikRef,
+              onSubmit: handleChangeStatus,
             }}
           >
             <div className="mb-4">
@@ -145,7 +126,8 @@ const Create = () => {
                   label={t("form.label.categories")}
                   menuPosition="fixed"
                   name="categories"
-                  options={categoriesOption}
+                  optionRemapping={{ label: "name", value: "id" }}
+                  options={categories}
                   placeholder={t("form.placeholder.categories")}
                   size="large"
                 />
