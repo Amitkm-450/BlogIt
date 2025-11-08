@@ -14,7 +14,7 @@ export const useLogin = () => {
     mutationFn: payload => authApi.login(payload),
     onSuccess: (response, values) => {
       setToLocalStorage({
-        authToken: response.authentication_token,
+        authToken: response.authenticationToken,
         email: values.email.toLowerCase(),
         userId: response.id,
         userName: response.name,

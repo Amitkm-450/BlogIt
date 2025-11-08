@@ -1,12 +1,14 @@
-import React, { useContext, useState } from "react";
+import React, { useState } from "react";
 
 import { Plus, Search } from "@bigbinary/neeto-icons";
 import { Input, Button, Spinner, Typography } from "@bigbinary/neetoui";
 import classNames from "classnames";
-import CategoryContext from "context/CategoryContext";
 import { useFetchCategories } from "hooks/reactQuery/useCategoriesApi";
-import { includes, without, append } from "ramda";
+import useQueryParams from "hooks/useQueryParams";
+import { isEmpty } from "ramda";
 import { useTranslation } from "react-i18next";
+import { useHistory } from "react-router-dom";
+import { buildUrl } from "utils/url";
 
 import AddCategoryModel from "./AddCategoryModal";
 
@@ -16,17 +18,30 @@ const Sidebar = ({ isCategorySidebarOpen }) => {
 
   const { data: { categories = [] } = {}, isLoading } = useFetchCategories();
 
-  const { selectedCategories, setSelectedCategories } =
-    useContext(CategoryContext);
+  const { categories: queryCategories = "" } = useQueryParams();
+  const selectedCategories = isEmpty(queryCategories)
+    ? []
+    : queryCategories.split(",");
 
   const { t } = useTranslation();
 
-  const handleSelectedCategory = ({ id }) => {
-    setSelectedCategories(prevSelected =>
-      includes(id, prevSelected)
-        ? without([id], prevSelected)
-        : append(id, prevSelected)
-    );
+  const history = useHistory();
+
+  const handleSelectedCategory = ({ name }) => {
+    const isAlreadySelected = selectedCategories.includes(name);
+
+    const newSelectedCategories = isAlreadySelected
+      ? selectedCategories.filter(
+          selectedCategoryName => selectedCategoryName !== name
+        )
+      : [...selectedCategories, name];
+
+    const url = buildUrl("/posts", {
+      categories: isEmpty(newSelectedCategories)
+        ? undefined
+        : newSelectedCategories.join(","),
+    });
+    history.replace(url);
   };
 
   const filteredCategories = categories.filter(category =>
@@ -74,19 +89,19 @@ const Sidebar = ({ isCategorySidebarOpen }) => {
         />
       </div>
       <ul className="mt-4 space-y-2">
-        {filteredCategories.map(category => (
+        {filteredCategories.map(({ id, name }) => (
           <li
-            key={category.id}
+            key={id}
             className={`cursor-pointer rounded p-2 text-gray-700 shadow-sm hover:shadow-lg ${
-              selectedCategories?.includes(category.id)
-                ? "bg-green-400 text-white"
+              selectedCategories.includes(name)
+                ? "bg-gray-400 text-white"
                 : "bg-white"
             }`}
             onClick={() => {
-              handleSelectedCategory(category);
+              handleSelectedCategory({ name });
             }}
           >
-            {category.name}
+            {name}
           </li>
         ))}
       </ul>

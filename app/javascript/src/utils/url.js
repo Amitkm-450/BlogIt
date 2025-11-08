@@ -20,15 +20,20 @@ export const buildUrl = (route, params) => {
   return isEmpty(queryParams) ? route : `${route}?${queryParams}`;
 };
 
-export const buildFilters = filters =>
-  Object.fromEntries(
-    Object.entries(filters)
-      .filter(
-        ([, value]) => value !== undefined && value !== null && value !== ""
-      )
-      .map(([key, value]) =>
-        key === "category"
-          ? [key, value?.replace("+rule-in", "")]
-          : [key, value]
-      )
-  );
+export const buildFilterParams = ({ title, categories = [], status }) => {
+  const params = {};
+
+  if (title?.trim()) {
+    params.searchTerm = title.trim();
+  }
+
+  if (categories.length > 0) {
+    params.categories = categories.map(c => c.name).join(",");
+  }
+
+  if (status) {
+    params.status = status;
+  }
+
+  return params;
+};

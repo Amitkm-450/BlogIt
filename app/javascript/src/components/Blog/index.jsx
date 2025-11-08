@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 
 import { capitalize } from "@bigbinary/neeto-cist";
 import { MenuHorizontal } from "@bigbinary/neeto-icons";
@@ -10,16 +10,19 @@ import {
   Typography,
   Tag,
 } from "@bigbinary/neetoui";
-import postsApi from "apis/posts";
+import { useFetchCategories } from "hooks/reactQuery/useCategoriesApi";
 import {
+  useFetchPosts,
   useUpdatePost,
   useDeletePost,
   useBulkDestroyPosts,
   useBulkStatusUpdate,
 } from "hooks/reactQuery/usePostsApi";
-import Logger from "js-logger";
+import useQueryParams from "hooks/useQueryParams";
 import { useTranslation } from "react-i18next";
+import { useHistory } from "react-router-dom";
 import { fromatDate } from "utils/date";
+import { buildFilterParams, buildUrl } from "utils/url";
 
 import DeleteConfirmationModal from "./DeleteConfirmationModal";
 import SearchFilterPan from "./SearchFilterPan";
@@ -28,12 +31,14 @@ import SubHeader from "./SubHeader";
 import { PageLayout } from "../commons";
 
 const Blogs = () => {
-  const [userBlogs, setUserBlogs] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
   const [selectedRowIds, setSelectedRowIds] = useState([]);
   const [isSearchPanOpen, setIsSearchPanOpen] = useState(false);
+
+  const history = useHistory();
+
+  const { t } = useTranslation();
 
   const columnData = [
     {
@@ -144,7 +149,30 @@ const Blogs = () => {
     }, {})
   );
 
-  const { t } = useTranslation();
+  const {
+    searchTerm = "",
+    status = "",
+    categories: queryCategories = "",
+  } = useQueryParams();
+
+  const { data: { categories = [] } = {} } = useFetchCategories();
+
+  const selectedCategoryIds = categories
+    .filter(({ name }) => queryCategories.split(",").includes(name))
+    .map(({ id }) => id);
+
+  const filterParams = {
+    ...(searchTerm && { title: searchTerm }),
+    ...(selectedCategoryIds.length > 0 && {
+      category_ids: selectedCategoryIds,
+    }),
+    ...(status && { status }),
+  };
+
+  const { data: userBlogs = [], isLoading: isPostsLoading } = useFetchPosts({
+    params: filterParams,
+    scope: "user",
+  });
 
   const { mutate: updatePost } = useUpdatePost();
   const { mutate: deletePost } = useDeletePost();
@@ -195,37 +223,16 @@ const Blogs = () => {
   };
 
   const handleFilterApplied = values => {
-    const params = {
-      ...(values.title && { title: values.title }),
-      ...(values.categories?.length > 0 && {
-        category_ids: values.categories.map(category => category.id),
-      }),
-      ...(values.status && { status: values.status }),
-    };
+    const searchParams = buildFilterParams(values);
 
-    fetchPosts(params);
+    const url = buildUrl("/posts/my-blogs", searchParams);
+    history.replace(url);
   };
 
   const handleRowSelect = (selectedRowKeys, selectedRows) => {
     setSelectedRowKeys(selectedRowKeys);
     setSelectedRowIds(selectedRows.map(selectedRow => selectedRow.id));
   };
-
-  const fetchPosts = async params => {
-    setIsLoading(true);
-    try {
-      const response = await postsApi.fetch({ params, scope: "user" });
-      setUserBlogs(response);
-    } catch (error) {
-      Logger.log(error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  useEffect(() => {
-    fetchPosts();
-  }, []);
 
   const { Menu, MenuItem, Divider } = Dropdown;
   const { Button: MenuItemButton } = MenuItem;
@@ -234,7 +241,7 @@ const Blogs = () => {
     column => checkedColumns[column.title]
   );
 
-  if (isLoading) {
+  if (isPostsLoading) {
     return (
       <div className="flex h-full items-center justify-center">
         <Spinner />

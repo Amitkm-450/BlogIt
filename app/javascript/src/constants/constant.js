@@ -27,11 +27,15 @@ export const getPostInitialData = (post = {}) => ({
     })) || [],
 });
 
-export const FilterInitialValues = {
-  title: "",
-  categories: [],
-  status: {},
-};
+export const getFilterInitialValues = ({
+  searchTerm,
+  selectedCategories,
+  status,
+} = {}) => ({
+  title: searchTerm || "",
+  categories: selectedCategories || [],
+  status: status || {},
+});
 
 export const FilterValidationSchema = yup.object().shape({
   title: yup.string().max(100, "Title cannot exceed 100 characters"),

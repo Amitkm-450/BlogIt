@@ -3,11 +3,15 @@ import { QUERY_KEYS } from "constants/query";
 import postsApi from "apis/posts";
 import { useQuery, useMutation, useQueryClient } from "react-query";
 
-export const useFetchPosts = ({ params, scope }) =>
-  useQuery({
-    queryKey: [QUERY_KEYS.POSTS, params],
+export const useFetchPosts = ({ params = {}, scope }) => {
+  const stableKey = JSON.stringify(params);
+
+  return useQuery({
+    queryKey: [QUERY_KEYS.POSTS, stableKey, scope],
     queryFn: () => postsApi.fetch({ params, scope }),
+    keepPreviousData: true,
   });
+};
 
 export const useFetchPost = slug =>
   useQuery({
