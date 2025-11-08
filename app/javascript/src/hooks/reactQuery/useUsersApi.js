@@ -12,7 +12,7 @@ export const useLogin = () => {
 
   return useMutation({
     mutationFn: payload => authApi.login(payload),
-    onSuccess: async (response, values) => {
+    onSuccess: (response, values) => {
       setToLocalStorage({
         authToken: response.authentication_token,
         email: values.email.toLowerCase(),
@@ -21,7 +21,7 @@ export const useLogin = () => {
       });
 
       setAuthHeaders();
-      await queryClient.invalidateQueries([QUERY_KEYS.USERS]);
+      queryClient.invalidateQueries([QUERY_KEYS.USERS]);
     },
   });
 };

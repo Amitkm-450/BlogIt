@@ -1,4 +1,4 @@
-import { PostInitialData, PostValidationSchema } from "constants/constant";
+import { PostValidationSchema, getPostInitialData } from "constants/constant";
 
 import React, { useRef, useState } from "react";
 
@@ -9,9 +9,8 @@ import {
   Typography,
 } from "@bigbinary/neetoui";
 import { Form, Input, Select, Textarea } from "@bigbinary/neetoui/formik";
-import postsApi from "apis/posts";
 import { useFetchCategories } from "hooks/reactQuery/useCategoriesApi";
-import Logger from "js-logger";
+import { useCreatePost } from "hooks/reactQuery/usePostsApi";
 import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
 
@@ -28,19 +27,23 @@ const Create = () => {
   const { data: { categories = [] } = {}, isLoading: isCategoryLoading } =
     useFetchCategories();
 
-  const handleChangeStatus = async () => {
-    try {
-      const values = formikRef.current?.values;
-      await postsApi.create({
+  const { mutate: createPost } = useCreatePost();
+
+  const handleChangeStatus = () => {
+    const values = formikRef.current?.values;
+    createPost(
+      {
         ...values,
         category_ids: values.categories.map(category => category.id),
         organization_id: 1,
         status,
-      });
-      history.replace("/");
-    } catch (error) {
-      Logger.error(error);
-    }
+      },
+      {
+        onSuccess: () => {
+          history.replace("/posts");
+        },
+      }
+    );
   };
 
   if (isCategoryLoading) {
@@ -101,7 +104,7 @@ const Create = () => {
             formikProps={{
               validateOnBlur: true,
               enableReinitialize: true,
-              initialValues: PostInitialData,
+              initialValues: getPostInitialData(),
               validationSchema: PostValidationSchema,
               innerRef: formikRef,
               onSubmit: handleChangeStatus,

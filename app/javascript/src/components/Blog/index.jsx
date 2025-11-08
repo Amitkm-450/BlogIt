@@ -11,10 +11,17 @@ import {
   Tag,
 } from "@bigbinary/neetoui";
 import postsApi from "apis/posts";
+import {
+  useUpdatePost,
+  useDeletePost,
+  useBulkDestroyPosts,
+  useBulkStatusUpdate,
+} from "hooks/reactQuery/usePostsApi";
 import Logger from "js-logger";
 import { useTranslation } from "react-i18next";
-import { useHistory } from "react-router-dom/cjs/react-router-dom.min";
+import { fromatDate } from "utils/date";
 
+import DeleteConfirmationModal from "./DeleteConfirmationModal";
 import SearchFilterPan from "./SearchFilterPan";
 import SubHeader from "./SubHeader";
 
@@ -23,6 +30,7 @@ import { PageLayout } from "../commons";
 const Blogs = () => {
   const [userBlogs, setUserBlogs] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
   const [selectedRowIds, setSelectedRowIds] = useState([]);
   const [isSearchPanOpen, setIsSearchPanOpen] = useState(false);
@@ -70,13 +78,13 @@ const Blogs = () => {
           : "—",
     },
     {
-      dataIndex: "updated_at",
+      dataIndex: "updatedAt",
       key: "updated_at",
       title: "Last Published At",
       width: 200,
-      render: updated_at => (
+      render: updatedAt => (
         <div className="flex items-center">
-          {updated_at ? new Date(updated_at).toDateString() : "—"}
+          {updatedAt ? fromatDate(updatedAt) : "—"}
         </div>
       ),
     },
@@ -138,21 +146,19 @@ const Blogs = () => {
 
   const { t } = useTranslation();
 
-  const history = useHistory();
+  const { mutate: updatePost } = useUpdatePost();
+  const { mutate: deletePost } = useDeletePost();
+  const { mutate: bulkDestroyPosts } = useBulkDestroyPosts();
+  const { mutate: bulkStatusUpdate } = useBulkStatusUpdate();
 
-  const handleChange = async (slug, status) => {
-    try {
-      await postsApi.update({
-        slug,
-        payload: {
-          status,
-        },
-        quiet: true,
-      });
-      history.go(0);
-    } catch (error) {
-      Logger.error(error);
-    }
+  const handleChange = (slug, status) => {
+    updatePost({
+      slug,
+      payload: {
+        status,
+      },
+      quiet: true,
+    });
   };
 
   const handleCheck = title => {
@@ -162,31 +168,30 @@ const Blogs = () => {
     }));
   };
 
-  const handleDelete = async slug => {
-    try {
-      await postsApi.destroy(slug);
-      history.replace("/posts");
-    } catch (error) {
-      Logger.error(error);
-    }
+  const handleDelete = slug => {
+    deletePost(slug);
   };
 
-  const handleBulkDelete = async () => {
-    try {
-      await postsApi.bulkDestroy(selectedRowIds);
-      history.go(0);
-    } catch (error) {
-      Logger.log(error);
-    }
+  const handleBulkDelete = () => {
+    bulkDestroyPosts(selectedRowIds, {
+      onSuccess: () => {
+        setIsDeleteModalOpen(false);
+        setSelectedRowKeys([]);
+        setSelectedRowIds([]);
+      },
+    });
   };
 
-  const handleBulkUpdate = async status => {
-    try {
-      await postsApi.bulkStatusUpdate(selectedRowIds, status);
-      history.go(0);
-    } catch (error) {
-      Logger.log(error);
-    }
+  const handleBulkUpdate = status => {
+    bulkStatusUpdate(
+      { postIds: selectedRowIds, status },
+      {
+        onSuccess: () => {
+          setSelectedRowKeys([]);
+          setSelectedRowIds([]);
+        },
+      }
+    );
   };
 
   const handleFilterApplied = values => {
@@ -254,8 +259,8 @@ const Blogs = () => {
             handleChange,
             handleCheck,
             checkedColumns,
-            handleBulkDelete,
             handleBulkUpdate,
+            setIsDeleteModalOpen,
           }}
         />
       </div>
@@ -273,6 +278,11 @@ const Blogs = () => {
         isOpen={isSearchPanOpen}
         onClose={() => setIsSearchPanOpen(false)}
         {...{ handleFilterApplied }}
+      />
+      <DeleteConfirmationModal
+        isOpen={isDeleteModalOpen}
+        onClose={() => setIsDeleteModalOpen(false)}
+        {...{ handleBulkDelete }}
       />
     </PageLayout>
   );

@@ -1,4 +1,4 @@
-import { PostValidationSchema } from "constants/constant";
+import { PostValidationSchema, getPostInitialData } from "constants/constant";
 
 import React, { useEffect, useRef, useState } from "react";
 
@@ -11,20 +11,17 @@ import {
   Dropdown,
 } from "@bigbinary/neetoui";
 import { Form, Input, Select, Textarea } from "@bigbinary/neetoui/formik";
-import postsApi from "apis/posts";
 import { useFetchCategories } from "hooks/reactQuery/useCategoriesApi";
-import Logger from "js-logger";
+import { useFetchPost, useUpdatePost } from "hooks/reactQuery/usePostsApi";
 import { useTranslation } from "react-i18next";
 import { useHistory, useParams } from "react-router-dom";
 import { getFromLocalStorage } from "utils/storage";
 
+import { useDeletePost } from "../../../hooks/reactQuery/usePostsApi";
 import { PageLayout } from "../../commons";
 
 const Edit = () => {
-  const [postLoading, setPostLoading] = useState(false);
-  const [postInitialData, setPostInitialData] = useState(null);
   const [status, setStatus] = useState("");
-
   const formikRef = useRef(null);
 
   const history = useHistory();
@@ -32,33 +29,39 @@ const Edit = () => {
 
   const { t } = useTranslation();
 
+  const { data: { post } = {}, isLoading: isPostLoading } = useFetchPost(slug);
+
   const { data: { categories = [] } = {}, isLoading: isCategoryLoading } =
     useFetchCategories();
 
-  const handleChangeStatus = async () => {
-    try {
-      const values = formikRef.current?.values;
-      await postsApi.update({
+  const { mutate: updatePost } = useUpdatePost();
+  const { mutate: deletePost } = useDeletePost();
+
+  const handleChangeStatus = () => {
+    const values = formikRef.current?.values;
+    updatePost(
+      {
         slug,
         payload: {
           ...values,
           category_ids: values.categories.map(category => category.id),
           status,
         },
-      });
-      history.replace("/");
-    } catch (error) {
-      Logger.error(error);
-    }
+      },
+      {
+        onSuccess: () => {
+          history.replace("/");
+        },
+      }
+    );
   };
 
-  const handleDelete = async () => {
-    try {
-      await postsApi.destroy(slug);
-      history.replace("/posts");
-    } catch (error) {
-      Logger.error(error);
-    }
+  const handleDelete = () => {
+    deletePost(slug, {
+      onSuccess: () => {
+        history.replace("/posts");
+      },
+    });
   };
 
   const handleRedirect = () => {
@@ -78,30 +81,10 @@ const Edit = () => {
   };
 
   useEffect(() => {
-    const fetchPostDetails = async () => {
-      setPostLoading(true);
-      try {
-        const { post } = await postsApi.show(slug);
-        setPostInitialData({
-          title: post.title || "",
-          description: post.description || "",
-          categories:
-            post.categories?.map(category => ({
-              name: category.name,
-              id: category.id,
-            })) || [],
-        });
-        setStatus(post.status);
-      } catch (error) {
-        Logger.log(error);
-      } finally {
-        setPostLoading(false);
-      }
-    };
-    fetchPostDetails();
-  }, []);
+    setStatus(post?.status);
+  }, [post]);
 
-  if (isCategoryLoading || postLoading) {
+  if (isCategoryLoading || isPostLoading) {
     return (
       <div className="flex h-screen items-center justify-center">
         <Spinner />
@@ -170,7 +153,7 @@ const Edit = () => {
             formikProps={{
               validateOnBlur: true,
               enableReinitialize: true,
-              initialValues: postInitialData,
+              initialValues: getPostInitialData(post),
               validationSchema: PostValidationSchema,
               innerRef: formikRef,
               onSubmit: handleChangeStatus,

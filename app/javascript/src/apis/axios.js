@@ -1,3 +1,4 @@
+import { keysToCamelCase, keysToSnakeCase } from "@bigbinary/neeto-cist";
 import { Toastr } from "@bigbinary/neetoui";
 import axios from "axios";
 import { setToLocalStorage, getFromLocalStorage } from "utils/storage";
@@ -5,6 +6,21 @@ import { setToLocalStorage, getFromLocalStorage } from "utils/storage";
 import { DEFAULT_ERROR_NOTIFICATION } from "../constants/constant";
 
 axios.defaults.baseURL = "/api/v1/";
+
+const transformResponseKeysToCamelCase = response => {
+  if (
+    response.request?.responseType === "blob" ||
+    response.data instanceof Blob
+  ) {
+    return;
+  }
+
+  if (response.data) response.data = keysToCamelCase(response.data);
+};
+
+const transformResponseKeysToSnakeCase = request => {
+  if (request.data) request.data = keysToSnakeCase(request.data);
+};
 
 const setAuthHeaders = () => {
   axios.defaults.headers = {
@@ -54,9 +70,20 @@ const handleErrorResponse = axiosErrorObject => {
 };
 
 const registerIntercepts = () => {
-  axios.interceptors.response.use(handleSuccessResponse, error =>
-    handleErrorResponse(error)
+  axios.interceptors.response.use(
+    response => {
+      transformResponseKeysToCamelCase(response);
+
+      return handleSuccessResponse(response);
+    },
+    error => handleErrorResponse(error)
   );
+
+  axios.interceptors.request.use(request => {
+    transformResponseKeysToSnakeCase(request);
+
+    return request;
+  });
 };
 
 const resetAuthTokens = () => {

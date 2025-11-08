@@ -17,11 +17,15 @@ export const PostValidationSchema = yup.object().shape({
     .required("Category is required"),
 });
 
-export const PostInitialData = {
-  title: "",
-  description: "",
-  categories: [],
-};
+export const getPostInitialData = (post = {}) => ({
+  title: post.title || "",
+  description: post.description || "",
+  categories:
+    post.categories?.map(category => ({
+      name: category.name,
+      id: category.id,
+    })) || [],
+});
 
 export const FilterInitialValues = {
   title: "",

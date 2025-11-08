@@ -1,26 +1,28 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 
 import { DownArrow, UpArrow } from "@bigbinary/neeto-icons";
 import { Button, Tag, Typography } from "@bigbinary/neetoui";
-import postsApi from "apis/posts";
 import classNames from "classnames";
 import { useCreateVote, useFetchVotes } from "hooks/reactQuery/useVotesApi";
-import Logger from "js-logger";
 import { useHistory } from "react-router-dom";
 import { fromatDate } from "utils/date";
 
-const Card = ({ id, title, user, created_at, slug, categories }) => {
-  const [postVotesCount, setPostVotesCount] = useState(0);
-  const [userVote, setUserVote] = useState(0);
-  const [isBloggable, setIsBloggable] = useState(false);
-
-  const creationDate = fromatDate(created_at);
-
+const Card = ({
+  id,
+  title,
+  user,
+  updatedAt,
+  slug,
+  categories,
+  isBloggable,
+}) => {
   const history = useHistory();
 
-  const { data: { vote } = {} } = useFetchVotes({
-    post_id: id,
-  });
+  const { data: { vote: { netVotes = 0, userVote = 0 } = {} } = {} } =
+    useFetchVotes({
+      post_id: id,
+    });
+
   const { mutate: createVote } = useCreateVote();
 
   const handleVote = async type => {
@@ -28,32 +30,13 @@ const Card = ({ id, title, user, created_at, slug, categories }) => {
 
     if (userVote === value) value = 0;
 
-    const { vote } = createVote({
+    createVote({
       params: { post_id: id },
       payload: { value },
     });
-    const { post } = await postsApi.show(slug);
-
-    setIsBloggable(post.is_bloggable);
-    setPostVotesCount(vote.net_votes);
-    setUserVote(vote.user_vote);
   };
 
-  useEffect(() => {
-    const fetchPostVotesCount = async () => {
-      try {
-        const { post } = await postsApi.show(slug);
-
-        setIsBloggable(post.is_bloggable);
-        setPostVotesCount(vote.net_votes);
-        setUserVote(vote.user_vote);
-      } catch (error) {
-        Logger.error(error);
-      }
-    };
-
-    fetchPostVotesCount();
-  }, [vote]);
+  const creationDate = fromatDate(updatedAt);
 
   return (
     <div className="flex cursor-default justify-between border-b p-4">
@@ -95,7 +78,7 @@ const Card = ({ id, title, user, created_at, slug, categories }) => {
           }}
         />
         <Typography style="body2" weight="bold">
-          {postVotesCount}
+          {netVotes}
         </Typography>
         <Button
           icon={DownArrow}
