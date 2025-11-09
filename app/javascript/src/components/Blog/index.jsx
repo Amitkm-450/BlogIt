@@ -23,7 +23,7 @@ import useQueryParams from "hooks/useQueryParams";
 import { isEmpty } from "ramda";
 import { Trans, useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
-import { fromatDate } from "utils/date";
+import { formatDate } from "utils/date";
 import { buildFilterParams, buildUrl } from "utils/url";
 
 import SearchFilterPan from "./SearchFilterPan";
@@ -90,7 +90,7 @@ const Blogs = () => {
       width: 200,
       render: updatedAt => (
         <div className="flex items-center">
-          {updatedAt ? fromatDate(updatedAt) : "—"}
+          {updatedAt ? formatDate(updatedAt) : "—"}
         </div>
       ),
     },

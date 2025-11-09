@@ -6,7 +6,7 @@ import classNames from "classnames";
 import { useFetchPost } from "hooks/reactQuery/usePostsApi";
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
-import { fromatDate } from "utils/date";
+import { formatDate } from "utils/date";
 import { getFromLocalStorage } from "utils/storage";
 
 import DownloadModal from "./DownloadModal";
@@ -92,7 +92,7 @@ const Show = () => {
             <Typography className="font-bold text-black" style="body2">
               {user.name}
             </Typography>
-            <Typography style="body2">{fromatDate(updatedAt)}</Typography>
+            <Typography style="body2">{formatDate(updatedAt)}</Typography>
           </div>
         </div>
         <Typography
