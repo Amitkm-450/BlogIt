@@ -13,7 +13,7 @@ import { getFromLocalStorage } from "utils/storage";
 
 import { Login, Signup } from "./components/Authentication";
 import UserBlogs from "./components/Blog";
-import { PrivateRoute } from "./components/commons";
+import { PageNotFound, PrivateRoute } from "./components/commons";
 import Home from "./components/Home";
 import {
   Edit as PostEdit,
@@ -77,6 +77,7 @@ const App = () => {
             redirectRoute="/login"
           />
           <Redirect exact from="/" to="/posts" />
+          <Route component={PageNotFound} path="/*" />
         </Switch>
       </QueryClientProvider>
     </Router>
