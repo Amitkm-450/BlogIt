@@ -240,6 +240,9 @@ const Blogs = () => {
   };
 
   const handleFilterApplied = values => {
+    setSelectedRowKeys([]);
+    setSelectedRowIds([]);
+
     const searchParams = buildFilterParams(values);
 
     const url = buildUrl("/posts/my-blogs", searchParams);

@@ -24,23 +24,23 @@ class Api::V1::PostsController < ApplicationController
 
   def destroy
     @post.destroy
-    render_notice(t("successfully_deleted", entity: "Post"))
+    render_notice(t("successfully_deleted", entity: "Post", count: 1))
   end
 
   def update
     @post.update!(post_params)
-    render_notice(t("successfully_updated", entity: "Post")) unless params[:quiet]
+    render_notice(t("successfully_updated", entity: "Post", count: 1)) unless params[:quiet]
   end
 
   def bulk_destroy
     posts_count = @posts.destroy_all.size
-    render_notice(t("successfully_deleted", entity: posts_count > 1 ? "Posts" : "Post"))
+    render_notice(t("successfully_deleted", entity: posts_count > 1 ? "Posts" : "Post", count: posts_count))
   end
 
   def bulk_status_update
     posts_count = @posts.where.not(status: post_params[:status])
-      .update_all(status: post_params[:status], updated_at: Time.current)
-    render_notice(t("successfully_updated", entity: posts_count > 1 ? "Posts" : "Post"))
+      .update_all(status: post_params[:status], updated_at: Time.zone.now)
+    render_notice(t("successfully_updated", entity: posts_count > 1 ? "Posts" : "Post", count: posts_count))
   end
 
   private
@@ -55,7 +55,7 @@ class Api::V1::PostsController < ApplicationController
 
     def load_posts
       if params[:scope] == "organization"
-        @posts = current_user.organization.posts
+        @posts = current_user.organization.posts.published
       else
         @posts = current_user.posts
       end
