@@ -13,6 +13,7 @@ import {
   Button,
 } from "@bigbinary/neetoui";
 import classNames from "classnames";
+import dayjs from "dayjs";
 import { useFetchCategories } from "hooks/reactQuery/useCategoriesApi";
 import {
   useFetchPosts,
@@ -25,7 +26,6 @@ import useQueryParams from "hooks/useQueryParams";
 import { isEmpty } from "ramda";
 import { Trans, useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
-import { formatDate } from "utils/date";
 import { buildFilterParams, buildUrl, handleFilterRemove } from "utils/url";
 
 import SearchFilterPan from "./SearchFilterPan";
@@ -86,13 +86,15 @@ const Blogs = () => {
           : "—",
     },
     {
-      dataIndex: "updatedAt",
-      key: "updated_at",
+      dataIndex: "lastPublishedAt",
+      key: "lastPublishedAt",
       title: "Last Published At",
       width: 200,
-      render: updatedAt => (
+      render: lastPublishedAt => (
         <div className="flex items-center">
-          {updatedAt ? formatDate(updatedAt) : "—"}
+          {lastPublishedAt
+            ? dayjs(lastPublishedAt).format("MMMM D, YYYY, hh.mm A")
+            : "—"}
         </div>
       ),
     },

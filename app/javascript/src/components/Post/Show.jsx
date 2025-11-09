@@ -30,7 +30,8 @@ const Show = () => {
     );
   }
 
-  const { categories, title, status, user, updatedAt, description } = post;
+  const { categories, title, status, user, lastPublishedAt, description } =
+    post;
 
   return (
     <PageLayout>
@@ -92,7 +93,7 @@ const Show = () => {
             <Typography className="font-bold text-black" style="body2">
               {user.name}
             </Typography>
-            <Typography style="body2">{formatDate(updatedAt)}</Typography>
+            <Typography style="body2">{formatDate(lastPublishedAt)}</Typography>
           </div>
         </div>
         <Typography

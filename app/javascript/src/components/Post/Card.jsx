@@ -11,7 +11,7 @@ const Card = ({
   id,
   title,
   user,
-  updatedAt,
+  lastPublishedAt,
   slug,
   categories,
   isBloggable,
@@ -36,8 +36,6 @@ const Card = ({
     });
   };
 
-  const creationDate = formatDate(updatedAt);
-
   return (
     <div className="flex cursor-default justify-between border-b p-4">
       <div
@@ -59,7 +57,7 @@ const Card = ({
         </div>
         <Typography className="mt-1 text-gray-600">{user.name}</Typography>
         <Typography className="text-sm text-gray-400">
-          {creationDate}
+          {formatDate(lastPublishedAt)}
         </Typography>
       </div>
       <div className="flex flex-col items-center">

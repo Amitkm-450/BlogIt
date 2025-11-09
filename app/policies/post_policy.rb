@@ -13,10 +13,6 @@ class PostPolicy
     record.organization_id == user.organization_id
   end
 
-  def create?
-    user.present?
-  end
-
   def update?
     record.user_id == user.id
   end

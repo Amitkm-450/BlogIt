@@ -12,9 +12,7 @@ class Api::V1::PostsController < ApplicationController
   end
 
   def create
-    post = current_user.posts.build(post_params)
-    authorize post
-    post.save!
+    post = current_user.posts.create!(post_params)
     render_notice(t("successfully_created", entity: "Post"))
   end
 
@@ -38,8 +36,12 @@ class Api::V1::PostsController < ApplicationController
   end
 
   def bulk_status_update
-    posts_count = @posts.where.not(status: post_params[:status])
-      .update_all(status: post_params[:status], updated_at: Time.zone.now)
+    status = post_params[:status]
+    updates = { status: }.merge(status == "published" ? { last_published_at: Time.zone.now } : {})
+
+    posts_count = @posts.where.not(status: status)
+      .update_all(updates)
+
     render_notice(t("successfully_updated", entity: posts_count > 1 ? "Posts" : "Post", count: posts_count))
   end
 

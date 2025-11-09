@@ -24,7 +24,15 @@ class Post < ApplicationRecord
   validates :slug, uniqueness: true
   validates_with SlugImmutableValidator
 
+  before_save :set_last_published_at, if: :published?
+
   def net_votes
     votes.sum(:value)
   end
+
+  private
+
+    def set_last_published_at
+      self.last_published_at = Time.zone.now
+    end
 end
