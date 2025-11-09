@@ -5,7 +5,7 @@ import { Button, Tag, Typography } from "@bigbinary/neetoui";
 import classNames from "classnames";
 import { useCreateVote, useFetchVotes } from "hooks/reactQuery/useVotesApi";
 import { useHistory } from "react-router-dom";
-import { fromatDate } from "utils/date";
+import { formatDate } from "utils/date";
 
 const Card = ({
   id,
@@ -36,7 +36,7 @@ const Card = ({
     });
   };
 
-  const creationDate = fromatDate(updatedAt);
+  const creationDate = formatDate(updatedAt);
 
   return (
     <div className="flex cursor-default justify-between border-b p-4">

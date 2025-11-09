@@ -1,4 +1,4 @@
-import { keysToSnakeCase } from "@bigbinary/neeto-cist";
+import { filterNonNull, keysToSnakeCase } from "@bigbinary/neeto-cist";
 import { stringify } from "qs";
 import { isEmpty, toPairs, pipe, omit } from "ramda";
 
@@ -36,4 +36,14 @@ export const buildFilterParams = ({ title, categories = [], status }) => {
   }
 
   return params;
+};
+
+export const handleFilterRemove = ({ key, filters, history, route }) => {
+  const updatedFilters = {
+    ...filters,
+    [key]: null,
+  };
+
+  const url = buildUrl(route, filterNonNull(updatedFilters));
+  history.replace(url);
 };

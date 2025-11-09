@@ -66,7 +66,8 @@
     "cancel": "Cancel",
     "submit": "Submit",
     "delete": "Delete",
-    "addNewBlog": "Add new blog post"
+    "addNewBlog": "Add new blog post",
+    "clearFilter": "Clear filter"
   },
   "signup": {
     "header": "Sign Up",
@@ -128,6 +129,11 @@
     "articlesCount_other": "<span>{{count}} articles</span>",
     "articlesSelected_one": "<span>{{count}} article selected of {{total}}</span>",
     "articlesSelected_other": "<span>{{count}} articles selected of {{total}}</span>",
+    "filters": {
+      "categories": "Categories: <value>{{value}}</value>",
+      "status": "Status: <value>{{value}}</value>",
+      "searchTerm": "Search term: <value>{{value}}</value>"
+    },
     "actions": {
       "publish": "Publish",
       "unpublish": "Unpublish",

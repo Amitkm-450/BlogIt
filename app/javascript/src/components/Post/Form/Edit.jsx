@@ -42,6 +42,11 @@ const Edit = () => {
   const { mutate: updatePost } = useUpdatePost();
   const { mutate: deletePost } = useDeletePost();
 
+  const handleCancel = () => {
+    formikRef?.current.resetForm();
+    setStatus(post.status);
+  };
+
   const handleChangeStatus = () => {
     const values = formikRef.current?.values;
     updatePost(
@@ -68,18 +73,17 @@ const Edit = () => {
 
   const handleRedirect = () => {
     const values = formikRef.current?.values;
-    history.push({
-      pathname: `/posts/${slug}/preview`,
-      state: {
-        post: {
-          ...values,
-          status,
-          user: {
-            name: getFromLocalStorage("authUserName"),
-          },
-        },
-      },
-    });
+
+    localStorage.setItem(
+      `preview_post_${slug}`,
+      JSON.stringify({
+        ...values,
+        status,
+        user: { name: getFromLocalStorage("authUserName") },
+      })
+    );
+
+    window.open(`/posts/${slug}/preview`, "_blank", "noopener,noreferrer");
   };
 
   useEffect(() => {
@@ -117,11 +121,15 @@ const Edit = () => {
             <Button
               label={t("button.cancel")}
               style="secondary"
-              onClick={() => formikRef?.current.resetForm()}
+              onClick={handleCancel}
             />
             <ActionDropdown
               buttonStyle="secondary"
-              label={status === "draft" ? "Save as draft" : "Publish"}
+              label={
+                status === "draft"
+                  ? t("posts.actions.setAsDraft")
+                  : t("posts.actions.publish")
+              }
               onClick={() => formikRef?.current.submitForm()}
             >
               <Menu>

@@ -1,21 +1,27 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 
 import { Avatar, Tag, Typography } from "@bigbinary/neetoui";
 import classNames from "classnames";
-// import { useTranslation } from "react-i18next";
 import { useTranslation } from "react-i18next";
-import { useLocation } from "react-router-dom";
-import { fromatDate } from "utils/date";
+import { useParams } from "react-router-dom";
+import { formatDate } from "utils/date";
 
 import { PageLayout } from "../../commons";
 
 const Preview = () => {
-  const location = useLocation();
-  const post = location.state?.post;
+  const [post, setPost] = useState({});
 
   const { t } = useTranslation();
+  const { slug } = useParams();
 
-  const { categories, title, status, user, created_at, description } = post;
+  useEffect(() => {
+    const data = localStorage.getItem(`preview_post_${slug}`);
+    if (data) {
+      setPost(JSON.parse(data));
+    }
+  }, [slug]);
+
+  const { categories, title, status, user, updatedAt, description } = post;
 
   return (
     <PageLayout>
@@ -54,9 +60,9 @@ const Preview = () => {
           </div>
           <div className="flex-col">
             <Typography className="font-bold text-black" style="body2">
-              {user.name}
+              {user?.name}
             </Typography>
-            <Typography style="body2">{fromatDate(created_at)}</Typography>
+            <Typography style="body2">{formatDate(updatedAt)}</Typography>
           </div>
         </div>
         <Typography
