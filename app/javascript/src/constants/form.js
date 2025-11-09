@@ -2,7 +2,7 @@ import * as yup from "yup";
 
 export const DEFAULT_ERROR_NOTIFICATION = "Something went wrong!";
 
-export const PostValidationSchema = yup.object().shape({
+export const POST_VALIDATION_SCHEMA = yup.object().shape({
   title: yup
     .string()
     .max(125, "Title must be at most 125 characters")
@@ -37,7 +37,7 @@ export const getFilterInitialValues = ({
   status: status || {},
 });
 
-export const FilterValidationSchema = yup.object().shape({
+export const FILTER_VALIDATION_SCHEMA = yup.object().shape({
   title: yup.string().max(100, "Title cannot exceed 100 characters"),
   categories: yup.array(),
   status: yup

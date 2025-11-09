@@ -122,5 +122,27 @@
     "deleteModal": {
       "header": "Are you sure ? You want to delete these posts ."
     }
+  },
+  "posts": {
+    "articlesCount_one": "<span>{{count}} article</span>",
+    "articlesCount_other": "<span>{{count}} articles</span>",
+    "articlesSelected_one": "<span>{{count}} article selected of {{total}}</span>",
+    "articlesSelected_other": "<span>{{count}} articles selected of {{total}}</span>",
+    "actions": {
+      "publish": "Publish",
+      "unpublish": "Unpublish",
+      "delete": "Delete",
+      "setAsDraft": "Save as draft"
+    },
+    "noData": "<span>There are no {{value}} to show.</span>",
+    "deleteAlert": {
+      "header": "Delete post?",
+      "subHeader": "You are about to delete this post? It'll be permanently deleted and we won't be able to recover it."
+    },
+    "bulkDelete": {
+      "header": "Delete posts?",
+      "subHeader_one": "You are about to delete <typography>{{count}}</typography> post? It'll be permanently deleted and we won't be able to recover it.",
+      "subHeader_other": "You are about to delete <typography>{{count}}</typography> posts? It'll be permanently deleted and we won't be able to recover it."
+    }
   }
 }

@@ -8,8 +8,9 @@ import {
   Table,
   Tooltip,
   Typography,
-  Tag,
+  NoData,
 } from "@bigbinary/neetoui";
+import classNames from "classnames";
 import { useFetchCategories } from "hooks/reactQuery/useCategoriesApi";
 import {
   useFetchPosts,
@@ -19,21 +20,23 @@ import {
   useBulkStatusUpdate,
 } from "hooks/reactQuery/usePostsApi";
 import useQueryParams from "hooks/useQueryParams";
-import { useTranslation } from "react-i18next";
+import { isEmpty } from "ramda";
+import { Trans, useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
 import { fromatDate } from "utils/date";
 import { buildFilterParams, buildUrl } from "utils/url";
 
-import DeleteConfirmationModal from "./DeleteConfirmationModal";
 import SearchFilterPan from "./SearchFilterPan";
 import SubHeader from "./SubHeader";
 
-import { PageLayout } from "../commons";
+import { DeleteConfirmationModal, PageLayout } from "../commons";
 
 const Blogs = () => {
-  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [isBulkDeleteModalOpen, setIsBulkDeleteModalOpen] = useState(false);
+  const [isSingleDeleteModalOpen, setIsSingleDeleteModalOpen] = useState(false);
   const [selectedRowKeys, setSelectedRowKeys] = useState([]);
   const [selectedRowIds, setSelectedRowIds] = useState([]);
+  const [selectedPostSlug, setSelectedPostSlug] = useState("");
   const [isSearchPanOpen, setIsSearchPanOpen] = useState(false);
 
   const history = useHistory();
@@ -77,9 +80,7 @@ const Blogs = () => {
       width: 200,
       render: categories =>
         categories?.length > 0
-          ? categories.map(({ id, name }) => (
-              <Tag className="mx-1" key={id} label={name} />
-            ))
+          ? categories.map(({ name }) => name).join(", ")
           : "—",
     },
     {
@@ -121,18 +122,19 @@ const Blogs = () => {
                     : handleChange(post.slug, "published")
                 }
               >
-                {post.status === "published" ? "Unpublish" : "Publish"}
+                {post.status === "published"
+                  ? t("posts.actions.unpublish")
+                  : t("posts.actions.publish")}
               </MenuItemButton>
             </MenuItem>
             <Divider />
             <MenuItem>
               <MenuItemButton
-                label="Delete"
                 style="danger"
                 type="delete"
                 onClick={() => handleDelete(post.slug)}
               >
-                Delete
+                {t("posts.actions.delete")}
               </MenuItemButton>
             </MenuItem>
           </Menu>
@@ -197,13 +199,13 @@ const Blogs = () => {
   };
 
   const handleDelete = slug => {
-    deletePost(slug);
+    setIsSingleDeleteModalOpen(true);
+    setSelectedPostSlug(slug);
   };
 
   const handleBulkDelete = () => {
     bulkDestroyPosts(selectedRowIds, {
       onSuccess: () => {
-        setIsDeleteModalOpen(false);
         setSelectedRowKeys([]);
         setSelectedRowIds([]);
       },
@@ -234,12 +236,23 @@ const Blogs = () => {
     setSelectedRowIds(selectedRows.map(selectedRow => selectedRow.id));
   };
 
+  const handleSingleDelete = () => {
+    deletePost(selectedPostSlug, {
+      onSuccess: () => {
+        setSelectedRowKeys([]);
+        setSelectedRowIds([]);
+      },
+    });
+  };
+
   const { Menu, MenuItem, Divider } = Dropdown;
   const { Button: MenuItemButton } = MenuItem;
 
   const filteredColumnData = columnData.filter(
     column => checkedColumns[column.title]
   );
+
+  const selectedPostsCount = selectedRowKeys.length;
 
   if (isPostsLoading) {
     return (
@@ -262,34 +275,76 @@ const Blogs = () => {
             setIsSearchPanOpen,
             selectedRowKeys,
             userBlogs,
-            handleDelete,
-            handleChange,
             handleCheck,
             checkedColumns,
             handleBulkUpdate,
-            setIsDeleteModalOpen,
+            columnData,
           }}
+          setIsDeleteModalOpen={setIsBulkDeleteModalOpen}
         />
       </div>
-      <Table
-        enableColumnResize
-        rowSelection
-        columnData={filteredColumnData}
-        rowData={userBlogs}
-        selectedRowKeys={selectedRowKeys}
-        onRowSelect={(selectedRowKeys, selectedRows) =>
-          handleRowSelect(selectedRowKeys, selectedRows)
-        }
-      />
+      <div
+        className={classNames(
+          "flex h-full w-full items-center justify-center",
+          {
+            hidden: !isEmpty(userBlogs),
+            block: isEmpty(userBlogs),
+          }
+        )}
+      >
+        <NoData
+          title={
+            <Trans
+              i18nKey="posts.noData"
+              values={{ value: "articles" }}
+              components={{
+                span: <Typography component="h3" style="semibold" />,
+              }}
+            />
+          }
+        />
+      </div>
+      <div
+        className={classNames("", {
+          hidden: isEmpty(userBlogs),
+          block: !isEmpty(userBlogs),
+        })}
+      >
+        <Table
+          enableColumnResize
+          rowSelection
+          columnData={filteredColumnData}
+          rowData={userBlogs}
+          selectedRowKeys={selectedRowKeys}
+          onRowSelect={(selectedRowKeys, selectedRows) =>
+            handleRowSelect(selectedRowKeys, selectedRows)
+          }
+        />
+      </div>
       <SearchFilterPan
         isOpen={isSearchPanOpen}
         onClose={() => setIsSearchPanOpen(false)}
         {...{ handleFilterApplied }}
       />
       <DeleteConfirmationModal
-        isOpen={isDeleteModalOpen}
-        onClose={() => setIsDeleteModalOpen(false)}
-        {...{ handleBulkDelete }}
+        isOpen={isBulkDeleteModalOpen || isSingleDeleteModalOpen}
+        values={isBulkDeleteModalOpen ? { count: selectedPostsCount } : {}}
+        headerMessage={
+          selectedPostsCount > 1 && isBulkDeleteModalOpen
+            ? t("posts.bulkDelete.header")
+            : t("posts.deleteAlert.header")
+        }
+        setIsOpen={
+          isBulkDeleteModalOpen
+            ? setIsBulkDeleteModalOpen
+            : setIsSingleDeleteModalOpen
+        }
+        subHeaderMessageKey={
+          isBulkDeleteModalOpen
+            ? "posts.bulkDelete.subHeader"
+            : "posts.deleteAlert.subHeader"
+        }
+        onSubmit={isBulkDeleteModalOpen ? handleBulkDelete : handleSingleDelete}
       />
     </PageLayout>
   );

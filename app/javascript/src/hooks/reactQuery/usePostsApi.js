@@ -48,8 +48,15 @@ export const useDeletePost = () => {
 
   return useMutation({
     mutationFn: slug => postsApi.destroy(slug),
-    onSuccess: () => {
-      queryClient.invalidateQueries([QUERY_KEYS.POSTS]);
+    onSuccess: (_, slug) => {
+      queryClient.invalidateQueries({
+        queryKey: [QUERY_KEYS.POSTS, slug],
+      });
+
+      queryClient.invalidateQueries({
+        queryKey: [QUERY_KEYS.POSTS],
+        exact: false,
+      });
     },
   });
 };

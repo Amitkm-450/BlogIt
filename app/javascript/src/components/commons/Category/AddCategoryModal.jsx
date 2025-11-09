@@ -1,7 +1,7 @@
 import {
   CATEGORY_INITIAL_DATA,
   CATEGORY_VALIDATION_SCHEMA,
-} from "constants/constant";
+} from "constants/form";
 
 import React, { useRef, useState } from "react";
 

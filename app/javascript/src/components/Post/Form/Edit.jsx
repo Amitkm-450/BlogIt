@@ -1,8 +1,8 @@
-import { PostValidationSchema, getPostInitialData } from "constants/constant";
+import { POST_VALIDATION_SCHEMA, getPostInitialData } from "constants/form";
 
 import React, { useEffect, useRef, useState } from "react";
 
-import { MenuHorizontal, Redirection } from "@bigbinary/neeto-icons";
+import { ExternalLink, MenuHorizontal } from "@bigbinary/neeto-icons";
 import {
   Button,
   Spinner,
@@ -12,16 +12,21 @@ import {
 } from "@bigbinary/neetoui";
 import { Form, Input, Select, Textarea } from "@bigbinary/neetoui/formik";
 import { useFetchCategories } from "hooks/reactQuery/useCategoriesApi";
-import { useFetchPost, useUpdatePost } from "hooks/reactQuery/usePostsApi";
+import {
+  useFetchPost,
+  useUpdatePost,
+  useDeletePost,
+} from "hooks/reactQuery/usePostsApi";
 import { useTranslation } from "react-i18next";
 import { useHistory, useParams } from "react-router-dom";
 import { getFromLocalStorage } from "utils/storage";
 
-import { useDeletePost } from "../../../hooks/reactQuery/usePostsApi";
-import { PageLayout } from "../../commons";
+import { DeleteConfirmationModal, PageLayout } from "../../commons";
 
 const Edit = () => {
+  const [isSingleDeleteModalOpen, setIsSingleDeleteModalOpen] = useState(false);
   const [status, setStatus] = useState("");
+
   const formikRef = useRef(null);
 
   const history = useHistory();
@@ -57,11 +62,8 @@ const Edit = () => {
   };
 
   const handleDelete = () => {
-    deletePost(slug, {
-      onSuccess: () => {
-        history.replace("/posts");
-      },
-    });
+    history.replace("/posts");
+    deletePost(slug);
   };
 
   const handleRedirect = () => {
@@ -103,7 +105,15 @@ const Edit = () => {
             {t("header.editBlogPost")}
           </Typography>
           <div className="flex items-center space-x-2">
-            <Button icon={Redirection} style="link" onClick={handleRedirect} />
+            <Button
+              icon={ExternalLink}
+              style="link"
+              tooltipProps={{
+                content: "Preview",
+                position: "top",
+              }}
+              onClick={handleRedirect}
+            />
             <Button
               label={t("button.cancel")}
               style="secondary"
@@ -121,7 +131,7 @@ const Edit = () => {
                       setStatus("published");
                     }}
                   >
-                    Publish
+                    {t("posts.actions.publish")}
                   </MenuItemButton>
                 </MenuItem>
                 <Divider />
@@ -131,7 +141,7 @@ const Edit = () => {
                       setStatus("draft");
                     }}
                   >
-                    Save as draft
+                    {t("posts.actions.setAsDraft")}
                   </MenuItemButton>
                 </MenuItem>
               </Menu>
@@ -140,9 +150,9 @@ const Edit = () => {
               <Dropdown.MenuItem>
                 <Dropdown.MenuItem.Button
                   className="text-red-600"
-                  onClick={handleDelete}
+                  onClick={() => setIsSingleDeleteModalOpen(true)}
                 >
-                  Delete
+                  {t("posts.actions.delete")}
                 </Dropdown.MenuItem.Button>
               </Dropdown.MenuItem>
             </Dropdown>
@@ -154,7 +164,7 @@ const Edit = () => {
               validateOnBlur: true,
               enableReinitialize: true,
               initialValues: getPostInitialData(post),
-              validationSchema: PostValidationSchema,
+              validationSchema: POST_VALIDATION_SCHEMA,
               innerRef: formikRef,
               onSubmit: handleChangeStatus,
             }}
@@ -193,6 +203,13 @@ const Edit = () => {
           </Form>
         </div>
       </div>
+      <DeleteConfirmationModal
+        headerMessage={t("posts.deleteAlert.header")}
+        isOpen={isSingleDeleteModalOpen}
+        setIsOpen={setIsSingleDeleteModalOpen}
+        subHeaderMessageKey="posts.deleteAlert.subHeader"
+        onSubmit={handleDelete}
+      />
     </PageLayout>
   );
 };
