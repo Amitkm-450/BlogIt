@@ -1,4 +1,4 @@
-import { PostValidationSchema, getPostInitialData } from "constants/constant";
+import { POST_VALIDATION_SCHEMA, getPostInitialData } from "constants/form";
 
 import React, { useRef, useState } from "react";
 
@@ -105,7 +105,7 @@ const Create = () => {
               validateOnBlur: true,
               enableReinitialize: true,
               initialValues: getPostInitialData(),
-              validationSchema: PostValidationSchema,
+              validationSchema: POST_VALIDATION_SCHEMA,
               innerRef: formikRef,
               onSubmit: handleChangeStatus,
             }}

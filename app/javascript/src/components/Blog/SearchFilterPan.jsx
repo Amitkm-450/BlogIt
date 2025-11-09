@@ -1,7 +1,7 @@
 import {
   getFilterInitialValues,
-  FilterValidationSchema,
-} from "constants/constant";
+  FILTER_VALIDATION_SCHEMA,
+} from "constants/form";
 
 import React, { useRef } from "react";
 
@@ -74,7 +74,7 @@ const SearchFilterPan = ({ isOpen, onClose, handleFilterApplied }) => {
               selectedCategories,
               status,
             }),
-            validationSchema: FilterValidationSchema,
+            validationSchema: FILTER_VALIDATION_SCHEMA,
             innerRef: filterFormRef,
           }}
         >

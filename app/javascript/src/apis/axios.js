@@ -3,7 +3,7 @@ import { Toastr } from "@bigbinary/neetoui";
 import axios from "axios";
 import { setToLocalStorage, getFromLocalStorage } from "utils/storage";
 
-import { DEFAULT_ERROR_NOTIFICATION } from "../constants/constant";
+import { DEFAULT_ERROR_NOTIFICATION } from "../constants/form";
 
 axios.defaults.baseURL = "/api/v1/";
 

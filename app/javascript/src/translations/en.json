@@ -131,7 +131,8 @@
     "actions": {
       "publish": "Publish",
       "unpublish": "Unpublish",
-      "delete": "Delete"
+      "delete": "Delete",
+      "setAsDraft": "Save as draft"
     },
     "noData": "<span>There are no {{value}} to show.</span>",
     "deleteAlert": {

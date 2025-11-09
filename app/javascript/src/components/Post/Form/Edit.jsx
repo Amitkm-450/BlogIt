@@ -1,4 +1,4 @@
-import { PostValidationSchema, getPostInitialData } from "constants/constant";
+import { POST_VALIDATION_SCHEMA, getPostInitialData } from "constants/form";
 
 import React, { useEffect, useRef, useState } from "react";
 
@@ -131,7 +131,7 @@ const Edit = () => {
                       setStatus("published");
                     }}
                   >
-                    Publish
+                    {t("posts.actions.publish")}
                   </MenuItemButton>
                 </MenuItem>
                 <Divider />
@@ -141,7 +141,7 @@ const Edit = () => {
                       setStatus("draft");
                     }}
                   >
-                    Save as draft
+                    {t("posts.actions.setAsDraft")}
                   </MenuItemButton>
                 </MenuItem>
               </Menu>
@@ -152,7 +152,7 @@ const Edit = () => {
                   className="text-red-600"
                   onClick={() => setIsSingleDeleteModalOpen(true)}
                 >
-                  Delete
+                  {t("posts.actions.delete")}
                 </Dropdown.MenuItem.Button>
               </Dropdown.MenuItem>
             </Dropdown>
@@ -164,7 +164,7 @@ const Edit = () => {
               validateOnBlur: true,
               enableReinitialize: true,
               initialValues: getPostInitialData(post),
-              validationSchema: PostValidationSchema,
+              validationSchema: POST_VALIDATION_SCHEMA,
               innerRef: formikRef,
               onSubmit: handleChangeStatus,
             }}
