@@ -9,6 +9,8 @@ import {
   Tooltip,
   Typography,
   NoData,
+  Tag,
+  Button,
 } from "@bigbinary/neetoui";
 import classNames from "classnames";
 import { useFetchCategories } from "hooks/reactQuery/useCategoriesApi";
@@ -24,7 +26,7 @@ import { isEmpty } from "ramda";
 import { Trans, useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
 import { formatDate } from "utils/date";
-import { buildFilterParams, buildUrl } from "utils/url";
+import { buildFilterParams, buildUrl, handleFilterRemove } from "utils/url";
 
 import SearchFilterPan from "./SearchFilterPan";
 import SubHeader from "./SubHeader";
@@ -151,16 +153,23 @@ const Blogs = () => {
     }, {})
   );
 
+  const queryParams = useQueryParams();
   const {
     searchTerm = "",
     status = "",
     categories: queryCategories = "",
-  } = useQueryParams();
+  } = queryParams;
+
+  const shouldShowFilters =
+    isEmpty(selectedRowIds) &&
+    Object.keys(queryParams)
+      .filter(key => key !== "page")
+      .some(key => Boolean(queryParams[key]));
 
   const { data: { categories = [] } = {} } = useFetchCategories();
 
   const selectedCategoryIds = categories
-    .filter(({ name }) => queryCategories.split(",").includes(name))
+    .filter(({ name }) => queryCategories?.split(",").includes(name))
     .map(({ id }) => id);
 
   const filterParams = {
@@ -169,6 +178,12 @@ const Blogs = () => {
       category_ids: selectedCategoryIds,
     }),
     ...(status && { status }),
+  };
+
+  const filters = {
+    ...(searchTerm && { searchTerm }),
+    ...(status && { status }),
+    ...(queryCategories && { categories: queryCategories }),
   };
 
   const { data: userBlogs = [], isLoading: isPostsLoading } = useFetchPosts({
@@ -281,6 +296,57 @@ const Blogs = () => {
             columnData,
           }}
           setIsDeleteModalOpen={setIsBulkDeleteModalOpen}
+        />
+      </div>
+      <div
+        className={classNames("flex items-center space-x-8", {
+          hidden: !shouldShowFilters,
+          block: shouldShowFilters,
+        })}
+      >
+        <div className="flex items-center space-x-3 py-2">
+          {!isEmpty(filters) &&
+            Object.entries(filters)
+              .filter(([_, value]) => Boolean(value))
+              .map(([key, value]) => {
+                if (key === "status") value = capitalize(value);
+
+                return (
+                  <Tag
+                    key={key}
+                    style="secondary"
+                    label={
+                      <Trans
+                        i18nKey={`posts.filters.${key}`}
+                        key={key}
+                        values={{ value }}
+                        components={{
+                          value: (
+                            <Typography
+                              className="text-gray-500"
+                              style="body2"
+                            />
+                          ),
+                        }}
+                      />
+                    }
+                    onClose={() => {
+                      handleFilterRemove({
+                        key,
+                        filters,
+                        history,
+                        route: "/posts/my-blogs",
+                      });
+                    }}
+                  />
+                );
+              })}
+        </div>
+        <Button
+          className="bg-gray-200"
+          label={t("button.clearFilter")}
+          style="Secondary"
+          onClick={() => history.replace("/posts/my-blogs")}
         />
       </div>
       <div
