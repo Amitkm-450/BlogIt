@@ -1,6 +1,13 @@
+import DeleteConfirmationModal from "./DeleteConfirmationModal";
 import PageLayout from "./PageLayout";
 import PrivateRoute from "./PrivateRoute";
 import ProgressBar from "./ProgressBar";
 import Sidebar from "./Sidebar";
 
-export { PageLayout, Sidebar, PrivateRoute, ProgressBar };
+export {
+  PageLayout,
+  Sidebar,
+  PrivateRoute,
+  ProgressBar,
+  DeleteConfirmationModal,
+};

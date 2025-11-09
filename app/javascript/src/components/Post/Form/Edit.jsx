@@ -12,14 +12,16 @@ import {
 } from "@bigbinary/neetoui";
 import { Form, Input, Select, Textarea } from "@bigbinary/neetoui/formik";
 import { useFetchCategories } from "hooks/reactQuery/useCategoriesApi";
-import { useFetchPost, useUpdatePost } from "hooks/reactQuery/usePostsApi";
+import {
+  useFetchPost,
+  useUpdatePost,
+  useDeletePost,
+} from "hooks/reactQuery/usePostsApi";
 import { useTranslation } from "react-i18next";
 import { useHistory, useParams } from "react-router-dom";
 import { getFromLocalStorage } from "utils/storage";
 
-import { useDeletePost } from "../../../hooks/reactQuery/usePostsApi";
-import { PageLayout } from "../../commons";
-import DeleteConfirmationModal from "../../commons/DeleteConfirmationModal";
+import { DeleteConfirmationModal, PageLayout } from "../../commons";
 
 const Edit = () => {
   const [isSingleDeleteModalOpen, setIsSingleDeleteModalOpen] = useState(false);
@@ -205,8 +207,10 @@ const Edit = () => {
         </div>
       </div>
       <DeleteConfirmationModal
+        headerMessage={t("posts.deleteAlert.header")}
         isOpen={isSingleDeleteModalOpen}
         setIsOpen={setIsSingleDeleteModalOpen}
+        subHeaderMessageKey="posts.deleteAlert.subHeader"
         onSubmit={handleDelete}
       />
     </PageLayout>

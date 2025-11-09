@@ -24,12 +24,10 @@ import { useHistory } from "react-router-dom";
 import { fromatDate } from "utils/date";
 import { buildFilterParams, buildUrl } from "utils/url";
 
-import DeleteConfirmationModal from "./DeleteConfirmationModal";
 import SearchFilterPan from "./SearchFilterPan";
 import SubHeader from "./SubHeader";
 
-import { PageLayout } from "../commons";
-import PostDeleteConfirmationModal from "../commons/DeleteConfirmationModal";
+import { DeleteConfirmationModal, PageLayout } from "../commons";
 
 const Blogs = () => {
   const [isBulkDeleteModalOpen, setIsBulkDeleteModalOpen] = useState(false);
@@ -207,7 +205,6 @@ const Blogs = () => {
   const handleBulkDelete = () => {
     bulkDestroyPosts(selectedRowIds, {
       onSuccess: () => {
-        setIsBulkDeleteModalOpen(false);
         setSelectedRowKeys([]);
         setSelectedRowIds([]);
       },
@@ -238,12 +235,23 @@ const Blogs = () => {
     setSelectedRowIds(selectedRows.map(selectedRow => selectedRow.id));
   };
 
+  const handleSingleDelete = () => {
+    deletePost(selectedPostSlug, {
+      onSuccess: () => {
+        setSelectedRowKeys([]);
+        setSelectedRowIds([]);
+      },
+    });
+  };
+
   const { Menu, MenuItem, Divider } = Dropdown;
   const { Button: MenuItemButton } = MenuItem;
 
   const filteredColumnData = columnData.filter(
     column => checkedColumns[column.title]
   );
+
+  const selectedPostsCount = selectedRowKeys.length;
 
   if (isPostsLoading) {
     return (
@@ -291,14 +299,24 @@ const Blogs = () => {
         {...{ handleFilterApplied }}
       />
       <DeleteConfirmationModal
-        isOpen={isBulkDeleteModalOpen}
-        onClose={() => setIsBulkDeleteModalOpen(false)}
-        {...{ handleBulkDelete }}
-      />
-      <PostDeleteConfirmationModal
-        isOpen={isSingleDeleteModalOpen}
-        setIsOpen={setIsSingleDeleteModalOpen}
-        onSubmit={() => deletePost(selectedPostSlug)}
+        isOpen={isBulkDeleteModalOpen || isSingleDeleteModalOpen}
+        values={isBulkDeleteModalOpen ? { count: selectedPostsCount } : {}}
+        headerMessage={
+          selectedPostsCount > 1 && isBulkDeleteModalOpen
+            ? t("posts.bulkDelete.header")
+            : t("posts.deleteAlert.header")
+        }
+        setIsOpen={
+          isBulkDeleteModalOpen
+            ? setIsBulkDeleteModalOpen
+            : setIsSingleDeleteModalOpen
+        }
+        subHeaderMessageKey={
+          isBulkDeleteModalOpen
+            ? "posts.bulkDelete.subHeader"
+            : "posts.deleteAlert.subHeader"
+        }
+        onSubmit={isBulkDeleteModalOpen ? handleBulkDelete : handleSingleDelete}
       />
     </PageLayout>
   );

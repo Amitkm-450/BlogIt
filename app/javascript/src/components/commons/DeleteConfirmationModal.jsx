@@ -1,11 +1,16 @@
 import React from "react";
 
 import { Alert, Typography } from "@bigbinary/neetoui";
-import { Trans, useTranslation } from "react-i18next";
+import { Trans } from "react-i18next";
 
-const DeleteConfirmationModal = ({ isOpen, setIsOpen, onSubmit }) => {
-  const { t } = useTranslation();
-
+const DeleteConfirmationModal = ({
+  isOpen,
+  setIsOpen,
+  onSubmit,
+  headerMessage,
+  values = {},
+  subHeaderMessageKey,
+}) => {
   const handleSubmit = () => {
     setIsOpen(false);
     onSubmit();
@@ -14,10 +19,11 @@ const DeleteConfirmationModal = ({ isOpen, setIsOpen, onSubmit }) => {
   return (
     <Alert
       isOpen={isOpen}
-      title={t("posts.deleteAlert.header")}
+      title={headerMessage}
       message={
         <Trans
-          i18nKey="posts.deleteAlert.subHeader"
+          i18nKey={subHeaderMessageKey}
+          values={values}
           components={{
             typography: (
               <Typography

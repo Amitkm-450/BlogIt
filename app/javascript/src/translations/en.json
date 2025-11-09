@@ -126,7 +126,12 @@
   "posts": {
     "deleteAlert": {
       "header": "Delete post?",
-      "subHeader": "<typography>You are permanently deleting this post. This action cannot be undone. Are you sure you want to continue?</typography>"
+      "subHeader": "You are about to delete this post? It'll be permanently deleted and we won't be able to recover it."
+    },
+    "bulkDelete": {
+      "header": "Delete posts?",
+      "subHeader_one": "You are about to delete <typography>{{count}}</typography> post? It'll be permanently deleted and we won't be able to recover it.",
+      "subHeader_other": "You are about to delete <typography>{{count}}</typography> posts? It'll be permanently deleted and we won't be able to recover it."
     }
   }
 }
