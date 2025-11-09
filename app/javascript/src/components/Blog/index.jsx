@@ -274,11 +274,10 @@ const Blogs = () => {
             setIsSearchPanOpen,
             selectedRowKeys,
             userBlogs,
-            handleDelete,
-            handleChange,
             handleCheck,
             checkedColumns,
             handleBulkUpdate,
+            columnData,
           }}
           setIsDeleteModalOpen={setIsBulkDeleteModalOpen}
         />
