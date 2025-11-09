@@ -62,11 +62,8 @@ const Edit = () => {
   };
 
   const handleDelete = () => {
-    deletePost(slug, {
-      onSuccess: () => {
-        history.replace("/posts");
-      },
-    });
+    history.replace("/posts");
+    deletePost(slug);
   };
 
   const handleRedirect = () => {

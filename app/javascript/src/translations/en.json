@@ -128,6 +128,12 @@
     "articlesCount_other": "<span>{{count}} articles</span>",
     "articlesSelected_one": "<span>{{count}} article selected of {{total}}</span>",
     "articlesSelected_other": "<span>{{count}} articles selected of {{total}}</span>",
+    "actions": {
+      "publish": "Publish",
+      "unpublish": "Unpublish",
+      "delete": "Delete"
+    },
+    "noData": "<span>There are no {{value}} to show.</span>",
     "deleteAlert": {
       "header": "Delete post?",
       "subHeader": "You are about to delete this post? It'll be permanently deleted and we won't be able to recover it."

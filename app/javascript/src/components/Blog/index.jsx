@@ -8,8 +8,9 @@ import {
   Table,
   Tooltip,
   Typography,
-  Tag,
+  NoData,
 } from "@bigbinary/neetoui";
+import classNames from "classnames";
 import { useFetchCategories } from "hooks/reactQuery/useCategoriesApi";
 import {
   useFetchPosts,
@@ -19,7 +20,8 @@ import {
   useBulkStatusUpdate,
 } from "hooks/reactQuery/usePostsApi";
 import useQueryParams from "hooks/useQueryParams";
-import { useTranslation } from "react-i18next";
+import { isEmpty } from "ramda";
+import { Trans, useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
 import { fromatDate } from "utils/date";
 import { buildFilterParams, buildUrl } from "utils/url";
@@ -78,9 +80,7 @@ const Blogs = () => {
       width: 200,
       render: categories =>
         categories?.length > 0
-          ? categories.map(({ id, name }) => (
-              <Tag className="mx-1" key={id} label={name} />
-            ))
+          ? categories.map(({ name }) => name).join(", ")
           : "—",
     },
     {
@@ -122,18 +122,19 @@ const Blogs = () => {
                     : handleChange(post.slug, "published")
                 }
               >
-                {post.status === "published" ? "Unpublish" : "Publish"}
+                {post.status === "published"
+                  ? t("posts.actions.unpublish")
+                  : t("posts.actions.publish")}
               </MenuItemButton>
             </MenuItem>
             <Divider />
             <MenuItem>
               <MenuItemButton
-                label="Delete"
                 style="danger"
                 type="delete"
                 onClick={() => handleDelete(post.slug)}
               >
-                Delete
+                {t("posts.actions.delete")}
               </MenuItemButton>
             </MenuItem>
           </Menu>
@@ -282,16 +283,44 @@ const Blogs = () => {
           setIsDeleteModalOpen={setIsBulkDeleteModalOpen}
         />
       </div>
-      <Table
-        enableColumnResize
-        rowSelection
-        columnData={filteredColumnData}
-        rowData={userBlogs}
-        selectedRowKeys={selectedRowKeys}
-        onRowSelect={(selectedRowKeys, selectedRows) =>
-          handleRowSelect(selectedRowKeys, selectedRows)
-        }
-      />
+      <div
+        className={classNames(
+          "flex h-full w-full items-center justify-center",
+          {
+            hidden: !isEmpty(userBlogs),
+            block: isEmpty(userBlogs),
+          }
+        )}
+      >
+        <NoData
+          title={
+            <Trans
+              i18nKey="posts.noData"
+              values={{ value: "articles" }}
+              components={{
+                span: <Typography component="h3" style="semibold" />,
+              }}
+            />
+          }
+        />
+      </div>
+      <div
+        className={classNames("", {
+          hidden: isEmpty(userBlogs),
+          block: !isEmpty(userBlogs),
+        })}
+      >
+        <Table
+          enableColumnResize
+          rowSelection
+          columnData={filteredColumnData}
+          rowData={userBlogs}
+          selectedRowKeys={selectedRowKeys}
+          onRowSelect={(selectedRowKeys, selectedRows) =>
+            handleRowSelect(selectedRowKeys, selectedRows)
+          }
+        />
+      </div>
       <SearchFilterPan
         isOpen={isSearchPanOpen}
         onClose={() => setIsSearchPanOpen(false)}

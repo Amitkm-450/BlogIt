@@ -1,10 +1,12 @@
 import React from "react";
 
-import { Button, Spinner, Typography } from "@bigbinary/neetoui";
+import { Button, NoData, Spinner, Typography } from "@bigbinary/neetoui";
+import classNames from "classnames";
 import { useFetchCategories } from "hooks/reactQuery/useCategoriesApi";
 import { useFetchPosts } from "hooks/reactQuery/usePostsApi";
 import useQueryParams from "hooks/useQueryParams";
-import { useTranslation } from "react-i18next";
+import { isEmpty } from "ramda";
+import { Trans, useTranslation } from "react-i18next";
 
 import PostCard from "./Card";
 
@@ -34,7 +36,7 @@ const List = () => {
   }
 
   return (
-    <div className="w-full p-4">
+    <div className="h-screen w-full p-4">
       <div className="flex items-center justify-between px-4">
         <Typography
           className="flex items-center justify-center"
@@ -48,6 +50,24 @@ const List = () => {
           label={t("button.addNewBlog")}
           style="secondary"
           to="/posts/new"
+        />
+      </div>
+      <div
+        className={classNames("flex h-2/3 w-full items-center justify-center", {
+          hidden: !isEmpty(posts),
+          block: isEmpty(posts),
+        })}
+      >
+        <NoData
+          title={
+            <Trans
+              i18nKey="posts.noData"
+              values={{ value: "posts" }}
+              components={{
+                span: <Typography component="h3" style="semibold" />,
+              }}
+            />
+          }
         />
       </div>
       <div className="space-y-4">
