@@ -1,21 +1,5 @@
 # frozen_string_literal: true
 
 json.post do
-  json.extract! @post,
-    :id,
-    :title,
-    :description,
-    :updated_at,
-    :status,
-    :is_bloggable
-
-  json.user do
-    json.extract! @post.user,
-      :id,
-      :name
-  end
-
-  json.categories do
-    json.array! @post.categories, :id, :name
-  end
+  json.partial! "api/v1/posts/post", post: @post
 end

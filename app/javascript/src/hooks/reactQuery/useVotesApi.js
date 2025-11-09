@@ -15,6 +15,7 @@ export const useCreateVote = () => {
   return useMutation({
     mutationFn: ({ params, payload }) => votesApi.create(params, payload),
     onSuccess: () => {
+      queryClient.invalidateQueries([QUERY_KEYS.POSTS]);
       queryClient.invalidateQueries([QUERY_KEYS.VOTES]);
     },
   });

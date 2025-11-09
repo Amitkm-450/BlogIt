@@ -1,0 +1,19 @@
+json.extract! post,
+  :id,
+  :title,
+  :description,
+  :slug,
+  :is_bloggable,
+  :updated_at,
+  :status,
+  :last_published_at
+
+json.user do
+  json.extract! post.user, :id, :name
+end
+
+json.organization do
+  json.extract! post.organization, :id, :name
+end
+
+json.categories post.categories, partial: "api/v1/categories/category", as: :category
