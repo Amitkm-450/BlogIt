@@ -8,6 +8,7 @@ import useQueryParams from "hooks/useQueryParams";
 import { isEmpty } from "ramda";
 import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
+import routes from "routes";
 import { buildUrl } from "utils/url";
 
 import AddCategoryModel from "./AddCategoryModal";
@@ -36,7 +37,7 @@ const Sidebar = ({ isCategorySidebarOpen }) => {
         )
       : [...selectedCategories, name];
 
-    const url = buildUrl("/posts", {
+    const url = buildUrl(routes.posts.root, {
       categories: isEmpty(newSelectedCategories)
         ? undefined
         : newSelectedCategories.join(","),

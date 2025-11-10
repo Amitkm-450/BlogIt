@@ -6,8 +6,10 @@ import classNames from "classnames";
 import { useFetchPost } from "hooks/reactQuery/usePostsApi";
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
+import routes from "routes";
 import { formatDate } from "utils/date";
 import { getFromLocalStorage } from "utils/storage";
+import { buildUrl } from "utils/url";
 
 import DownloadModal from "./DownloadModal";
 
@@ -75,7 +77,7 @@ const Show = () => {
                   icon={Edit}
                   size="large"
                   style="text"
-                  to={`/posts/${slug}/edit`}
+                  to={buildUrl(routes.posts.edit, { slug })}
                   tooltipProps={{
                     content: t("toolTip.editButton"),
                     position: "top",

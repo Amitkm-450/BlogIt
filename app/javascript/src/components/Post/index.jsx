@@ -7,6 +7,7 @@ import { useFetchPosts } from "hooks/reactQuery/usePostsApi";
 import useQueryParams from "hooks/useQueryParams";
 import { isEmpty } from "ramda";
 import { Trans, useTranslation } from "react-i18next";
+import routes from "routes";
 
 import PostCard from "./Card";
 
@@ -49,7 +50,7 @@ const List = () => {
           className="bg-black text-white"
           label={t("button.addNewBlog")}
           style="secondary"
-          to="/posts/new"
+          to={routes.posts.new}
         />
       </div>
       <div

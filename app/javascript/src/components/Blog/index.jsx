@@ -26,6 +26,7 @@ import useQueryParams from "hooks/useQueryParams";
 import { isEmpty } from "ramda";
 import { Trans, useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
+import routes from "routes";
 import { buildFilterParams, buildUrl, handleFilterRemove } from "utils/url";
 
 import SearchFilterPan from "./SearchFilterPan";
@@ -52,26 +53,24 @@ const Blogs = () => {
       title: "Title",
       width: 100,
       render: (title, post) => {
-        if (title.length > 30) {
-          return (
-            <Tooltip content={title} position="right">
-              <a
-                className="block max-w-xs truncate"
-                href={`/posts/${post.slug}/edit`}
-              >
-                {`${title.slice(0, 30)}...`}
-              </a>
-            </Tooltip>
-          );
-        }
+        const displayTitle =
+          title.length > 30 ? `${title.slice(0, 30)}...` : title;
 
-        return (
+        const link = (
           <a
             className="block max-w-xs truncate"
-            href={`/posts/${post.slug}/edit`}
+            href={buildUrl(routes.posts.edit, { slug: post.slug })}
           >
-            {title}
+            {displayTitle}
           </a>
+        );
+
+        return title.length > 30 ? (
+          <Tooltip content={title} position="right">
+            {link}
+          </Tooltip>
+        ) : (
+          link
         );
       },
     },
@@ -247,7 +246,7 @@ const Blogs = () => {
 
     const searchParams = buildFilterParams(values);
 
-    const url = buildUrl("/posts/my-blogs", searchParams);
+    const url = buildUrl(routes.posts.myBlogs, searchParams);
     history.replace(url);
   };
 
@@ -340,7 +339,7 @@ const Blogs = () => {
                         key,
                         filters,
                         history,
-                        route: "/posts/my-blogs",
+                        route: routes.posts.myBlogs,
                       });
                     }}
                   />
@@ -351,7 +350,7 @@ const Blogs = () => {
           className="bg-gray-200"
           label={t("button.clearFilter")}
           style="Secondary"
-          onClick={() => history.replace("/posts/my-blogs")}
+          onClick={() => history.replace(routes.posts.myBlogs)}
         />
       </div>
       <div

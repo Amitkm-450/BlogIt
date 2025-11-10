@@ -11,6 +11,7 @@ import { useFetchCategories } from "hooks/reactQuery/useCategoriesApi";
 import useQueryParams from "hooks/useQueryParams";
 import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
+import routes from "routes";
 
 const SearchFilterPan = ({ isOpen, onClose, handleFilterApplied }) => {
   const { data: { categories = [] } = {}, isLoading } = useFetchCategories();
@@ -53,7 +54,7 @@ const SearchFilterPan = ({ isOpen, onClose, handleFilterApplied }) => {
         status: {},
       },
     });
-    history.replace("/posts/my-blogs");
+    history.replace(routes.posts.myBlogs);
   };
 
   if (isLoading) {

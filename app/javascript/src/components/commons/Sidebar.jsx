@@ -13,6 +13,7 @@ import classNames from "classnames";
 import { useLogout } from "hooks/reactQuery/useUsersApi";
 import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
+import routes from "routes";
 import { getFromLocalStorage } from "utils/storage";
 
 const Sidebar = ({ setIsCategorySidebarOpen }) => {
@@ -27,7 +28,7 @@ const Sidebar = ({ setIsCategorySidebarOpen }) => {
   const handleLogout = () => {
     logoutUser(undefined, {
       onSuccess: () => {
-        history.push("/login");
+        history.push(routes.login);
       },
     });
   };
@@ -35,12 +36,17 @@ const Sidebar = ({ setIsCategorySidebarOpen }) => {
   return (
     <div className="relative flex h-screen w-24 flex-col items-center gap-1 border-r-2 border-gray-200 px-1 py-2">
       <div className="flex flex-col gap-y-4">
-        <Button icon={Book} size="large" style="tertiary" to="/posts" />
+        <Button
+          icon={Book}
+          size="large"
+          style="tertiary"
+          to={routes.posts.root}
+        />
         <Button
           icon={List}
           size="large"
           style="secondary"
-          to="/posts"
+          to={routes.posts.root}
           tooltipProps={{
             content: t("sidebar.postsList"),
             position: "right",
@@ -50,7 +56,7 @@ const Sidebar = ({ setIsCategorySidebarOpen }) => {
           icon={Edit}
           size="large"
           style="secondary"
-          to="/posts/new"
+          to={routes.posts.new}
           tooltipProps={{
             content: t("sidebar.postCreate"),
             position: "right",
@@ -72,7 +78,7 @@ const Sidebar = ({ setIsCategorySidebarOpen }) => {
           icon={Folder}
           size="large"
           style="secondary"
-          to="/posts/my-blogs"
+          to={routes.posts.myBlogs}
           tooltipProps={{
             content: t("sidebar.myBlogPosts"),
             position: "right",
