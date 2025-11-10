@@ -16,7 +16,7 @@ const PageLayout = ({ children }) => {
           isCategorySidebarOpen,
         }}
       />
-      <div className="flex-grow p-6">{children}</div>
+      <div className="flex-grow overflow-x-auto p-6">{children}</div>
     </div>
   );
 };

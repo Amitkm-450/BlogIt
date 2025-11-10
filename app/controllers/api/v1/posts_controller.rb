@@ -21,7 +21,7 @@ class Api::V1::PostsController < ApplicationController
   end
 
   def destroy
-    @post.destroy
+    @post.destroy!
     render_notice(t("successfully_deleted", entity: "Post", count: 1))
   end
 
@@ -52,7 +52,7 @@ class Api::V1::PostsController < ApplicationController
     end
 
     def load_post!
-      @post = Post.find_by!(slug: params[:slug])
+      @post = current_user.organization.posts.find_by!(slug: params[:slug])
     end
 
     def load_posts

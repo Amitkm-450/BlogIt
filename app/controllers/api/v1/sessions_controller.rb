@@ -4,8 +4,10 @@ class Api::V1::SessionsController < ApplicationController
   skip_before_action :authenticate_user_using_x_auth_token, only: :create
 
   def create
-    @user = User.find_by!(email: login_params[:email].downcase)
-    unless @user.authenticate(login_params[:password])
+    @user = User.find_by(email: login_params[:email].downcase)
+    if @user&.authenticate(login_params[:password])
+      render
+    else
       render_error(t("session.incorrect_credentials"), :unauthorized)
     end
   end

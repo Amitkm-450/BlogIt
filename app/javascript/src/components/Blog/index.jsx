@@ -382,9 +382,9 @@ const Blogs = () => {
         })}
       >
         <Table
-          enableColumnResize
           rowSelection
           columnData={filteredColumnData}
+          enableColumnResize={false}
           rowData={userBlogs}
           selectedRowKeys={selectedRowKeys}
           onRowSelect={(selectedRowKeys, selectedRows) =>
