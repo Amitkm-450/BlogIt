@@ -5,6 +5,7 @@ require "test_helper"
 class OrganizationTest < ActiveSupport::TestCase
   def setup
     @organization = build(:organization)
+    @user = create(:user, organization: @organization)
   end
 
   def test_valid_organization
@@ -19,7 +20,7 @@ class OrganizationTest < ActiveSupport::TestCase
 
   def test_dependent_posts_are_destroyed
     organization = create(:organization)
-    post = create(:post, organization: organization)
+    post = create(:post, user: @user, organization: organization)
     assert_difference "Post.count", -1 do
       organization.destroy
     end

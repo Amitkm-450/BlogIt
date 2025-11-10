@@ -4,7 +4,8 @@ require "test_helper"
 
 class UserTest < ActiveSupport::TestCase
   def setup
-    @user = build(:user)
+    @organization = create(:organization)
+    @user = build(:user, organization: @organization)
   end
 
   def test_valid_user
@@ -25,7 +26,7 @@ class UserTest < ActiveSupport::TestCase
     assert @user.invalid?
     assert_includes @user.errors.messages[:email], I18n.t("errors.messages.blank")
 
-    create(:user, email: "test@example.com")
+    create(:user, email: "test@example.com", organization: @organization)
     @user.email = "test@example.com"
     assert @user.invalid?
 
@@ -40,12 +41,12 @@ class UserTest < ActiveSupport::TestCase
   end
 
   def test_password_confirmation_is_required_on_create
-    user = build(:user, password_confirmation: nil)
+    user = build(:user, password_confirmation: nil, organization: @organization)
     assert user.invalid?
   end
 
   def test_email_is_downcased_before_save
-    user = create(:user, email: "TEST@EXAMPLE.COM")
+    user = create(:user, email: "TEST@EXAMPLE.COM", organization: @organization)
     assert_equal "test@example.com", user.email
   end
 end
