@@ -19,7 +19,9 @@ import {
 } from "hooks/reactQuery/usePostsApi";
 import { useTranslation } from "react-i18next";
 import { useHistory, useParams } from "react-router-dom";
+import routes from "routes";
 import { getFromLocalStorage } from "utils/storage";
+import { buildUrl } from "utils/url";
 
 import { DeleteConfirmationModal, PageLayout } from "../../commons";
 
@@ -60,14 +62,14 @@ const Edit = () => {
       },
       {
         onSuccess: () => {
-          history.replace("/");
+          history.replace(routes.posts.root);
         },
       }
     );
   };
 
   const handleDelete = () => {
-    history.replace("/posts");
+    history.replace(routes.posts.root);
     deletePost(slug);
   };
 
@@ -83,7 +85,11 @@ const Edit = () => {
       })
     );
 
-    window.open(`/posts/${slug}/preview`, "_blank", "noopener,noreferrer");
+    window.open(
+      buildUrl(routes.posts.preview, { slug }),
+      "_blank",
+      "noopener,noreferrer"
+    );
   };
 
   useEffect(() => {

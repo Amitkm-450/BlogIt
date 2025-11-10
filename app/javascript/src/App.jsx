@@ -16,68 +16,46 @@ import UserBlogs from "./components/Blog";
 import { PageNotFound, PrivateRoute } from "./components/commons";
 import Home from "./components/Home";
 import {
-  Edit as PostEdit,
+  Edit as EditPost,
   Create as CreatePost,
   Preview as PostReview,
 } from "./components/Post/Form";
 import ShowPost from "./components/Post/Show";
+import routes from "./routes";
 import queryClient from "./utils/queryClient";
 
 const App = () => {
   const authToken = getFromLocalStorage("authToken");
   const isLoggedIn = !either(isNil, isEmpty)(authToken);
 
+  const privateRoutes = [
+    { path: routes.posts.new, component: CreatePost },
+    { path: routes.posts.myBlogs, component: UserBlogs },
+    { path: routes.posts.edit, component: EditPost },
+    { path: routes.posts.preview, component: PostReview },
+    { path: routes.posts.show, component: ShowPost },
+    { path: routes.posts.root, component: Home },
+  ];
+
   return (
     <Router>
       <QueryClientProvider client={queryClient}>
         <ToastContainer />
         <Switch>
-          <Route exact component={Signup} path="/signup" />
-          <Route exact component={Login} path="/login" />
-          <PrivateRoute
-            exact
-            component={CreatePost}
-            condition={isLoggedIn}
-            path="/posts/new"
-            redirectRoute="/login"
-          />
-          <PrivateRoute
-            exact
-            component={UserBlogs}
-            condition={isLoggedIn}
-            path="/posts/my-blogs"
-            redirectRoute="/login"
-          />
-          <PrivateRoute
-            exact
-            component={PostEdit}
-            condition={isLoggedIn}
-            path="/posts/:slug/edit"
-            redirectRoute="/login"
-          />
-          <PrivateRoute
-            exact
-            component={PostReview}
-            condition={isLoggedIn}
-            path="/posts/:slug/preview"
-            redirectRoute="/login"
-          />
-          <PrivateRoute
-            exact
-            component={ShowPost}
-            condition={isLoggedIn}
-            path="/posts/:slug"
-            redirectRoute="/login"
-          />
-          <PrivateRoute
-            exact
-            component={Home}
-            condition={isLoggedIn}
-            path="/posts"
-            redirectRoute="/login"
-          />
-          <Redirect exact from="/" to="/posts" />
-          <Route component={PageNotFound} path="/*" />
+          <Route exact component={Signup} path={routes.signup} />
+          <Route exact component={Login} path={routes.login} />
+          {privateRoutes.map(({ path, component: Component }) => (
+            <PrivateRoute
+              exact
+              component={Component}
+              condition={isLoggedIn}
+              key={path}
+              path={path}
+              redirectRoute={routes.login}
+            />
+          ))}
+          <Redirect exact from={routes.root} to={routes.posts.root} />
+          <Route component={PageNotFound} path={routes.notFound} />
         </Switch>
       </QueryClientProvider>
     </Router>

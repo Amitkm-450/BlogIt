@@ -20,6 +20,7 @@ const alias = {
   components: absolutePath("src/components"),
   constants: absolutePath("src/constants"),
   channels: absolutePath("src/channels"),
+  routes: absolutePath("src/routes"),
 };
 
 export { alias };

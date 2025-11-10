@@ -1,17 +1,22 @@
 import React from "react";
 
-import { Button, NoData, Spinner, Typography } from "@bigbinary/neetoui";
+import { Button, NoData, Spinner, Tag, Typography } from "@bigbinary/neetoui";
 import classNames from "classnames";
 import { useFetchCategories } from "hooks/reactQuery/useCategoriesApi";
 import { useFetchPosts } from "hooks/reactQuery/usePostsApi";
 import useQueryParams from "hooks/useQueryParams";
 import { isEmpty } from "ramda";
 import { Trans, useTranslation } from "react-i18next";
+import { useHistory } from "react-router-dom";
+import routes from "routes";
+import { handleFilterRemove } from "utils/url";
 
 import PostCard from "./Card";
 
 const List = () => {
   const { categories: queryCategories = "" } = useQueryParams();
+
+  const history = useHistory();
 
   const { data: { categories = [] } = {} } = useFetchCategories();
 
@@ -49,7 +54,7 @@ const List = () => {
           className="bg-black text-white"
           label={t("button.addNewBlog")}
           style="secondary"
-          to="/posts/new"
+          to={routes.posts.new}
         />
       </div>
       <div
@@ -68,6 +73,39 @@ const List = () => {
               }}
             />
           }
+        />
+      </div>
+      <div
+        className={classNames("my-2 flex items-center gap-2", {
+          hidden: isEmpty(queryCategories),
+          block: !isEmpty(queryCategories),
+        })}
+      >
+        <Tag
+          style="secondary"
+          label={
+            <Trans
+              i18nKey="posts.filters.categories"
+              values={{ value: queryCategories }}
+              components={{
+                value: <Typography className="text-gray-500" style="body3" />,
+              }}
+            />
+          }
+          onClose={() => {
+            handleFilterRemove({
+              key: "categories",
+              filters: { categories: queryCategories },
+              history,
+              route: routes.posts.root,
+            });
+          }}
+        />
+        <Button
+          className="bg-gray-200"
+          label={t("button.clearFilter")}
+          style="Secondary"
+          onClick={() => history.replace(routes.posts.root)}
         />
       </div>
       <div className="space-y-4">

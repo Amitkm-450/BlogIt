@@ -13,6 +13,7 @@ import { useFetchCategories } from "hooks/reactQuery/useCategoriesApi";
 import { useCreatePost } from "hooks/reactQuery/usePostsApi";
 import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
+import routes from "routes";
 
 import { PageLayout } from "../../commons";
 
@@ -40,7 +41,7 @@ const Create = () => {
       },
       {
         onSuccess: () => {
-          history.replace("/posts");
+          history.replace(routes.posts.root);
         },
       }
     );

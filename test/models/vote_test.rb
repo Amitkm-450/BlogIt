@@ -24,6 +24,6 @@ class VoteTest < ActiveSupport::TestCase
     create(:vote, user: @user, post: @post, value: 1)
     duplicate_vote = build(:vote, user: @user, post: @post, value: -1)
     assert duplicate_vote.invalid?
-    assert_includes duplicate_vote.errors.messages[:user_id], "can vote only once per post"
+    assert_includes duplicate_vote.errors.messages[:user_id], I18n.t("one_vote_per_post")
   end
 end

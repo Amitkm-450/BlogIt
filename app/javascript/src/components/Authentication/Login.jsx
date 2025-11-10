@@ -3,6 +3,7 @@ import React from "react";
 import LoginForm from "components/Authentication/Form/Login";
 import { useLogin } from "hooks/reactQuery/useUsersApi";
 import { useHistory } from "react-router-dom";
+import routes from "routes";
 import { getFromLocalStorage } from "utils/storage";
 
 const Login = () => {
@@ -10,7 +11,7 @@ const Login = () => {
 
   const userId = getFromLocalStorage("authUserId");
   if (userId) {
-    history.push("/posts");
+    history.push(routes.posts.root);
   }
 
   const { mutate: login } = useLogin();
@@ -18,7 +19,7 @@ const Login = () => {
   const handleSubmit = values => {
     login(values, {
       onSuccess: () => {
-        window.location.href = "/posts";
+        window.location.href = routes.posts.root;
       },
     });
   };

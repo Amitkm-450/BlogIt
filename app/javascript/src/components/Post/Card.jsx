@@ -5,7 +5,9 @@ import { Button, Tag, Typography } from "@bigbinary/neetoui";
 import classNames from "classnames";
 import { useCreateVote, useFetchVotes } from "hooks/reactQuery/useVotesApi";
 import { useHistory } from "react-router-dom";
+import routes from "routes";
 import { formatDate } from "utils/date";
+import { buildUrl } from "utils/url";
 
 const Card = ({
   id,
@@ -39,8 +41,8 @@ const Card = ({
   return (
     <div className="flex cursor-default justify-between border-b p-4">
       <div
-        className="flex flex-col gap-y-1"
-        onClick={() => history.push(`/posts/${slug}`)}
+        className="flex w-4/5 flex-col gap-y-1 px-2 py-1"
+        onClick={() => history.push(buildUrl(routes.posts.show, { slug }))}
       >
         <div className="flex flex-col gap-y-2">
           <div className="flex space-x-2">

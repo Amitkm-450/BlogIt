@@ -4,6 +4,7 @@ import { Button, Typography } from "@bigbinary/neetoui";
 import { Form, Input } from "@bigbinary/neetoui/formik";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
+import routes from "routes";
 
 import { LOGIN_INITIAL_DATA, LOGIN_VALIDATION_SCHEMA } from "../constants";
 
@@ -19,7 +20,7 @@ const Login = ({ handleSubmit }) => {
         <div className="text-center">
           <Link
             className="mt-2 text-sm font-medium text-indigo-500 transition duration-150 ease-in-out focus:underline focus:outline-none"
-            to="/signup"
+            to={routes.signup}
           >
             {t("login.link")}
           </Link>

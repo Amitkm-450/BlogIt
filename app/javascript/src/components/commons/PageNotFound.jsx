@@ -1,6 +1,7 @@
 import React from "react";
 
 import { NoData } from "@bigbinary/neetoui";
+import routes from "routes";
 import withT from "utils/withT";
 
 const PageNotFound = ({ t }) => (
@@ -36,7 +37,7 @@ const PageNotFound = ({ t }) => (
       primaryButtonProps={{
         label: t("button.home"),
         className: "bg-neutral-800 hover:bg-neutral-950",
-        to: "/",
+        to: routes.root,
       }}
     />
   </div>
