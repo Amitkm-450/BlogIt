@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 
-import { Button, Modal } from "@bigbinary/neetoui";
+import { Modal } from "@bigbinary/neetoui";
 import postsApi from "apis/posts";
 import createConsumer from "channels/consumer";
 import FileSaver from "file-saver";
@@ -9,7 +9,6 @@ import { subscribeToReportDownloadChannel } from "../../channels/postPdfDownload
 import { ProgressBar } from "../commons";
 
 const DownloadModal = ({ isOpen, onClose, slug }) => {
-  const [isLoading, setIsLoading] = useState(true);
   const [progress, setProgress] = useState(0);
   const [message, setMessage] = useState("");
 
@@ -24,14 +23,11 @@ const DownloadModal = ({ isOpen, onClose, slug }) => {
   };
 
   const downloadPdf = async () => {
-    setIsLoading(true);
     try {
       const { data } = await postsApi.download(slug);
       FileSaver.saveAs(data, `${slug}_report.pdf`);
     } catch (error) {
       logger.error(error);
-    } finally {
-      setIsLoading(false);
     }
   };
 
@@ -50,8 +46,8 @@ const DownloadModal = ({ isOpen, onClose, slug }) => {
 
   useEffect(() => {
     if (progress === 100) {
-      setIsLoading(false);
-      setMessage("Report is ready to be downloaded");
+      downloadPdf();
+      onClose();
     }
   }, [progress]);
 
@@ -64,7 +60,6 @@ const DownloadModal = ({ isOpen, onClose, slug }) => {
             <ProgressBar progress={progress} />
           </div>
         </div>
-        <Button label="Download" loading={isLoading} onClick={downloadPdf} />
       </div>
     </Modal>
   );

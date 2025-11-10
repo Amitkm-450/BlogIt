@@ -48,3 +48,4 @@ en:
     upload: "Uploading to server"
     attach: "Attaching the report to the user"
   not_found: "%{entity} not found"
+  one_vote_per_post: "can vote only once per post"

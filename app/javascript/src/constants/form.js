@@ -1,3 +1,4 @@
+import i18n from "common/i18n";
 import * as yup from "yup";
 
 export const DEFAULT_ERROR_NOTIFICATION = "Something went wrong!";
@@ -5,16 +6,16 @@ export const DEFAULT_ERROR_NOTIFICATION = "Something went wrong!";
 export const POST_VALIDATION_SCHEMA = yup.object().shape({
   title: yup
     .string()
-    .max(125, "Title must be at most 125 characters")
-    .required("Title is required"),
+    .max(125, i18n.t("validations.title.max"))
+    .required(i18n.t("validations.title.required")),
   description: yup
     .string()
-    .max(10000, "Description must be at most 10000 characters")
-    .required("Description is required"),
+    .max(10000, i18n.t("validations.description.max"))
+    .required(i18n.t("validations.description.required")),
   categories: yup
     .array()
-    .min(1, "Category is required")
-    .required("Category is required"),
+    .min(1, i18n.t("validations.category.required"))
+    .required(i18n.t("validations.category.required")),
 });
 
 export const getPostInitialData = (post = {}) => ({
@@ -38,7 +39,7 @@ export const getFilterInitialValues = ({
 });
 
 export const FILTER_VALIDATION_SCHEMA = yup.object().shape({
-  title: yup.string().max(100, "Title cannot exceed 100 characters"),
+  title: yup.string().max(100, i18n.t("validations.title.filterMax")),
   categories: yup.array(),
   status: yup
     .object({
@@ -56,6 +57,6 @@ export const CATEGORY_VALIDATION_SCHEMA = yup.object().shape({
   name: yup
     .string()
     .trim()
-    .max(50, "Category name must be at most 50 characters")
-    .required("Category name is required"),
+    .max(50, i18n.t("validations.category.max"))
+    .required(i18n.t("validations.category.required")),
 });

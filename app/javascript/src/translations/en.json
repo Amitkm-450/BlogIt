@@ -154,5 +154,36 @@
   },
   "title": {
     "pageNotFound": "Page not found"
+  },
+  "validations": {
+    "name": {
+      "required": "Name is required",
+      "min": "Name must be at least 2 characters long"
+    },
+    "email": {
+      "required": "Email is required",
+      "valid": "Enter a valid email address"
+    },
+    "password": {
+      "required": "Password is required",
+      "min": "Password must be at least 6 characters"
+    },
+    "passwordConfirmation": {
+      "required": "Password confirmation is required",
+      "match": "Passwords must match"
+    },
+    "title": {
+      "required": "Title is required",
+      "max": "Title must be at most 125 characters",
+      "filterMax": "Title cannot exceed 100 characters"
+    },
+    "description": {
+      "required": "Description is required",
+      "max": "Description must be at most 10000 characters"
+    },
+    "category": {
+      "required": "Category is required",
+      "max": "Category name must be at most 50 characters"
+    }
   }
 }

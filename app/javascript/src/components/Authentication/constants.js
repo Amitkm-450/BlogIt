@@ -1,3 +1,4 @@
+import i18n from "common/i18n";
 import * as yup from "yup";
 
 export const SIGNUP_INITIAL_DATA = {
@@ -10,20 +11,23 @@ export const SIGNUP_INITIAL_DATA = {
 export const SIGNUP_VALIDATION_SCHEMA = yup.object().shape({
   name: yup
     .string()
-    .required("Name is required")
-    .min(2, "Name must be at least 2 characters long"),
+    .required(i18n.t("validations.name.required"))
+    .min(2, i18n.t("validations.name.min")),
   email: yup
     .string()
-    .required("Email is required")
-    .email("Enter a valid email address"),
+    .required(i18n.t("validations.email.required"))
+    .email(i18n.t("validations.email.valid")),
   password: yup
     .string()
-    .required("Password is required")
-    .min(6, "Password must be at least 6 characters"),
-  password_confirmation: yup
+    .required(i18n.t("validations.password.required"))
+    .min(6, i18n.t("validations.password.min")),
+  passwordConfirmation: yup
     .string()
-    .required("Password confirmation is required")
-    .oneOf([yup.ref("password"), null], "Passwords must match"),
+    .required(i18n.t("validations.passwordConfirmation.required"))
+    .oneOf(
+      [yup.ref("password"), null],
+      i18n.t("validations.passwordConfirmation.match")
+    ),
 });
 
 export const LOGIN_INITIAL_DATA = {
@@ -34,7 +38,7 @@ export const LOGIN_INITIAL_DATA = {
 export const LOGIN_VALIDATION_SCHEMA = yup.object().shape({
   email: yup
     .string()
-    .required("Email is required")
-    .email("Enter a valid email address"),
-  password: yup.string().required("Password is required"),
+    .required(i18n.t("validations.email.required"))
+    .email(i18n.t("validations.email.valid")),
+  password: yup.string().required(i18n.t("validations.password.required")),
 });
