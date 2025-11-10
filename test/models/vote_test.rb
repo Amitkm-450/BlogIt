@@ -4,8 +4,8 @@ require "test_helper"
 
 class VoteTest < ActiveSupport::TestCase
   def setup
-    @user = create(:user)
     @organization = create(:organization)
+    @user = create(:user, organization: @organization)
     @post = create(:post, user: @user, organization: @organization)
     @vote = build(:vote, user: @user, post: @post, value: 1)
   end

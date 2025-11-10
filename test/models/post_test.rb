@@ -4,8 +4,8 @@ require "test_helper"
 
 class PostTest < ActiveSupport::TestCase
   def setup
-    @user = create(:user)
     @organization = create(:organization)
+    @user = create(:user, organization: @organization)
     @post = build(:post, user: @user, organization: @organization)
   end
 
@@ -57,7 +57,7 @@ class PostTest < ActiveSupport::TestCase
   def test_net_votes_returns_sum
     post = create(:post, user: @user, organization: @organization)
     create(:vote, user: @user, post: post, value: 1)
-    another_user = create(:user)
+    another_user = create(:user, organization: @organization)
     create(:vote, user: another_user, post: post, value: -1)
     assert_equal 0, post.net_votes
   end

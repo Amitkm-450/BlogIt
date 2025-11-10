@@ -5,7 +5,7 @@ import { Form, Input } from "@bigbinary/neetoui/formik";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 
-import { LoginInitialData, LoginValidationSchema } from "../constant";
+import { LOGIN_INITIAL_DATA, LOGIN_VALIDATION_SCHEMA } from "../constants";
 
 const Login = ({ handleSubmit }) => {
   const { t } = useTranslation();
@@ -29,24 +29,33 @@ const Login = ({ handleSubmit }) => {
           formikProps={{
             validateOnBlur: true,
             enableReinitialize: true,
-            initialValues: LoginInitialData,
-            validationSchema: LoginValidationSchema,
+            initialValues: LOGIN_INITIAL_DATA,
+            validationSchema: LOGIN_VALIDATION_SCHEMA,
             onSubmit: handleSubmit,
           }}
         >
-          <Input
-            label={t("login.form.label.email")}
-            name="email"
-            placeholder={t("login.form.placeholder.email")}
-            type="email"
-          />
-          <Input
-            label={t("login.form.label.password")}
-            name="password"
-            placeholder={t("login.form.placeholder.password")}
-            type="password"
-          />
-          <Button label={t("login.button.submit")} type="submit" />
+          {({ dirty }) => (
+            <div className="flex flex-col gap-2">
+              <Input
+                label={t("login.form.label.email")}
+                name="email"
+                placeholder={t("login.form.placeholder.email")}
+                type="email"
+              />
+              <Input
+                label={t("login.form.label.password")}
+                name="password"
+                placeholder={t("login.form.placeholder.password")}
+                type="password"
+              />
+              <Button
+                className="auth-button"
+                disabled={!dirty}
+                label={t("login.button.submit")}
+                type="submit"
+              />
+            </div>
+          )}
         </Form>
       </div>
     </div>

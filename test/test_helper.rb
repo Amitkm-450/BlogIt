@@ -25,3 +25,7 @@ def headers(user, options = {})
     "X-Auth-Email" => user.email
   }.merge(options)
 end
+
+def response_body
+  response.parsed_body
+end

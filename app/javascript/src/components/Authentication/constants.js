@@ -1,13 +1,13 @@
 import * as yup from "yup";
 
-export const SignupInitialData = {
+export const SIGNUP_INITIAL_DATA = {
   name: "",
   email: "",
   password: "",
   password_confirmation: "",
 };
 
-export const SignupValidationSchema = yup.object().shape({
+export const SIGNUP_VALIDATION_SCHEMA = yup.object().shape({
   name: yup
     .string()
     .required("Name is required")
@@ -26,12 +26,12 @@ export const SignupValidationSchema = yup.object().shape({
     .oneOf([yup.ref("password"), null], "Passwords must match"),
 });
 
-export const LoginInitialData = {
+export const LOGIN_INITIAL_DATA = {
   email: "",
   password: "",
 };
 
-export const LoginValidationSchema = yup.object().shape({
+export const LOGIN_VALIDATION_SCHEMA = yup.object().shape({
   email: yup
     .string()
     .required("Email is required")

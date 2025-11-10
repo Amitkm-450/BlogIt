@@ -2,3 +2,21 @@
   flex-direction: row-reverse;
   gap: 12px;
 }
+
+.auth-button {
+  padding-left:  45%;
+}
+
+.ant-table-wrapper thead.ant-table-thead tr th {
+  text-transform: lowercase;
+  font-size: 1em;
+  font-weight: 600;
+}
+
+.ant-table-wrapper thead.ant-table-thead tr th:first-letter {
+  text-transform: uppercase;
+}
+
+.neeto-ui-dropdown__popup-menu > :first-child {
+  pointer-events: none;
+}

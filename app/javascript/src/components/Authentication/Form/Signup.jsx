@@ -5,7 +5,7 @@ import { Form, Input } from "@bigbinary/neetoui/formik";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 
-import { SignupInitialData, SignupValidationSchema } from "../constant";
+import { SIGNUP_INITIAL_DATA, SIGNUP_VALIDATION_SCHEMA } from "../constants";
 
 const Signup = ({ handleSubmit }) => {
   const { t } = useTranslation();
@@ -35,8 +35,8 @@ const Signup = ({ handleSubmit }) => {
         <Form
           className="mt-8 flex flex-col gap-y-6"
           formikProps={{
-            initialValues: SignupInitialData,
-            validationSchema: SignupValidationSchema,
+            initialValues: SIGNUP_INITIAL_DATA,
+            validationSchema: SIGNUP_VALIDATION_SCHEMA,
             onSubmit: handleSubmit,
           }}
         >
@@ -65,6 +65,7 @@ const Signup = ({ handleSubmit }) => {
                 type="password"
               />
               <Button
+                className="auth-button"
                 disabled={!dirty}
                 label={t("signup.button.register")}
                 type="submit"

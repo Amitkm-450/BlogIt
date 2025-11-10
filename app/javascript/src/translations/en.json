@@ -67,7 +67,8 @@
     "submit": "Submit",
     "delete": "Delete",
     "addNewBlog": "Add new blog post",
-    "clearFilter": "Clear filter"
+    "clearFilter": "Clear filter",
+    "home": "Back to home"
   },
   "signup": {
     "header": "Sign Up",
@@ -150,5 +151,8 @@
       "subHeader_one": "You are about to delete <typography>{{count}}</typography> post? It'll be permanently deleted and we won't be able to recover it.",
       "subHeader_other": "You are about to delete <typography>{{count}}</typography> posts? It'll be permanently deleted and we won't be able to recover it."
     }
+  },
+  "title": {
+    "pageNotFound": "Page not found"
   }
 }

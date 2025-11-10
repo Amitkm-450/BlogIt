@@ -57,14 +57,13 @@ const handleErrorResponse = axiosErrorObject => {
   if (axiosErrorObject.response?.status === 401) {
     setToLocalStorage({ authToken: null, email: null, userId: null });
     setTimeout(() => (window.location.href = "/"), 2000);
+  } else if (axiosErrorObject.response?.status === 404) {
+    window.location.href = "/not_found";
   }
 
   Toastr.error(
     axiosErrorObject.response?.data?.error || DEFAULT_ERROR_NOTIFICATION
   );
-  if (axiosErrorObject.response?.status === 423) {
-    window.location.href = "/";
-  }
 
   return Promise.reject(axiosErrorObject);
 };
