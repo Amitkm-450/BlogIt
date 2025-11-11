@@ -3,14 +3,17 @@ import React from "react";
 import { DownArrow, UpArrow } from "@bigbinary/neeto-icons";
 import { Button, Tag, Typography } from "@bigbinary/neetoui";
 import classNames from "classnames";
-import { useCreateVote, useFetchVotes } from "hooks/reactQuery/useVotesApi";
+import {
+  useCreateVote,
+  useFetchVotes,
+  useDeleteVote,
+} from "hooks/reactQuery/useVotesApi";
 import { useHistory } from "react-router-dom";
 import routes from "routes";
 import { formatDate } from "utils/date";
 import { buildUrl } from "utils/url";
 
 const Card = ({
-  id,
   title,
   user,
   lastPublishedAt,
@@ -20,22 +23,25 @@ const Card = ({
 }) => {
   const history = useHistory();
 
-  const { data: { vote: { netVotes = 0, userVote = 0 } = {} } = {} } =
-    useFetchVotes({
-      post_id: id,
-    });
+  const { data: { vote: { id, netVotes = 0, userVote = 0 } = {} } = {} } =
+    useFetchVotes(slug);
 
   const { mutate: createVote } = useCreateVote();
+  const { mutate: deleteVote } = useDeleteVote();
 
   const handleVote = async type => {
-    let value = type === "up" ? 1 : -1;
-
-    if (userVote === value) value = 0;
-
-    createVote({
-      params: { post_id: id },
-      payload: { value },
-    });
+    const value = type === "up" ? 1 : -1;
+    if (userVote === value) {
+      deleteVote({
+        params: { postSlug: slug, id },
+        payload: { value },
+      });
+    } else {
+      createVote({
+        postSlug: slug,
+        payload: { value },
+      });
+    }
   };
 
   return (

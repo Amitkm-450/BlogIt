@@ -71,24 +71,6 @@ const List = () => {
         />
       </div>
       <div
-        className={classNames("flex h-2/3 w-full items-center justify-center", {
-          hidden: !isEmpty(posts),
-          block: isEmpty(posts),
-        })}
-      >
-        <NoData
-          title={
-            <Trans
-              i18nKey="posts.noData"
-              values={{ value: "posts" }}
-              components={{
-                span: <Typography component="h3" style="semibold" />,
-              }}
-            />
-          }
-        />
-      </div>
-      <div
         className={classNames("my-2 flex items-center gap-2", {
           hidden: isEmpty(queryCategories),
           block: !isEmpty(queryCategories),
@@ -122,7 +104,30 @@ const List = () => {
           onClick={() => history.replace(buildUrl(routes.posts.root, { page }))}
         />
       </div>
-      <div className="flex h-[90%] flex-col justify-between">
+      <div
+        className={classNames("flex h-2/3 w-full items-center justify-center", {
+          hidden: !isEmpty(posts),
+          block: isEmpty(posts),
+        })}
+      >
+        <NoData
+          title={
+            <Trans
+              i18nKey="posts.noData"
+              values={{ value: "posts" }}
+              components={{
+                span: <Typography component="h3" style="semibold" />,
+              }}
+            />
+          }
+        />
+      </div>
+      <div
+        className={classNames("flex h-[90%] flex-col justify-between", {
+          hidden: isEmpty(posts),
+          block: !isEmpty(posts),
+        })}
+      >
         <div className="space-y-4 overflow-y-auto">
           {posts.map((post, index) => (
             <PostCard key={index} {...post} />
