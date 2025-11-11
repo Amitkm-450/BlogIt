@@ -1,4 +1,5 @@
 import { POST_VALIDATION_SCHEMA, getPostInitialData } from "constants/form";
+import { POST_STATUS } from "constants/post";
 
 import React, { useRef, useState } from "react";
 
@@ -18,7 +19,7 @@ import routes from "routes";
 import { PageLayout } from "../../commons";
 
 const Create = () => {
-  const [status, setStatus] = useState("draft");
+  const [status, setStatus] = useState(POST_STATUS.DRAFT);
 
   const history = useHistory();
   const { t } = useTranslation();
@@ -73,14 +74,14 @@ const Create = () => {
             />
             <ActionDropdown
               buttonStyle="secondary"
-              label={status === "draft" ? "Save as draft" : "Publish"}
+              label={status === POST_STATUS.DRAFT ? "Save as draft" : "Publish"}
               onClick={() => formikRef?.current.submitForm()}
             >
               <Menu>
                 <MenuItem>
                   <MenuItemButton
                     onClick={() => {
-                      setStatus("published");
+                      setStatus(POST_STATUS.PUBLISHED);
                     }}
                   >
                     Publish
@@ -90,7 +91,7 @@ const Create = () => {
                 <MenuItem>
                   <MenuItemButton
                     onClick={() => {
-                      setStatus("draft");
+                      setStatus(POST_STATUS.DRAFT);
                     }}
                   >
                     Save as draft

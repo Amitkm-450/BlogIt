@@ -126,10 +126,23 @@
     }
   },
   "posts": {
+    "draftSavedAt": "<span>Draft saved at {{time}}</span>",
     "articlesCount_one": "<span>{{count}} article</span>",
     "articlesCount_other": "<span>{{count}} articles</span>",
     "articlesSelected_one": "<span>{{count}} article selected of {{total}}</span>",
     "articlesSelected_other": "<span>{{count}} articles selected of {{total}}</span>",
+    "table": {
+      "title": "Title",
+      "category": "Category",
+      "lastPublishedAt": "Last Published At",
+      "status": "Status",
+      "actions": "Actions",
+      "empty": "—"
+    },
+    "vote": {
+      "up": "Up",
+      "down": "Down"
+    },
     "filters": {
       "categories": "Categories: <value>{{value}}</value>",
       "status": "Status: <value>{{value}}</value>",
@@ -139,7 +152,8 @@
       "publish": "Publish",
       "unpublish": "Unpublish",
       "delete": "Delete",
-      "setAsDraft": "Save as draft"
+      "setAsDraft": "Save as draft",
+      "preview": "Preview"
     },
     "noData": "<span>There are no {{value}} to show.</span>",
     "deleteAlert": {

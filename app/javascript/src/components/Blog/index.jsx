@@ -1,3 +1,5 @@
+import { POST_STATUS } from "constants/post";
+
 import React, { useState } from "react";
 
 import { capitalize } from "@bigbinary/neeto-cist";
@@ -10,7 +12,6 @@ import {
   Typography,
   NoData,
   Tag,
-  Button,
   Pagination,
 } from "@bigbinary/neetoui";
 import classNames from "classnames";
@@ -52,7 +53,7 @@ const Blogs = () => {
     {
       dataIndex: "title",
       key: "title",
-      title: "Title",
+      title: t("posts.table.title"),
       width: 100,
       render: (title, post) => {
         const displayTitle =
@@ -77,7 +78,7 @@ const Blogs = () => {
       },
     },
     {
-      title: "Category",
+      title: t("posts.table.category"),
       dataIndex: "categories",
       key: "categories",
       width: 200,
@@ -89,25 +90,25 @@ const Blogs = () => {
     {
       dataIndex: "lastPublishedAt",
       key: "lastPublishedAt",
-      title: "Last Published At",
+      title: t("posts.table.lastPublishedAt"),
       width: 200,
       render: lastPublishedAt => (
         <div className="flex items-center">
           {lastPublishedAt
             ? dayjs(lastPublishedAt).format("MMMM D, YYYY, hh.mm A")
-            : "—"}
+            : t("posts.table.empty")}
         </div>
       ),
     },
     {
       dataIndex: "status",
       key: "status",
-      title: "Status",
+      title: t("posts.table.status"),
       width: 100,
       render: status => capitalize(status),
     },
     {
-      title: "Actions",
+      title: t("posts.table.actions"),
       width: 50,
       render: (_, post) => (
         <Dropdown
@@ -122,12 +123,12 @@ const Blogs = () => {
                 className="text-black"
                 style="link"
                 onClick={() =>
-                  post.status === "published"
-                    ? handleChange(post.slug, "draft")
-                    : handleChange(post.slug, "published")
+                  post.status === POST_STATUS.PUBLISHED
+                    ? handleChange(post.slug, POST_STATUS.DRAFT)
+                    : handleChange(post.slug, POST_STATUS.PUBLISHED)
                 }
               >
-                {post.status === "published"
+                {post.status === POST_STATUS.PUBLISHED
                   ? t("posts.actions.unpublish")
                   : t("posts.actions.publish")}
               </MenuItemButton>
@@ -354,14 +355,6 @@ const Blogs = () => {
                 );
               })}
         </div>
-        <Button
-          className="bg-gray-200"
-          label={t("button.clearFilter")}
-          style="Secondary"
-          onClick={() =>
-            history.replace(buildUrl(routes.posts.myBlogs, { page }))
-          }
-        />
       </div>
       <div
         className={classNames(

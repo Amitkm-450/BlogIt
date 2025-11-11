@@ -1,3 +1,5 @@
+import { POST_STATUS } from "constants/post";
+
 import React from "react";
 
 import { Delete, Filter } from "@bigbinary/neeto-icons";
@@ -65,7 +67,7 @@ const SubHeader = ({
                 <MenuItemButton
                   className="text-black"
                   style="link"
-                  onClick={() => handleBulkUpdate("draft")}
+                  onClick={() => handleBulkUpdate(POST_STATUS.DRAFT)}
                 >
                   {t("subHeader.status.draft")}
                 </MenuItemButton>
@@ -75,7 +77,7 @@ const SubHeader = ({
                 <MenuItemButton
                   className="text-black"
                   style="link"
-                  onClick={() => handleBulkUpdate("published")}
+                  onClick={() => handleBulkUpdate(POST_STATUS.PUBLISHED)}
                 >
                   {t("subHeader.status.publish")}
                 </MenuItemButton>

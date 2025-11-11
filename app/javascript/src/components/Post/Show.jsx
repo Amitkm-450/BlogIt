@@ -1,3 +1,5 @@
+import { POST_STATUS } from "constants/post";
+
 import React, { useState } from "react";
 
 import { Download, Edit } from "@bigbinary/neeto-icons";
@@ -55,8 +57,8 @@ const Show = () => {
                   size="large"
                   style="warning"
                   className={classNames({
-                    block: status !== "published",
-                    hidden: status === "published",
+                    block: status !== POST_STATUS.PUBLISHED,
+                    hidden: status === POST_STATUS.PUBLISHED,
                   })}
                 />
               </div>

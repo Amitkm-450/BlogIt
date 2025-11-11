@@ -2,6 +2,7 @@ import {
   getFilterInitialValues,
   FILTER_VALIDATION_SCHEMA,
 } from "constants/form";
+import { POST_STATUS } from "constants/post";
 
 import React, { useRef } from "react";
 
@@ -107,8 +108,8 @@ const SearchFilterPan = ({ isOpen, onClose, handleFilterApplied }) => {
                 name="status"
                 placeholder={t("filterForm.placeholder.status")}
                 options={[
-                  { label: "Draft", value: "draft" },
-                  { label: "Published", value: "published" },
+                  { label: "Draft", value: POST_STATUS.DRAFT },
+                  { label: "Published", value: POST_STATUS.PUBLISHED },
                 ]}
               />
             </div>

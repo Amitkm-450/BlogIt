@@ -61,7 +61,7 @@ class Api::V1::PostsController < ApplicationController
 
     def load_posts
       if params[:scope] == "organization"
-        @posts = current_user.organization.posts.published
+        @posts = current_user.organization.posts
       else
         @posts = current_user.posts
       end

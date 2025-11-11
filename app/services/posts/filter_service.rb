@@ -13,6 +13,7 @@ module Posts
       filter_by_title
       filter_by_status
       filter_by_category
+      self.posts = posts.order(created_at: :desc)
       posts
     end
 

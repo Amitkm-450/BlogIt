@@ -8,23 +8,19 @@ import {
   useFetchVotes,
   useDeleteVote,
 } from "hooks/reactQuery/useVotesApi";
+import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
 import routes from "routes";
 import { formatDate } from "utils/date";
 import { buildUrl } from "utils/url";
 
-const Card = ({
-  title,
-  user,
-  lastPublishedAt,
-  slug,
-  categories,
-  isBloggable,
-}) => {
+const Card = ({ title, user, createdAt, slug, categories, isBloggable }) => {
   const history = useHistory();
 
   const { data: { vote: { id, netVotes = 0, userVote = 0 } = {} } = {} } =
     useFetchVotes(slug);
+
+  const { t } = useTranslation();
 
   const { mutate: createVote } = useCreateVote();
   const { mutate: deleteVote } = useDeleteVote();
@@ -65,7 +61,7 @@ const Card = ({
         </div>
         <Typography className="mt-1 text-gray-600">{user.name}</Typography>
         <Typography className="text-sm text-gray-400">
-          {formatDate(lastPublishedAt)}
+          {formatDate(createdAt)}
         </Typography>
       </div>
       <div className="flex flex-col items-center">
@@ -76,7 +72,7 @@ const Card = ({
             "bg-green-200": userVote === 1,
           })}
           tooltipProps={{
-            content: "Up",
+            content: t("posts.vote.up"),
             position: "left",
           }}
           onClick={() => {
@@ -93,7 +89,7 @@ const Card = ({
             "bg-red-200": userVote === -1,
           })}
           tooltipProps={{
-            content: "Down",
+            content: t("posts.vote.down"),
             position: "right",
           }}
           onClick={() => {

@@ -18,7 +18,7 @@ import { isEmpty } from "ramda";
 import { Trans, useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
 import routes from "routes";
-import { handleFilterRemove, buildUrl } from "utils/url";
+import { handleFilterRemove } from "utils/url";
 
 import PostCard from "./Card";
 
@@ -96,12 +96,6 @@ const List = () => {
               route: routes.posts.root,
             });
           }}
-        />
-        <Button
-          className="bg-gray-200"
-          label={t("button.clearFilter")}
-          style="Secondary"
-          onClick={() => history.replace(buildUrl(routes.posts.root, { page }))}
         />
       </div>
       <div
