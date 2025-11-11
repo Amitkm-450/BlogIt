@@ -22,7 +22,7 @@ class ReportsJob
     post.report.attach(
       io: StringIO.new(pdf_blob), filename: "#{post.slug}_report.pdf",
       content_type: "application/pdf")
-    post.save
+    post.save!(validate: false)
     ActionCable.server.broadcast(user_id, { message: I18n.t("report.attach"), progress: 100 })
   end
 end

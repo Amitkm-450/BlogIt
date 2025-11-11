@@ -19,7 +19,6 @@ Rails.application.routes.draw do
         resources :votes, only: %i[index create destroy]
       end
       resources :categories, only: %i[index create]
-      resources :organizations, only: [:index]
       resources :users, only: %i[create]
       resource :session, only: %i[create destroy]
     end
