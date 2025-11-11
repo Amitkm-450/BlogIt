@@ -97,7 +97,11 @@ const Show = () => {
             <Typography className="font-bold text-black" style="body2">
               {user.name}
             </Typography>
-            <Typography style="body2">{formatDate(lastPublishedAt)}</Typography>
+            <Typography style="body2">
+              {lastPublishedAt
+                ? formatDate(lastPublishedAt)
+                : t("posts.notPublishedYet")}
+            </Typography>
           </div>
         </div>
         <Typography

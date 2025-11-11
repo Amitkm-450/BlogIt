@@ -133,6 +133,7 @@
     "articlesCount_other": "<span>{{count}} articles</span>",
     "articlesSelected_one": "<span>{{count}} article selected of {{total}}</span>",
     "articlesSelected_other": "<span>{{count}} articles selected of {{total}}</span>",
+    "notPublishedYet": "Not published yet",
     "table": {
       "title": "Title",
       "category": "Category",
