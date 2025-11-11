@@ -68,7 +68,9 @@
     "delete": "Delete",
     "addNewBlog": "Add new blog post",
     "clearFilter": "Clear filter",
-    "home": "Back to home"
+    "home": "Back to home",
+    "draft": "Draft",
+    "published": "Published"
   },
   "signup": {
     "header": "Sign Up",

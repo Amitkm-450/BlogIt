@@ -49,3 +49,4 @@ en:
     attach: "Attaching the report to the user"
   not_found: "%{entity} not found"
   one_vote_per_post: "can vote only once per post"
+  cannot_republish_without_changes: "Cannot republish without any changes."

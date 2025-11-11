@@ -32,7 +32,7 @@ const SearchFilterPan = ({ isOpen, onClose, handleFilterApplied }) => {
   const selectedCategories =
     queryCategories
       .split(",")
-      .map(name => categories.find(cat => cat.name === name))
+      .map(name => categories.find(category => category.name === name))
       .filter(Boolean) || [];
 
   const handleApplyFilters = () => {
@@ -108,8 +108,14 @@ const SearchFilterPan = ({ isOpen, onClose, handleFilterApplied }) => {
                 name="status"
                 placeholder={t("filterForm.placeholder.status")}
                 options={[
-                  { label: "Draft", value: POST_STATUS.DRAFT },
-                  { label: "Published", value: POST_STATUS.PUBLISHED },
+                  {
+                    label: t("button.draft"),
+                    value: POST_STATUS.DRAFT,
+                  },
+                  {
+                    label: t("button.published"),
+                    value: POST_STATUS.PUBLISHED,
+                  },
                 ]}
               />
             </div>
