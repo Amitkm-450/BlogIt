@@ -26,7 +26,11 @@ import routes from "routes";
 import { getFromLocalStorage } from "utils/storage";
 import { buildUrl } from "utils/url";
 
-import { DeleteConfirmationModal, PageLayout } from "../../commons";
+import {
+  DeleteConfirmationModal,
+  PageLayout,
+  PageNotFound,
+} from "../../commons";
 
 const Edit = () => {
   const [isSingleDeleteModalOpen, setIsSingleDeleteModalOpen] = useState(false);
@@ -95,6 +99,9 @@ const Edit = () => {
     );
   };
 
+  const currentUserId = getFromLocalStorage("authUserId");
+  const isUnauthorized = currentUserId !== post?.user?.id;
+
   const isDraft = post?.status === POST_STATUS.DRAFT;
 
   useEffect(() => {
@@ -111,6 +118,10 @@ const Edit = () => {
 
   const { Menu, MenuItem, Divider } = ActionDropdown;
   const { Button: MenuItemButton } = MenuItem;
+
+  if (isUnauthorized) {
+    return <PageNotFound />;
+  }
 
   return (
     <PageLayout>
