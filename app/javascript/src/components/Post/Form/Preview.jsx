@@ -1,3 +1,5 @@
+import { POST_STATUS } from "constants/post";
+
 import React, { useEffect, useState } from "react";
 
 import { Avatar, Tag, Typography } from "@bigbinary/neetoui";
@@ -46,8 +48,8 @@ const Preview = () => {
                   size="large"
                   style="warning"
                   className={classNames({
-                    block: status !== "published",
-                    hidden: status === "published",
+                    block: status !== POST_STATUS.PUBLISHED,
+                    hidden: status === POST_STATUS.PUBLISHED,
                   })}
                 />
               </div>

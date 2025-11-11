@@ -1,4 +1,5 @@
 import { POST_VALIDATION_SCHEMA, getPostInitialData } from "constants/form";
+import { POST_STATUS } from "constants/post";
 
 import React, { useEffect, useRef, useState } from "react";
 
@@ -11,19 +12,25 @@ import {
   Dropdown,
 } from "@bigbinary/neetoui";
 import { Form, Input, Select, Textarea } from "@bigbinary/neetoui/formik";
+import classNames from "classnames";
+import dayjs from "dayjs";
 import { useFetchCategories } from "hooks/reactQuery/useCategoriesApi";
 import {
   useFetchPost,
   useUpdatePost,
   useDeletePost,
 } from "hooks/reactQuery/usePostsApi";
-import { useTranslation } from "react-i18next";
+import { Trans, useTranslation } from "react-i18next";
 import { useHistory, useParams } from "react-router-dom";
 import routes from "routes";
 import { getFromLocalStorage } from "utils/storage";
 import { buildUrl } from "utils/url";
 
-import { DeleteConfirmationModal, PageLayout } from "../../commons";
+import {
+  DeleteConfirmationModal,
+  PageLayout,
+  PageNotFound,
+} from "../../commons";
 
 const Edit = () => {
   const [isSingleDeleteModalOpen, setIsSingleDeleteModalOpen] = useState(false);
@@ -92,6 +99,11 @@ const Edit = () => {
     );
   };
 
+  const currentUserId = getFromLocalStorage("authUserId");
+  const isUnauthorized = currentUserId !== post?.user?.id;
+
+  const isDraft = post?.status === POST_STATUS.DRAFT;
+
   useEffect(() => {
     setStatus(post?.status);
   }, [post]);
@@ -107,6 +119,10 @@ const Edit = () => {
   const { Menu, MenuItem, Divider } = ActionDropdown;
   const { Button: MenuItemButton } = MenuItem;
 
+  if (isUnauthorized) {
+    return <PageNotFound />;
+  }
+
   return (
     <PageLayout>
       <div className="flex flex-col items-start px-4">
@@ -115,11 +131,28 @@ const Edit = () => {
             {t("header.editBlogPost")}
           </Typography>
           <div className="flex items-center space-x-2">
+            <Trans
+              i18nKey="posts.draftSavedAt"
+              components={{
+                span: (
+                  <Typography
+                    style="body2"
+                    className={classNames("text-gray-400", {
+                      hidden: !isDraft,
+                      block: isDraft,
+                    })}
+                  />
+                ),
+              }}
+              values={{
+                time: dayjs(post.updatedAt).format("MMM D, YYYY h:mm A"),
+              }}
+            />
             <Button
               icon={ExternalLink}
               style="link"
               tooltipProps={{
-                content: "Preview",
+                content: t("posts.actions.preview"),
                 position: "top",
               }}
               onClick={handleRedirect}
@@ -132,7 +165,7 @@ const Edit = () => {
             <ActionDropdown
               buttonStyle="secondary"
               label={
-                status === "draft"
+                status === POST_STATUS.DRAFT
                   ? t("posts.actions.setAsDraft")
                   : t("posts.actions.publish")
               }
@@ -142,7 +175,7 @@ const Edit = () => {
                 <MenuItem>
                   <MenuItemButton
                     onClick={() => {
-                      setStatus("published");
+                      setStatus(POST_STATUS.PUBLISHED);
                     }}
                   >
                     {t("posts.actions.publish")}
@@ -152,7 +185,7 @@ const Edit = () => {
                 <MenuItem>
                   <MenuItemButton
                     onClick={() => {
-                      setStatus("draft");
+                      setStatus(POST_STATUS.DRAFT);
                     }}
                   >
                     {t("posts.actions.setAsDraft")}

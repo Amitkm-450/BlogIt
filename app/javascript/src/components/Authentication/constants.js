@@ -21,7 +21,7 @@ export const SIGNUP_VALIDATION_SCHEMA = yup.object().shape({
     .string()
     .required(i18n.t("validations.password.required"))
     .min(6, i18n.t("validations.password.min")),
-  passwordConfirmation: yup
+  password_confirmation: yup
     .string()
     .required(i18n.t("validations.passwordConfirmation.required"))
     .oneOf(

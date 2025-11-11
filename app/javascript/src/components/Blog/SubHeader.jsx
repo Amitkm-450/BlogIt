@@ -1,3 +1,5 @@
+import { POST_STATUS } from "constants/post";
+
 import React from "react";
 
 import { Delete, Filter } from "@bigbinary/neeto-icons";
@@ -15,7 +17,7 @@ import { Trans, useTranslation } from "react-i18next";
 const SubHeader = ({
   setIsSearchPanOpen,
   selectedRowKeys,
-  userBlogs,
+  totalPostsCount,
   columnData,
   handleCheck,
   checkedColumns,
@@ -25,15 +27,14 @@ const SubHeader = ({
   const { t } = useTranslation();
 
   const selectedCount = selectedRowKeys.length;
-  const totalCount = userBlogs.length;
   const hasSelection = !isEmpty(selectedRowKeys);
 
   let translationKey = "posts.articlesCount";
-  let translationValues = { count: totalCount };
+  let translationValues = { count: totalPostsCount };
 
   if (hasSelection) {
     translationKey = "posts.articlesSelected";
-    translationValues = { count: selectedCount, total: totalCount };
+    translationValues = { count: selectedCount, total: totalPostsCount };
   }
 
   const { Menu, MenuItem, Divider } = Dropdown;
@@ -66,7 +67,7 @@ const SubHeader = ({
                 <MenuItemButton
                   className="text-black"
                   style="link"
-                  onClick={() => handleBulkUpdate("draft")}
+                  onClick={() => handleBulkUpdate(POST_STATUS.DRAFT)}
                 >
                   {t("subHeader.status.draft")}
                 </MenuItemButton>
@@ -76,7 +77,7 @@ const SubHeader = ({
                 <MenuItemButton
                   className="text-black"
                   style="link"
-                  onClick={() => handleBulkUpdate("published")}
+                  onClick={() => handleBulkUpdate(POST_STATUS.PUBLISHED)}
                 >
                   {t("subHeader.status.publish")}
                 </MenuItemButton>

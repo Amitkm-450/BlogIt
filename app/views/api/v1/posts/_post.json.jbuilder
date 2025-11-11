@@ -5,6 +5,7 @@ json.extract! post,
   :slug,
   :is_bloggable,
   :updated_at,
+  :created_at,
   :status,
   :last_published_at
 
