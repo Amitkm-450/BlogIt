@@ -4,3 +4,7 @@ export const QUERY_KEYS = {
   POSTS: "posts",
   VOTES: "votes",
 };
+
+export const PAGE_DEFAULT_SIZE = 10;
+
+export const PAGE_DEFAULT_NUMBER = 1;

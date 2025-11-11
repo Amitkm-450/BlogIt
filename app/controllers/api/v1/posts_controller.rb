@@ -1,14 +1,18 @@
 # frozen_string_literal: true
 
 class Api::V1::PostsController < ApplicationController
+  include Pagy::Backend
+
   before_action :load_post!, only: %i[show destroy update]
   before_action :load_posts, only: %i[index bulk_destroy bulk_status_update]
   before_action :authorize_post!, only: %i[show destroy update]
   before_action :authorize_posts!, only: %i[bulk_destroy bulk_status_update]
 
   def index
-    @posts = @posts.includes(:user, :organization, :categories)
-    @posts = Posts::FilterService.new(@posts, params).process
+    posts = @posts.includes(:user, :organization, :categories)
+    posts = Posts::FilterService.new(posts, params).process
+    @total_posts = posts.count
+    @pagy, @posts = pagy(posts, items: 10, page: params[:page] || 1)
   end
 
   def create

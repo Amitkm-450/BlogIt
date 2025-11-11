@@ -86,3 +86,5 @@ group :development, :test do
 end
 
 gem "pg", "~> 1.5"
+
+gem "pagy", "~> 6.5"

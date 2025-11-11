@@ -11,6 +11,7 @@ import {
   NoData,
   Tag,
   Button,
+  Pagination,
 } from "@bigbinary/neetoui";
 import classNames from "classnames";
 import dayjs from "dayjs";
@@ -32,6 +33,7 @@ import { buildFilterParams, buildUrl, handleFilterRemove } from "utils/url";
 import SearchFilterPan from "./SearchFilterPan";
 import SubHeader from "./SubHeader";
 
+import { PAGE_DEFAULT_NUMBER, PAGE_DEFAULT_SIZE } from "../../constants/query";
 import { DeleteConfirmationModal, PageLayout } from "../commons";
 
 const Blogs = () => {
@@ -159,6 +161,7 @@ const Blogs = () => {
     searchTerm = "",
     status = "",
     categories: queryCategories = "",
+    page,
   } = queryParams;
 
   const shouldShowFilters =
@@ -179,6 +182,7 @@ const Blogs = () => {
       category_ids: selectedCategoryIds,
     }),
     ...(status && { status }),
+    ...(page && { page }),
   };
 
   const filters = {
@@ -187,7 +191,10 @@ const Blogs = () => {
     ...(queryCategories && { categories: queryCategories }),
   };
 
-  const { data: userBlogs = [], isLoading: isPostsLoading } = useFetchPosts({
+  const {
+    data: { posts: userBlogs = [], count: totalPostsCount = 0 } = {},
+    isLoading: isPostsLoading,
+  } = useFetchPosts({
     params: filterParams,
     scope: "user",
   });
@@ -293,7 +300,7 @@ const Blogs = () => {
           {...{
             setIsSearchPanOpen,
             selectedRowKeys,
-            userBlogs,
+            totalPostsCount,
             handleCheck,
             checkedColumns,
             handleBulkUpdate,
@@ -338,6 +345,7 @@ const Blogs = () => {
                       handleFilterRemove({
                         key,
                         filters,
+                        page,
                         history,
                         route: routes.posts.myBlogs,
                       });
@@ -350,7 +358,9 @@ const Blogs = () => {
           className="bg-gray-200"
           label={t("button.clearFilter")}
           style="Secondary"
-          onClick={() => history.replace(routes.posts.myBlogs)}
+          onClick={() =>
+            history.replace(buildUrl(routes.posts.myBlogs, { page }))
+          }
         />
       </div>
       <div
@@ -375,7 +385,7 @@ const Blogs = () => {
         />
       </div>
       <div
-        className={classNames("", {
+        className={classNames("flex h-[90%] flex-col justify-between pb-4", {
           hidden: isEmpty(userBlogs),
           block: !isEmpty(userBlogs),
         })}
@@ -390,6 +400,13 @@ const Blogs = () => {
             handleRowSelect(selectedRowKeys, selectedRows)
           }
         />
+        <div className="flex flex-row-reverse px-1">
+          <Pagination
+            count={totalPostsCount}
+            pageNo={Number(page) || PAGE_DEFAULT_NUMBER}
+            pageSize={PAGE_DEFAULT_SIZE}
+          />
+        </div>
       </div>
       <SearchFilterPan
         isOpen={isSearchPanOpen}

@@ -21,7 +21,7 @@ class Api::V1::PostsControllerTest < ActionDispatch::IntegrationTest
     create_list(:post, 2, :published, user: @user, organization: @organization)
     get api_v1_posts_path(scope: "organization"), headers: @headers
     assert_response :success
-    assert response_body.all? { |p| p[:status] == "published" }
+    assert response_body[:posts].all? { |p| p[:status] == "published" }
   end
 
   def test_should_create_post

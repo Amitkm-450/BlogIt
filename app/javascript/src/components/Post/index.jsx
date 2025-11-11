@@ -1,6 +1,15 @@
+import { PAGE_DEFAULT_NUMBER, PAGE_DEFAULT_SIZE } from "constants/query";
+
 import React from "react";
 
-import { Button, NoData, Spinner, Tag, Typography } from "@bigbinary/neetoui";
+import {
+  Button,
+  NoData,
+  Pagination,
+  Spinner,
+  Tag,
+  Typography,
+} from "@bigbinary/neetoui";
 import classNames from "classnames";
 import { useFetchCategories } from "hooks/reactQuery/useCategoriesApi";
 import { useFetchPosts } from "hooks/reactQuery/usePostsApi";
@@ -9,12 +18,12 @@ import { isEmpty } from "ramda";
 import { Trans, useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
 import routes from "routes";
-import { handleFilterRemove } from "utils/url";
+import { handleFilterRemove, buildUrl } from "utils/url";
 
 import PostCard from "./Card";
 
 const List = () => {
-  const { categories: queryCategories = "" } = useQueryParams();
+  const { categories: queryCategories = "", page } = useQueryParams();
 
   const history = useHistory();
 
@@ -24,9 +33,13 @@ const List = () => {
     category_ids: categories
       .filter(({ name }) => queryCategories.split(",").includes(name))
       .map(({ id }) => id),
+    ...(page && { page }),
   };
 
-  const { data: posts = [], isLoading: isPostsLoading } = useFetchPosts({
+  const {
+    data: { posts = [], count: totalPostsCount = 0 } = {},
+    isLoading: isPostsLoading,
+  } = useFetchPosts({
     params: filterParams,
   });
 
@@ -96,6 +109,7 @@ const List = () => {
             handleFilterRemove({
               key: "categories",
               filters: { categories: queryCategories },
+              page,
               history,
               route: routes.posts.root,
             });
@@ -105,13 +119,22 @@ const List = () => {
           className="bg-gray-200"
           label={t("button.clearFilter")}
           style="Secondary"
-          onClick={() => history.replace(routes.posts.root)}
+          onClick={() => history.replace(buildUrl(routes.posts.root, { page }))}
         />
       </div>
-      <div className="space-y-4">
-        {posts.map((post, index) => (
-          <PostCard key={index} {...post} />
-        ))}
+      <div className="flex h-[90%] flex-col justify-between">
+        <div className="space-y-4 overflow-y-auto">
+          {posts.map((post, index) => (
+            <PostCard key={index} {...post} />
+          ))}
+        </div>
+        <div className="flex flex-row-reverse px-1">
+          <Pagination
+            count={totalPostsCount}
+            pageNo={Number(page) || PAGE_DEFAULT_NUMBER}
+            pageSize={PAGE_DEFAULT_SIZE}
+          />
+        </div>
       </div>
     </div>
   );

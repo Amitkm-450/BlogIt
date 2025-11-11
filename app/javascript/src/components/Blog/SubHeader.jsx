@@ -15,7 +15,7 @@ import { Trans, useTranslation } from "react-i18next";
 const SubHeader = ({
   setIsSearchPanOpen,
   selectedRowKeys,
-  userBlogs,
+  totalPostsCount,
   columnData,
   handleCheck,
   checkedColumns,
@@ -25,15 +25,14 @@ const SubHeader = ({
   const { t } = useTranslation();
 
   const selectedCount = selectedRowKeys.length;
-  const totalCount = userBlogs.length;
   const hasSelection = !isEmpty(selectedRowKeys);
 
   let translationKey = "posts.articlesCount";
-  let translationValues = { count: totalCount };
+  let translationValues = { count: totalPostsCount };
 
   if (hasSelection) {
     translationKey = "posts.articlesSelected";
-    translationValues = { count: selectedCount, total: totalCount };
+    translationValues = { count: selectedCount, total: totalPostsCount };
   }
 
   const { Menu, MenuItem, Divider } = Dropdown;

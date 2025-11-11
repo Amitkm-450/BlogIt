@@ -38,9 +38,10 @@ export const buildFilterParams = ({ title, categories = [], status }) => {
   return params;
 };
 
-export const handleFilterRemove = ({ key, filters, history, route }) => {
+export const handleFilterRemove = ({ key, filters, page, history, route }) => {
   const updatedFilters = {
     ...filters,
+    page,
     [key]: null,
   };
 
