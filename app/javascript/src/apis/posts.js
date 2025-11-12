@@ -1,33 +1,30 @@
 import axios from "axios";
 
-import endPoints from "../endPoints";
-import { buildUrl } from "../utils/url";
+import {
+  postsUrl,
+  postUrl,
+  postReportUrl,
+  postReportDownloadUrl,
+} from "../endPoints";
 
-const fetch = params =>
-  axios.get(endPoints.posts.root, {
-    params,
-  });
+const fetch = params => axios.get(postsUrl(), { params });
 
-const create = payload => axios.post(endPoints.posts.root, { post: payload });
+const create = payload => axios.post(postsUrl(), { post: payload });
 
-const show = slug => axios.get(buildUrl(endPoints.posts.show, { slug }));
+const show = slug => axios.get(postUrl(slug));
 
 const update = ({ slug, payload, quiet = false }) => {
-  const path = buildUrl(endPoints.posts.show, { slug });
-  const updatePath = quiet ? `${path}?quiet` : path;
+  const url = postUrl(slug) + (quiet ? "?quiet" : "");
 
-  return axios.patch(updatePath, { post: payload });
+  return axios.patch(url, { post: payload });
 };
 
-const destroy = slug => axios.delete(buildUrl(endPoints.posts.show, { slug }));
+const destroy = slug => axios.delete(postUrl(slug));
 
-const generatePdf = slug =>
-  axios.post(buildUrl(endPoints.posts.report, { slug }), {});
+const generatePdf = slug => axios.post(postReportUrl(slug), {});
 
-const download = slug =>
-  axios.get(buildUrl(endPoints.posts.reportDownload, { slug }), {
-    responseType: "blob",
-  });
+const downloadPdf = slug =>
+  axios.get(postReportDownloadUrl(slug), { responseType: "blob" });
 
 const postsApi = {
   fetch,
@@ -36,7 +33,7 @@ const postsApi = {
   update,
   destroy,
   generatePdf,
-  download,
+  download: downloadPdf,
 };
 
 export default postsApi;

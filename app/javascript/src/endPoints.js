@@ -1,22 +1,17 @@
-const endPoints = {
-  sessions: "/session",
-  users: "/users",
-  categories: "/categories",
-  posts: {
-    root: "/posts",
-    show: "/posts/:slug",
-    report: "/posts/:slug/report",
-    reportDownload: "/posts/:slug/report/download",
-    votes: {
-      root: "/posts/:postSlug/votes",
-      show: "/posts/:postSlug/votes/:id",
-    },
-  },
-  myPosts: {
-    root: "/my_posts",
-    bulkDestroy: "/my_posts/bulk_destroy",
-    bulkStatusUpdate: "/my_posts/bulk_status_update",
-  },
-};
+export const sessionUrl = () => "/session";
+export const usersUrl = () => "/users";
 
-export default endPoints;
+export const categoriesUrl = () => "/categories";
+
+export const postsUrl = () => "/posts";
+export const postUrl = slug => `${postsUrl()}/${slug}`;
+export const postReportUrl = slug => `${postUrl(slug)}/report`;
+export const postReportDownloadUrl = slug => `${postReportUrl(slug)}/download`;
+
+export const postVotesUrl = postSlug => `${postUrl(postSlug)}/votes`;
+export const postVoteUrl = (postSlug, id) => `${postVotesUrl(postSlug)}/${id}`;
+
+export const myPostsUrl = () => "/my_posts";
+export const bulkDestroyMyPostsUrl = () => `${myPostsUrl()}/bulk_destroy`;
+export const bulkStatusUpdateMyPostsUrl = () =>
+  `${myPostsUrl()}/bulk_status_update`;
