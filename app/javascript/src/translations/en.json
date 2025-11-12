@@ -134,6 +134,7 @@
     "articlesSelected_one": "<span>{{count}} article selected of {{total}}</span>",
     "articlesSelected_other": "<span>{{count}} articles selected of {{total}}</span>",
     "notPublishedYet": "Not published yet",
+    "blogIt": "Blog It",
     "table": {
       "title": "Title",
       "category": "Category",

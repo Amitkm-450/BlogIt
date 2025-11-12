@@ -9,7 +9,7 @@ class Api::V1::CategoriesController < ApplicationController
 
   def create
     @current_organization.categories.create!(category_params)
-    render_notice(t("successfully_created", entity: "Category"))
+    render_notice(t("successfully_created", entity: t("entities.category")))
   end
 
   private

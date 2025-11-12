@@ -52,3 +52,10 @@ en:
   cannot_republish_without_changes: "Cannot republish without any changes."
   authorization:
     denied: "Authorization denied"
+  entities:
+    category: "Category"
+    user: "User"
+    report: "Report"
+    post:
+      one: "Post"
+      other: "Posts"

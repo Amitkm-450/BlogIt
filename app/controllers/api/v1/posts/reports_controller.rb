@@ -9,7 +9,7 @@ class Api::V1::Posts::ReportsController < ApplicationController
 
   def download
     unless @post.report.attached?
-      render_error(t("not_found", entity: "report"), :not_found) and return
+      render_error(t("not_found", entity: t("entities.report")), :not_found) and return
     end
 
     send_data @post.report.download, filename: pdf_file_name, content_type: "application/pdf"

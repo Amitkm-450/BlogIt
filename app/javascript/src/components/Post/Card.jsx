@@ -51,7 +51,7 @@ const Card = ({ title, user, createdAt, slug, categories, isBloggable }) => {
             <Typography style="h3" weight="semibold">
               {title}
             </Typography>
-            {isBloggable && <Tag label="Blog It" style="success" />}
+            {isBloggable && <Tag label={t("posts.blogIt")} style="success" />}
           </div>
           <div className="flex items-center justify-start gap-4">
             {categories.map(category => (

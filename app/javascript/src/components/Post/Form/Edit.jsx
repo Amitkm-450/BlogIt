@@ -163,7 +163,15 @@ const Edit = () => {
               onClick={handleCancel}
             />
             <ActionDropdown
-              buttonStyle="secondary"
+              buttonStyle="primary"
+              buttonProps={{
+                className: "bg-black text-white",
+              }}
+              dropdownProps={{
+                buttonProps: {
+                  className: "bg-black text-white",
+                },
+              }}
               label={
                 status === POST_STATUS.DRAFT
                   ? t("posts.actions.setAsDraft")
