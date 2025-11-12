@@ -12,7 +12,7 @@ import { ToastContainer } from "react-toastify";
 import { getFromLocalStorage } from "utils/storage";
 
 import { Login, Signup } from "./components/Authentication";
-import UserBlogs from "./components/Blog";
+import UserBlogs from "./components/Blogs";
 import { PageNotFound, PrivateRoute } from "./components/commons";
 import Home from "./components/Home";
 import {
