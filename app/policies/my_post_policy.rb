@@ -1,6 +1,6 @@
 # frozen_string_literal: true
 
-class PostPolicy
+class MyPostPolicy
   attr_reader :user, :record
 
   def initialize(user, record)
@@ -8,16 +8,13 @@ class PostPolicy
     @record = record
   end
 
-  def show?
-    record.organization_id == user.organization_id
+  def bulk_destroy?
+    records = Array(record)
+    records.all? { |r| r.user_id == user.id }
   end
 
-  def update?
-    record.user_id == user.id
-  end
-
-  def destroy?
-    update?
+  def bulk_status_update?
+    bulk_destroy?
   end
 
   class Scope
@@ -29,7 +26,7 @@ class PostPolicy
     end
 
     def resolve
-      scope.where(organization_id: user.organization_id)
+      scope.where(user_id: user.id)
     end
   end
 end

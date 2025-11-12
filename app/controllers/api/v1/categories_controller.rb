@@ -4,7 +4,7 @@ class Api::V1::CategoriesController < ApplicationController
   before_action :load_organization
 
   def index
-    @categories = @current_organization.categories
+    @categories = policy_scope(Category)
   end
 
   def create

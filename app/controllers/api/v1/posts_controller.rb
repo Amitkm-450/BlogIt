@@ -3,13 +3,10 @@
 class Api::V1::PostsController < ApplicationController
   include Pagy::Backend
 
-  before_action :load_post!, only: %i[show destroy update]
-  before_action :load_posts, only: %i[index bulk_destroy bulk_status_update]
-  before_action :authorize_post!, only: %i[show destroy update]
-  before_action :authorize_posts!, only: %i[bulk_destroy bulk_status_update]
+  before_action :load_post_and_authorize!, only: %i[show destroy update]
 
   def index
-    posts = @posts.includes(:user, :organization, :categories)
+    posts = policy_scope(Post).includes(:user, :organization, :categories)
     posts = Posts::FilterService.new(posts, params).process
     @total_posts = posts.count
     @pagy, @posts = pagy(posts, items: 10, page: params[:page] || 1)
@@ -31,48 +28,17 @@ class Api::V1::PostsController < ApplicationController
 
   def update
     @post.update!(post_params)
-    render_notice(t("successfully_updated", entity: t("entities.post", count: 1), count: 1)) unless ActiveModel::Type::Boolean.new.cast(params[:quiet])
-  end
-
-  def bulk_destroy
-    posts_count = @posts.destroy_all.size
-    render_notice(t("successfully_deleted", entity: t("entities.post", count: posts_count), count: posts_count))
-  end
-
-  def bulk_status_update
-    status = post_params[:status]
-    updates = { status: }.merge(status == "published" ? { last_published_at: Time.zone.now } : {})
-
-    posts_count = @posts.where.not(status: status)
-      .update_all(updates)
-
-    render_notice(t("successfully_updated", entity: t("entities.post", count: posts_count), count: posts_count))
+    render_notice(t("successfully_updated", entity: t("entities.post", count: 1), count: 1)) unless params.key?(:quiet)
   end
 
   private
 
-    def post_params
-      params.require(:post).permit(:title, :description, :organization_id, :status, category_ids: [])
-    end
-
-    def load_post!
+    def load_post_and_authorize!
       @post = current_user.organization.posts.find_by!(slug: params[:slug])
-    end
-
-    def load_posts
-      if params[:scope] == "organization"
-        @posts = current_user.organization.posts
-      else
-        @posts = current_user.posts
-      end
-      @posts = @posts.where(id: params[:post_ids]) if params[:post_ids].present?
-    end
-
-    def authorize_post!
       authorize @post
     end
 
-    def authorize_posts!
-      authorize @posts
+    def post_params
+      params.require(:post).permit(:title, :description, :organization_id, :status, category_ids: [])
     end
 end

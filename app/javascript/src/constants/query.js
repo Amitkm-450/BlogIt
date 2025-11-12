@@ -2,6 +2,7 @@ export const QUERY_KEYS = {
   USERS: "users",
   CATEGORIES: "categories",
   POSTS: "posts",
+  MY_POSTS: "my_posts",
   VOTES: "votes",
 };
 

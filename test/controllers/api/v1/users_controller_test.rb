@@ -21,7 +21,7 @@ class Api::V1::UsersControllerTest < ActionDispatch::IntegrationTest
       headers: @headers,
       as: :json
     assert_response :success
-    assert_equal I18n.t("successfully_created", entity: "User"), response_body[:notice]
+    assert_equal I18n.t("successfully_created", entity: I18n.t("entities.user")), response_body[:notice]
   end
 
   def test_should_not_create_user_with_existing_email

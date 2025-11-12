@@ -18,12 +18,11 @@ import classNames from "classnames";
 import dayjs from "dayjs";
 import { useFetchCategories } from "hooks/reactQuery/useCategoriesApi";
 import {
-  useFetchPosts,
-  useUpdatePost,
-  useDeletePost,
-  useBulkDestroyPosts,
-  useBulkStatusUpdate,
-} from "hooks/reactQuery/usePostsApi";
+  useFetchMyPosts,
+  useBulkDestroyMyPosts,
+  useBulkStatusUpdateMyPosts,
+} from "hooks/reactQuery/useMyPostsApi";
+import { useUpdatePost, useDeletePost } from "hooks/reactQuery/usePostsApi";
 import useQueryParams from "hooks/useQueryParams";
 import { isEmpty } from "ramda";
 import { Trans, useTranslation } from "react-i18next";
@@ -195,15 +194,12 @@ const Blogs = () => {
   const {
     data: { posts: userBlogs = [], count: totalPostsCount = 0 } = {},
     isLoading: isPostsLoading,
-  } = useFetchPosts({
-    params: filterParams,
-    scope: "user",
-  });
+  } = useFetchMyPosts(filterParams);
 
   const { mutate: updatePost } = useUpdatePost();
   const { mutate: deletePost } = useDeletePost();
-  const { mutate: bulkDestroyPosts } = useBulkDestroyPosts();
-  const { mutate: bulkStatusUpdate } = useBulkStatusUpdate();
+  const { mutate: bulkDestroyPosts } = useBulkDestroyMyPosts();
+  const { mutate: bulkStatusUpdate } = useBulkStatusUpdateMyPosts();
 
   const handleChange = (slug, status) => {
     updatePost({

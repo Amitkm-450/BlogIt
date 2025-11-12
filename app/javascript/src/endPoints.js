@@ -5,14 +5,17 @@ const endPoints = {
   posts: {
     root: "/posts",
     show: "/posts/:slug",
-    bulkDestroy: "/posts/bulk_destroy",
-    bulkStatusUpdate: "/posts/bulk_status_update",
     report: "/posts/:slug/report",
     reportDownload: "/posts/:slug/report/download",
     votes: {
       root: "/posts/:postSlug/votes",
       show: "/posts/:postSlug/votes/:id",
     },
+  },
+  myPosts: {
+    root: "/my_posts",
+    bulkDestroy: "/my_posts/bulk_destroy",
+    bulkStatusUpdate: "/my_posts/bulk_status_update",
   },
 };
 

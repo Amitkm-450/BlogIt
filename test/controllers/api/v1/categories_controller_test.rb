@@ -23,7 +23,7 @@ class Api::V1::CategoriesControllerTest < ActionDispatch::IntegrationTest
       headers: @headers,
       as: :json
     assert_response :success
-    assert_equal I18n.t("successfully_created", entity: "Category"), response_body["notice"]
+    assert_equal I18n.t("successfully_created", entity: I18n.t("entities.category")), response_body["notice"]
   end
 
   def test_should_not_create_category_without_name
