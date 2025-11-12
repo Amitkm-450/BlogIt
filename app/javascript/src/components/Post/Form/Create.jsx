@@ -1,4 +1,4 @@
-import { POST_VALIDATION_SCHEMA, getPostInitialData } from "constants/form";
+import { getPostInitialData } from "constants/form";
 import { POST_STATUS } from "constants/post";
 
 import React, { useRef, useState } from "react";
@@ -9,12 +9,13 @@ import {
   Spinner,
   Typography,
 } from "@bigbinary/neetoui";
-import { Form, Input, Select, Textarea } from "@bigbinary/neetoui/formik";
 import { useFetchCategories } from "hooks/reactQuery/useCategoriesApi";
 import { useCreatePost } from "hooks/reactQuery/usePostsApi";
 import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
 import routes from "routes";
+
+import Form from "./Form";
 
 import { PageLayout } from "../../commons";
 
@@ -115,47 +116,10 @@ const Create = () => {
         </div>
         <div className="mx-auto w-full rounded-lg bg-white p-6 shadow">
           <Form
-            formikProps={{
-              validateOnBlur: true,
-              enableReinitialize: true,
-              initialValues: getPostInitialData(),
-              validationSchema: POST_VALIDATION_SCHEMA,
-              innerRef: formikRef,
-              onSubmit: handleChangeStatus,
-            }}
-          >
-            <div className="mb-4">
-              <Input
-                label={t("form.label.title")}
-                name="title"
-                placeholder={t("form.placeholder.title")}
-                size="large"
-              />
-            </div>
-            <div className="flex flex-col">
-              <div className="mb-1 mt-1 w-full">
-                <Select
-                  isMulti
-                  isSearchable
-                  label={t("form.label.categories")}
-                  menuPosition="fixed"
-                  name="categories"
-                  optionRemapping={{ label: "name", value: "id" }}
-                  options={categories}
-                  placeholder={t("form.placeholder.categories")}
-                  size="large"
-                />
-              </div>
-            </div>
-            <div className="mb-4">
-              <Textarea
-                label={t("form.label.description")}
-                name="description"
-                placeholder={t("form.placeholder.description")}
-                size="large"
-              />
-            </div>
-          </Form>
+            {...{ categories, formikRef }}
+            initialValues={getPostInitialData()}
+            onSubmit={handleChangeStatus}
+          />
         </div>
       </div>
     </PageLayout>

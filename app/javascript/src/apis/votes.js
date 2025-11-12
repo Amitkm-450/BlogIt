@@ -1,18 +1,14 @@
 import axios from "axios";
-import { buildUrl } from "utils/url";
 
-import endPoints from "../endPoints";
+import { postVotesUrl, postVoteUrl } from "../endPoints";
 
-const fetch = postSlug =>
-  axios.get(buildUrl(endPoints.posts.votes.root, { postSlug }));
+const fetch = postSlug => axios.get(postVotesUrl(postSlug));
 
 const create = (postSlug, payload) =>
-  axios.post(buildUrl(endPoints.posts.votes.root, { postSlug }), {
-    vote: payload,
-  });
+  axios.post(postVotesUrl(postSlug), { vote: payload });
 
 const destroy = (params, payload) =>
-  axios.delete(buildUrl(endPoints.posts.votes.show, params), {
+  axios.delete(postVoteUrl(params.postSlug, params.id), {
     vote: payload,
   });
 

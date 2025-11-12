@@ -7,6 +7,7 @@ import classNames from "classnames";
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
 import { formatDate } from "utils/date";
+import { getFromLocalStorage } from "utils/storage";
 
 import { PageLayout } from "../../commons";
 
@@ -17,10 +18,9 @@ const Preview = () => {
   const { slug } = useParams();
 
   useEffect(() => {
-    const data = localStorage.getItem(`preview_post_${slug}`);
-    if (data) {
-      setPost(JSON.parse(data));
-    }
+    const data = getFromLocalStorage(`preview_post_${slug}`);
+
+    setPost(data);
   }, [slug]);
 
   const { categories, title, status, user, updatedAt, description } = post;
