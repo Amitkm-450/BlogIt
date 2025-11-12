@@ -135,6 +135,11 @@
     "articlesSelected_other": "<span>{{count}} articles selected of {{total}}</span>",
     "notPublishedYet": "Not published yet",
     "blogIt": "Blog It",
+    "form": {
+      "title": "Title",
+      "categories": "Categories",
+      "description": "Description"
+    },
     "table": {
       "title": "Title",
       "category": "Category",

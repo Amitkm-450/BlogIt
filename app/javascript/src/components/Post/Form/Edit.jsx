@@ -1,4 +1,4 @@
-import { POST_VALIDATION_SCHEMA, getPostInitialData } from "constants/form";
+import { getPostInitialData } from "constants/form";
 import { POST_STATUS } from "constants/post";
 
 import React, { useEffect, useRef, useState } from "react";
@@ -11,7 +11,6 @@ import {
   ActionDropdown,
   Dropdown,
 } from "@bigbinary/neetoui";
-import { Form, Input, Select, Textarea } from "@bigbinary/neetoui/formik";
 import classNames from "classnames";
 import dayjs from "dayjs";
 import { useFetchCategories } from "hooks/reactQuery/useCategoriesApi";
@@ -25,6 +24,8 @@ import { useHistory, useParams } from "react-router-dom";
 import routes from "routes";
 import { getFromLocalStorage } from "utils/storage";
 import { buildUrl } from "utils/url";
+
+import Form from "./Form";
 
 import {
   DeleteConfirmationModal,
@@ -215,47 +216,10 @@ const Edit = () => {
         </div>
         <div className="w-full rounded-lg bg-white p-6 shadow">
           <Form
-            formikProps={{
-              validateOnBlur: true,
-              enableReinitialize: true,
-              initialValues: getPostInitialData(post),
-              validationSchema: POST_VALIDATION_SCHEMA,
-              innerRef: formikRef,
-              onSubmit: handleChangeStatus,
-            }}
-          >
-            <div className="mb-4">
-              <Input
-                label={t("form.label.title")}
-                name="title"
-                placeholder={t("form.placeholder.title")}
-                size="large"
-              />
-            </div>
-            <div className="flex flex-col">
-              <div className="mb-1 mt-1 w-full">
-                <Select
-                  isMulti
-                  isSearchable
-                  label={t("form.label.categories")}
-                  menuPosition="fixed"
-                  name="categories"
-                  optionRemapping={{ label: "name", value: "id" }}
-                  options={categories}
-                  placeholder={t("form.placeholder.categories")}
-                  size="large"
-                />
-              </div>
-            </div>
-            <div className="mb-4">
-              <Textarea
-                label={t("form.label.description")}
-                name="description"
-                placeholder={t("form.placeholder.description")}
-                size="large"
-              />
-            </div>
-          </Form>
+            {...{ categories, formikRef }}
+            initialValues={getPostInitialData(post)}
+            onSubmit={handleChangeStatus}
+          />
         </div>
       </div>
       <DeleteConfirmationModal
