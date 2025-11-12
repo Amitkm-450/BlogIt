@@ -1,6 +1,5 @@
 # frozen_string_literal: true
 
-# app/policies/post_policy.rb
 class PostPolicy
   attr_reader :user, :record
 

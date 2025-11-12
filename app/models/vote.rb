@@ -17,7 +17,7 @@ class Vote < ApplicationRecord
       downvotes = post.votes.where(value: -1).count
 
       net_votes = post.net_votes
-      is_bloggable = net_votes > BlogConstants::BLOG_THRESHOLD
+      is_bloggable = net_votes > Constants::BLOG_THRESHOLD
 
       post.update!(
         upvotes:,
