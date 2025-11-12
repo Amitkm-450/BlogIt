@@ -8,7 +8,7 @@ export const useFetchPosts = ({ params = {}, scope }) => {
 
   return useQuery({
     queryKey: [QUERY_KEYS.POSTS, stableKey, scope],
-    queryFn: () => postsApi.fetch({ params, scope }),
+    queryFn: () => postsApi.fetch(params),
     keepPreviousData: true,
   });
 };
@@ -25,6 +25,7 @@ export const useCreatePost = () => {
   return useMutation({
     mutationFn: payload => postsApi.create(payload),
     onSuccess: () => {
+      queryClient.invalidateQueries([QUERY_KEYS.MY_POSTS]);
       queryClient.invalidateQueries([QUERY_KEYS.POSTS]);
     },
   });
@@ -38,6 +39,7 @@ export const useUpdatePost = () => {
       postsApi.update({ slug, payload, quiet }),
     onSuccess: (_, { slug }) => {
       queryClient.invalidateQueries([QUERY_KEYS.POSTS]);
+      queryClient.invalidateQueries([QUERY_KEYS.MY_POSTS]);
       queryClient.invalidateQueries([QUERY_KEYS.POSTS, slug]);
     },
   });
@@ -53,33 +55,12 @@ export const useDeletePost = () => {
         queryKey: [QUERY_KEYS.POSTS, slug],
       });
 
+      queryClient.invalidateQueries([QUERY_KEYS.MY_POSTS]);
+
       queryClient.invalidateQueries({
         queryKey: [QUERY_KEYS.POSTS],
         exact: false,
       });
-    },
-  });
-};
-
-export const useBulkDestroyPosts = () => {
-  const queryClient = useQueryClient();
-
-  return useMutation({
-    mutationFn: postIds => postsApi.bulkDestroy(postIds),
-    onSuccess: () => {
-      queryClient.invalidateQueries([QUERY_KEYS.POSTS]);
-    },
-  });
-};
-
-export const useBulkStatusUpdate = () => {
-  const queryClient = useQueryClient();
-
-  return useMutation({
-    mutationFn: ({ postIds, status }) =>
-      postsApi.bulkStatusUpdate(postIds, status),
-    onSuccess: () => {
-      queryClient.invalidateQueries([QUERY_KEYS.POSTS]);
     },
   });
 };

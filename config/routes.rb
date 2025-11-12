@@ -5,11 +5,6 @@ Rails.application.routes.draw do
   namespace :api do
     namespace :v1, defaults: { format: :json } do
       resources :posts, only: %i[index create show update destroy], param: :slug do
-        collection do
-          delete :bulk_destroy
-          patch :bulk_status_update
-        end
-
         member do
           resource :report, only: %i[create], module: :posts do
             get :download, on: :member
@@ -17,6 +12,13 @@ Rails.application.routes.draw do
         end
 
         resources :votes, only: %i[index create destroy]
+      end
+
+      resources :my_posts, only: %i[index] do
+        collection do
+          delete :bulk_destroy
+          patch :bulk_status_update
+        end
       end
       resources :categories, only: %i[index create]
       resources :users, only: %i[create]
