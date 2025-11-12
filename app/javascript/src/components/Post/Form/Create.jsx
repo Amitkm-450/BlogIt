@@ -73,8 +73,20 @@ const Create = () => {
               onClick={() => formikRef?.current.resetForm()}
             />
             <ActionDropdown
-              buttonStyle="secondary"
-              label={status === POST_STATUS.DRAFT ? "Save as draft" : "Publish"}
+              buttonStyle="primary"
+              buttonProps={{
+                className: "bg-black text-white",
+              }}
+              dropdownProps={{
+                buttonProps: {
+                  className: "bg-black text-white",
+                },
+              }}
+              label={
+                status === POST_STATUS.DRAFT
+                  ? t("posts.actions.setAsDraft")
+                  : t("posts.actions.publish")
+              }
               onClick={() => formikRef?.current.submitForm()}
             >
               <Menu>
@@ -84,7 +96,7 @@ const Create = () => {
                       setStatus(POST_STATUS.PUBLISHED);
                     }}
                   >
-                    Publish
+                    {t("posts.actions.publish")}
                   </MenuItemButton>
                 </MenuItem>
                 <Divider />
@@ -94,7 +106,7 @@ const Create = () => {
                       setStatus(POST_STATUS.DRAFT);
                     }}
                   >
-                    Save as draft
+                    {t("posts.actions.setAsDraft")}
                   </MenuItemButton>
                 </MenuItem>
               </Menu>

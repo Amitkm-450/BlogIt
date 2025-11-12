@@ -17,7 +17,7 @@ class Api::V1::PostsController < ApplicationController
 
   def create
     post = current_user.posts.create!(post_params)
-    render_notice(t("successfully_created", entity: "Post"))
+    render_notice(t("successfully_created", entity: t("entities.post", count: 1)))
   end
 
   def show
@@ -26,17 +26,17 @@ class Api::V1::PostsController < ApplicationController
 
   def destroy
     @post.destroy!
-    render_notice(t("successfully_deleted", entity: "Post", count: 1))
+    render_notice(t("successfully_deleted", entity: t("entities.post", count: 1), count: 1))
   end
 
   def update
     @post.update!(post_params)
-    render_notice(t("successfully_updated", entity: "Post", count: 1)) unless params[:quiet]
+    render_notice(t("successfully_updated", entity: t("entities.post", count: 1), count: 1)) unless ActiveModel::Type::Boolean.new.cast(params[:quiet])
   end
 
   def bulk_destroy
     posts_count = @posts.destroy_all.size
-    render_notice(t("successfully_deleted", entity: posts_count > 1 ? "Posts" : "Post", count: posts_count))
+    render_notice(t("successfully_deleted", entity: t("entities.post", count: posts_count), count: posts_count))
   end
 
   def bulk_status_update
@@ -46,7 +46,7 @@ class Api::V1::PostsController < ApplicationController
     posts_count = @posts.where.not(status: status)
       .update_all(updates)
 
-    render_notice(t("successfully_updated", entity: posts_count > 1 ? "Posts" : "Post", count: posts_count))
+    render_notice(t("successfully_updated", entity: t("entities.post", count: posts_count), count: posts_count))
   end
 
   private

@@ -6,7 +6,7 @@ class Api::V1::UsersController < ApplicationController
 
   def create
     @current_organization.users.create!(user_params)
-    render_notice(t("successfully_created", entity: "User"))
+    render_notice(t("successfully_created", entity: t("entities.user")))
   end
 
   private

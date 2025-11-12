@@ -85,7 +85,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_11_09_145853) do
     t.string "email", null: false
     t.string "password_digest", null: false
     t.string "authentication_token"
-    t.integer "organization_id"
+    t.integer "organization_id", null: false
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["organization_id"], name: "index_users_on_organization_id"
   end
