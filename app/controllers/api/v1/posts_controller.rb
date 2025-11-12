@@ -3,9 +3,8 @@
 class Api::V1::PostsController < ApplicationController
   include Pagy::Backend
 
-  before_action :load_post!, only: %i[show destroy update]
+  before_action :load_post_and_authorize!, only: %i[show destroy update]
   before_action :load_posts, only: %i[index bulk_destroy bulk_status_update]
-  before_action :authorize_post!, only: %i[show destroy update]
   before_action :authorize_posts!, only: %i[bulk_destroy bulk_status_update]
 
   def index
@@ -31,7 +30,7 @@ class Api::V1::PostsController < ApplicationController
 
   def update
     @post.update!(post_params)
-    render_notice(t("successfully_updated", entity: t("entities.post", count: 1), count: 1)) unless ActiveModel::Type::Boolean.new.cast(params[:quiet])
+    render_notice(t("successfully_updated", entity: t("entities.post", count: 1), count: 1)) unless params.key?(:quiet)
   end
 
   def bulk_destroy
@@ -40,11 +39,7 @@ class Api::V1::PostsController < ApplicationController
   end
 
   def bulk_status_update
-    status = post_params[:status]
-    updates = { status: }.merge(status == "published" ? { last_published_at: Time.zone.now } : {})
-
-    posts_count = @posts.where.not(status: status)
-      .update_all(updates)
+    posts_count = Posts::BulkStatusUpdateService.new(@posts, post_params[:status]).process
 
     render_notice(t("successfully_updated", entity: t("entities.post", count: posts_count), count: posts_count))
   end
@@ -55,8 +50,9 @@ class Api::V1::PostsController < ApplicationController
       params.require(:post).permit(:title, :description, :organization_id, :status, category_ids: [])
     end
 
-    def load_post!
+    def load_post_and_authorize!
       @post = current_user.organization.posts.find_by!(slug: params[:slug])
+      authorize @post
     end
 
     def load_posts
@@ -66,10 +62,6 @@ class Api::V1::PostsController < ApplicationController
         @posts = current_user.posts
       end
       @posts = @posts.where(id: params[:post_ids]) if params[:post_ids].present?
-    end
-
-    def authorize_post!
-      authorize @post
     end
 
     def authorize_posts!

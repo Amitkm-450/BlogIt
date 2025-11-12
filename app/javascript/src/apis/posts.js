@@ -16,9 +16,10 @@ const create = payload => axios.post(endPoints.posts.root, { post: payload });
 const show = slug => axios.get(buildUrl(endPoints.posts.show, { slug }));
 
 const update = ({ slug, payload, quiet = false }) => {
-  const path = buildUrl(endPoints.posts.show, { slug, quiet });
+  const path = buildUrl(endPoints.posts.show, { slug });
+  const updatePath = quiet ? `${path}?quiet` : path;
 
-  return axios.patch(path, { post: payload });
+  return axios.patch(updatePath, { post: payload });
 };
 
 const destroy = slug => axios.delete(buildUrl(endPoints.posts.show, { slug }));
