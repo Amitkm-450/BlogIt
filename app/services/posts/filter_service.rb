@@ -22,19 +22,19 @@ module Posts
       def filter_by_title
         return unless params[:title].present?
 
-        self.posts = posts.where("LOWER(title) LIKE ?", "%#{params[:title].downcase}%")
+        @posts = posts.where("LOWER(title) LIKE ?", "%#{params[:title].downcase}%")
       end
 
       def filter_by_status
         return unless params[:status].present?
 
-        self.posts = posts.where(status: params[:status])
+        @posts = posts.where(status: params[:status])
       end
 
       def filter_by_category
         return unless params[:category_ids].present?
 
-        self.posts = posts
+        @posts = posts
           .joins(:categories)
           .where(categories: { id: params[:category_ids] })
           .distinct
