@@ -17,6 +17,7 @@ import { isEmpty } from "ramda";
 import { Trans, useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
 import routes from "routes";
+import { getCheckedColumns } from "utils/post";
 import { buildFilterParams, buildUrl } from "utils/url";
 
 import { getPostsColumns } from "./getColumns";
@@ -75,7 +76,9 @@ const Blogs = () => {
   const filters = filterNonNull({
     searchTerm: searchTerm || undefined,
     status: status || undefined,
-    categories: queryCategories || undefined,
+    categories: isNotEmpty(queryCategories)
+      ? queryCategories?.split(",")
+      : undefined,
   });
 
   const {
@@ -105,11 +108,7 @@ const Blogs = () => {
 
   const columnData = getPostsColumns({ handleChange, handleDelete });
   const [checkedColumns, setCheckedColumns] = useState(() =>
-    columnData.reduce((acc, { title }) => {
-      acc[title] = true;
-
-      return acc;
-    }, {})
+    getCheckedColumns(columnData)
   );
 
   const handleCheck = title => {
@@ -206,7 +205,7 @@ const Blogs = () => {
           block: shouldShowFilters,
         })}
       >
-        <FilterSubHeader {...{ filters }} />
+        <FilterSubHeader {...{ filters }} route={routes.posts.myBlogs} />
       </div>
       <div
         className={classNames(

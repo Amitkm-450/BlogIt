@@ -6,19 +6,44 @@ import { Tag, Typography } from "neetoui";
 import { isEmpty } from "ramda";
 import { Trans } from "react-i18next";
 import { useHistory } from "react-router-dom";
-import routes from "routes";
 import { handleFilterRemove } from "utils/url";
 
-const FilterSubHeader = ({ filters }) => {
+const FilterSubHeader = ({ filters, route }) => {
   const { page } = useQueryParams();
 
   const history = useHistory();
 
   return (
     <div className="flex items-center space-x-3 py-2">
+      {Array.isArray(filters.categories) &&
+        filters.categories.map(category => (
+          <Tag
+            key={category}
+            style="danger"
+            label={
+              <Trans
+                i18nKey="posts.filters.category"
+                values={{ value: category }}
+                components={{
+                  value: <Typography className="text-gray-500" style="body2" />,
+                }}
+              />
+            }
+            onClose={() =>
+              handleFilterRemove({
+                key: "categories",
+                valueToRemove: category,
+                filters,
+                page,
+                history,
+                route,
+              })
+            }
+          />
+        ))}
       {!isEmpty(filters) &&
         Object.entries(filters)
-          .filter(([_, value]) => Boolean(value))
+          .filter(([key, value]) => key !== "categories" && Boolean(value))
           .map(([key, value]) => {
             if (key === "status") value = capitalize(value);
 
@@ -44,7 +69,7 @@ const FilterSubHeader = ({ filters }) => {
                     filters,
                     page,
                     history,
-                    route: routes.posts.myBlogs,
+                    route,
                   });
                 }}
               />

@@ -1,4 +1,4 @@
-import { getPostInitialData } from "constants/form";
+import { getPostInitialValues } from "constants/form";
 import { POST_STATUS } from "constants/post";
 
 import React, { useEffect, useRef, useState } from "react";
@@ -219,7 +219,7 @@ const Edit = () => {
         <div className="w-full rounded-lg bg-white p-6 shadow">
           <Form
             {...{ categories, formikRef }}
-            initialValues={getPostInitialData(post)}
+            initialValues={getPostInitialValues(post)}
             onSubmit={handleChangeStatus}
           />
         </div>

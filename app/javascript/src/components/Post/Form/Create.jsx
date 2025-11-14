@@ -1,4 +1,4 @@
-import { getPostInitialData } from "constants/form";
+import { getPostInitialValues } from "constants/form";
 import { POST_STATUS } from "constants/post";
 
 import React, { useRef, useState } from "react";
@@ -116,7 +116,7 @@ const Create = () => {
         <div className="mx-auto w-full rounded-lg bg-white p-6 shadow">
           <Form
             {...{ categories, formikRef }}
-            initialValues={getPostInitialData()}
+            initialValues={getPostInitialValues()}
             onSubmit={handleChangeStatus}
           />
         </div>

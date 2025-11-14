@@ -6,19 +6,18 @@ import classNames from "classnames";
 import { useFetchCategories } from "hooks/reactQuery/useCategoriesApi";
 import { useFetchPosts } from "hooks/reactQuery/usePostsApi";
 import useQueryParams from "hooks/useQueryParams";
-import { Button, NoData, Pagination, Spinner, Tag, Typography } from "neetoui";
+import { filterNonNull, isNotEmpty } from "neetocist";
+import { Button, NoData, Pagination, Spinner, Typography } from "neetoui";
 import { isEmpty } from "ramda";
 import { Trans, useTranslation } from "react-i18next";
-import { useHistory } from "react-router-dom";
 import routes from "routes";
-import { handleFilterRemove } from "utils/url";
 
 import PostCard from "./Card";
 
+import { FilterSubHeader } from "../commons";
+
 const List = () => {
   const { categories: queryCategories = "", page } = useQueryParams();
-
-  const history = useHistory();
 
   const { data: { categories = [] } = {} } = useFetchCategories();
 
@@ -28,6 +27,12 @@ const List = () => {
       .map(({ id }) => id),
     ...(page && { page }),
   };
+
+  const filters = filterNonNull({
+    categories: isNotEmpty(queryCategories)
+      ? queryCategories?.split(",")
+      : undefined,
+  });
 
   const {
     data: { posts = [], count: totalPostsCount = 0 } = {},
@@ -69,27 +74,7 @@ const List = () => {
           block: !isEmpty(queryCategories),
         })}
       >
-        <Tag
-          style="secondary"
-          label={
-            <Trans
-              i18nKey="posts.filters.categories"
-              values={{ value: queryCategories }}
-              components={{
-                value: <Typography className="text-gray-500" style="body3" />,
-              }}
-            />
-          }
-          onClose={() => {
-            handleFilterRemove({
-              key: "categories",
-              filters: { categories: queryCategories },
-              page,
-              history,
-              route: routes.posts.root,
-            });
-          }}
-        />
+        <FilterSubHeader {...{ filters }} route={routes.posts.root} />
       </div>
       <div
         className={classNames("flex h-2/3 w-full items-center justify-center", {

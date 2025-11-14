@@ -154,7 +154,7 @@
       "down": "Down"
     },
     "filters": {
-      "categories": "Categories: <value>{{value}}</value>",
+      "category": "Category: <value>{{value}}</value>",
       "status": "Status: <value>{{value}}</value>",
       "searchTerm": "Search term: <value>{{value}}</value>"
     },

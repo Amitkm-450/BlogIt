@@ -18,7 +18,7 @@ export const POST_VALIDATION_SCHEMA = yup.object().shape({
     .required(i18n.t("validations.category.required")),
 });
 
-export const getPostInitialData = (post = {}) => {
+export const getPostInitialValues = (post = {}) => {
   const { title, description, categories } = post;
 
   return {

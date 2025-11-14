@@ -86,11 +86,7 @@ const CategorySidebar = ({ isCategorySidebarOpen }) => {
           placeholder={t("categorySidebar.searchInput.placeholder")}
           prefix={<Search size={16} />}
           value={searchTerm}
-          onChange={({
-            event: {
-              target: { value },
-            },
-          }) => setSearchTerm(value)}
+          onChange={({ target: { value } }) => setSearchTerm(value)}
         />
       </div>
       <ul className="mt-4 space-y-2">
