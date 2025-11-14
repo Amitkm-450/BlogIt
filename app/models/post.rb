@@ -38,7 +38,7 @@ class Post < ApplicationRecord
     end
 
     def republishable_changes_present?
-      attribute_changes = (changed & ["title", "description"]).any?
+      attribute_changes = will_save_change_to_title? || will_save_change_to_description?
       category_changes = categories.ids.sort != category_ids_before_change.sort
       attribute_changes || category_changes
     end
