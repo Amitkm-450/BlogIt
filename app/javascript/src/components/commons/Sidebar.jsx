@@ -48,7 +48,7 @@ const Sidebar = ({ setIsCategorySidebarOpen }) => {
       icon: MenuLayout,
       style: "secondary",
       tooltipKey: "sidebar.category",
-      onClick: () => setIsCategorySidebarOpen(prev => !prev),
+      onClick: () => setIsCategorySidebarOpen(previous => !previous),
     },
     {
       icon: Folder,
@@ -87,7 +87,7 @@ const Sidebar = ({ setIsCategorySidebarOpen }) => {
           content: t("sidebar.profile"),
           position: "right",
         }}
-        onClick={() => setIsMenuVisible(prev => !prev)}
+        onClick={() => setIsMenuVisible(previous => !previous)}
       />
       <div
         className={classNames(

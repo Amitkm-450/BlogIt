@@ -124,7 +124,7 @@ const SubHeader = ({
             content: t("toolTip.editButton"),
             position: "top",
           }}
-          onClick={() => setIsSearchPanOpen(prev => !prev)}
+          onClick={() => setIsSearchPanOpen(previous => !previous)}
         />
       </div>
     </div>

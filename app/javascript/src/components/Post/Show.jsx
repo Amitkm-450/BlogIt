@@ -2,10 +2,10 @@ import { POST_STATUS } from "constants/post";
 
 import React, { useState } from "react";
 
-import { Download, Edit } from "@bigbinary/neeto-icons";
-import { Avatar, Spinner, Tag, Typography, Button } from "@bigbinary/neetoui";
 import classNames from "classnames";
 import { useFetchPost } from "hooks/reactQuery/usePostsApi";
+import { Download, Edit } from "neetoicons";
+import { Avatar, Spinner, Tag, Typography, Button } from "neetoui";
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
 import routes from "routes";

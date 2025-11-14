@@ -1,7 +1,7 @@
 import React from "react";
 
 import { PageLayout } from "./commons";
-import PostsList from "./Post";
+import PostsList from "./Post/List";
 
 const Home = () => (
   <PageLayout>

@@ -19,14 +19,20 @@ import { FilterSubHeader } from "../commons";
 const List = () => {
   const { categories: queryCategories = "", page } = useQueryParams();
 
+  const { t } = useTranslation();
+
   const { data: { categories = [] } = {} } = useFetchCategories();
 
-  const filterParams = {
-    category_ids: categories
-      .filter(({ name }) => queryCategories.split(",").includes(name))
-      .map(({ id }) => id),
-    ...(page && { page }),
-  };
+  const selectedCategoryIds = categories
+    .filter(({ name }) => queryCategories?.split(",").includes(name))
+    .map(({ id }) => id);
+
+  const filterParams = filterNonNull({
+    category_ids: isNotEmpty(selectedCategoryIds)
+      ? selectedCategoryIds
+      : undefined,
+    page: page || undefined,
+  });
 
   const filters = filterNonNull({
     categories: isNotEmpty(queryCategories)
@@ -40,8 +46,6 @@ const List = () => {
   } = useFetchPosts({
     params: filterParams,
   });
-
-  const { t } = useTranslation();
 
   if (isPostsLoading) {
     return (

@@ -25,10 +25,10 @@ const Card = ({
 }) => {
   const history = useHistory();
 
+  const { t } = useTranslation();
+
   const { data: { vote: { id = "", userVote = 0 } = {} } = {} } =
     useFetchVotes(slug);
-
-  const { t } = useTranslation();
 
   const { mutate: createVote } = useCreateVote();
   const { mutate: deleteVote } = useDeleteVote();
