@@ -2,18 +2,11 @@ import { PAGE_DEFAULT_NUMBER, PAGE_DEFAULT_SIZE } from "constants/query";
 
 import React from "react";
 
-import {
-  Button,
-  NoData,
-  Pagination,
-  Spinner,
-  Tag,
-  Typography,
-} from "@bigbinary/neetoui";
 import classNames from "classnames";
 import { useFetchCategories } from "hooks/reactQuery/useCategoriesApi";
 import { useFetchPosts } from "hooks/reactQuery/usePostsApi";
 import useQueryParams from "hooks/useQueryParams";
+import { Button, NoData, Pagination, Spinner, Tag, Typography } from "neetoui";
 import { isEmpty } from "ramda";
 import { Trans, useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";

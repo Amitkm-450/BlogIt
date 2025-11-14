@@ -13,11 +13,8 @@ const create = payload => axios.post(postsUrl(), { post: payload });
 
 const show = slug => axios.get(postUrl(slug));
 
-const update = ({ slug, payload, quiet = false }) => {
-  const url = postUrl(slug) + (quiet ? "?quiet" : "");
-
-  return axios.patch(url, { post: payload });
-};
+const update = ({ slug, payload, quiet }) =>
+  axios.patch(postUrl(slug, quiet), { post: payload });
 
 const destroy = slug => axios.delete(postUrl(slug));
 

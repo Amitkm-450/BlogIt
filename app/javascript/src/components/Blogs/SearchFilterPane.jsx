@@ -6,15 +6,17 @@ import { POST_STATUS } from "constants/post";
 
 import React, { useRef } from "react";
 
-import { Pane, Spinner, Typography, Button } from "@bigbinary/neetoui";
-import { Form, Input, Select } from "@bigbinary/neetoui/formik";
 import { useFetchCategories } from "hooks/reactQuery/useCategoriesApi";
 import useQueryParams from "hooks/useQueryParams";
+import { findBy } from "neetocist";
+import { Pane, Spinner, Typography, Button } from "neetoui";
+import { Form, Input, Select } from "neetoui/formik";
+import { isEmpty } from "ramda";
 import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
 import routes from "routes";
 
-const SearchFilterPan = ({ isOpen, onClose, handleFilterApplied }) => {
+const SearchFilterPane = ({ isOpen, onClose, handleFilterApplied }) => {
   const { data: { categories = [] } = {}, isLoading } = useFetchCategories();
 
   const { t } = useTranslation();
@@ -32,15 +34,16 @@ const SearchFilterPan = ({ isOpen, onClose, handleFilterApplied }) => {
   const selectedCategories =
     queryCategories
       .split(",")
-      .map(name => categories.find(category => category.name === name))
+      .map(name => findBy({ name }, categories))
       .filter(Boolean) || [];
 
   const handleApplyFilters = () => {
-    const values = filterFormRef?.current.values;
+    const { title, categories, status } = filterFormRef?.current.values || {};
+
     const filters = {
-      title: values.title.length > 0 ? values.title : undefined,
-      categories: values.categories.length > 0 ? values.categories : undefined,
-      status: values.status?.value,
+      title: !isEmpty(title) ? title : undefined,
+      categories: !isEmpty(categories) ? categories : undefined,
+      status: status?.value,
     };
 
     handleFilterApplied(filters);
@@ -138,4 +141,4 @@ const SearchFilterPan = ({ isOpen, onClose, handleFilterApplied }) => {
   );
 };
 
-export default SearchFilterPan;
+export default SearchFilterPane;

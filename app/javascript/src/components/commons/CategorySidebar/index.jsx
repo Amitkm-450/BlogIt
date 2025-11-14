@@ -1,11 +1,11 @@
 import React, { useState } from "react";
 
-import { Plus, Search } from "@bigbinary/neeto-icons";
-import { Input, Button, Spinner, Typography } from "@bigbinary/neetoui";
 import classNames from "classnames";
 import { useFetchCategories } from "hooks/reactQuery/useCategoriesApi";
 import useQueryParams from "hooks/useQueryParams";
-import { isEmpty } from "ramda";
+import { Plus, Search } from "neetoicons";
+import { Input, Button, Spinner, Typography } from "neetoui";
+import { isEmpty, isNotNil } from "ramda";
 import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
 import routes from "routes";
@@ -13,16 +13,16 @@ import { buildUrl } from "utils/url";
 
 import AddCategoryModel from "./AddCategoryModal";
 
-const Sidebar = ({ isCategorySidebarOpen }) => {
+const CategorySidebar = ({ isCategorySidebarOpen }) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const { data: { categories = [] } = {}, isLoading } = useFetchCategories();
 
-  const { categories: queryCategories = "" } = useQueryParams();
-  const selectedCategories = isEmpty(queryCategories)
-    ? []
-    : queryCategories.split(",");
+  const { categories: queryCategories } = useQueryParams();
+  const selectedCategories = isNotNil(queryCategories)
+    ? queryCategories.split(",")
+    : [];
 
   const { t } = useTranslation();
 
@@ -86,25 +86,35 @@ const Sidebar = ({ isCategorySidebarOpen }) => {
           placeholder={t("categorySidebar.searchInput.placeholder")}
           prefix={<Search size={16} />}
           value={searchTerm}
-          onChange={event => setSearchTerm(event.target.value)}
+          onChange={({
+            event: {
+              target: { value },
+            },
+          }) => setSearchTerm(value)}
         />
       </div>
       <ul className="mt-4 space-y-2">
-        {filteredCategories.map(({ id, name }) => (
-          <li
-            key={id}
-            className={`cursor-pointer rounded p-2 text-gray-700 shadow-sm hover:shadow-lg ${
-              selectedCategories.includes(name)
-                ? "bg-gray-400 text-white"
-                : "bg-white"
-            }`}
-            onClick={() => {
-              handleSelectedCategory({ name });
-            }}
-          >
-            {name}
-          </li>
-        ))}
+        {filteredCategories.map(({ id, name }) => {
+          const isCategorySelected = selectedCategories.includes(name);
+
+          return (
+            <li
+              key={id}
+              className={classNames(
+                "cursor-pointer rounded p-2 text-gray-700 shadow-sm hover:shadow-lg",
+                {
+                  "bg-gray-400 text-white": isCategorySelected,
+                  "bg-white": !isCategorySelected,
+                }
+              )}
+              onClick={() => {
+                handleSelectedCategory({ name });
+              }}
+            >
+              {name}
+            </li>
+          );
+        })}
       </ul>
       <AddCategoryModel
         {...{ isModalOpen }}
@@ -114,4 +124,4 @@ const Sidebar = ({ isCategorySidebarOpen }) => {
   );
 };
 
-export default Sidebar;
+export default CategorySidebar;

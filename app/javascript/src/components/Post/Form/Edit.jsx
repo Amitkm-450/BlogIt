@@ -3,14 +3,6 @@ import { POST_STATUS } from "constants/post";
 
 import React, { useEffect, useRef, useState } from "react";
 
-import { ExternalLink, MenuHorizontal } from "@bigbinary/neeto-icons";
-import {
-  Button,
-  Spinner,
-  Typography,
-  ActionDropdown,
-  Dropdown,
-} from "@bigbinary/neetoui";
 import classNames from "classnames";
 import dayjs from "dayjs";
 import { useFetchCategories } from "hooks/reactQuery/useCategoriesApi";
@@ -19,6 +11,9 @@ import {
   useUpdatePost,
   useDeletePost,
 } from "hooks/reactQuery/usePostsApi";
+import { ExternalLink, MenuHorizontal } from "neetoicons";
+import { Button, Spinner, Typography, ActionDropdown, Dropdown } from "neetoui";
+import { pluck } from "ramda";
 import { Trans, useTranslation } from "react-i18next";
 import { useHistory, useParams } from "react-router-dom";
 import routes from "routes";
@@ -32,6 +27,16 @@ import {
   PageLayout,
   PageNotFound,
 } from "../../commons";
+
+const {
+  Menu: ActionMenu,
+  MenuItem: ActionMenuItem,
+  Divider: ActionDivider,
+} = ActionDropdown;
+const { Button: ActionMenuItemButton } = ActionMenuItem;
+
+const { MenuItem } = Dropdown;
+const { Button: MenuItemButton } = MenuItem;
 
 const Edit = () => {
   const [isSingleDeleteModalOpen, setIsSingleDeleteModalOpen] = useState(false);
@@ -64,7 +69,7 @@ const Edit = () => {
         slug,
         payload: {
           ...values,
-          category_ids: values.categories.map(category => category.id),
+          category_ids: pluck("id", values.categories),
           status,
         },
       },
@@ -116,9 +121,6 @@ const Edit = () => {
       </div>
     );
   }
-
-  const { Menu, MenuItem, Divider } = ActionDropdown;
-  const { Button: MenuItemButton } = MenuItem;
 
   if (isUnauthorized) {
     return <PageNotFound />;
@@ -180,37 +182,37 @@ const Edit = () => {
               }
               onClick={() => formikRef?.current.submitForm()}
             >
-              <Menu>
-                <MenuItem>
-                  <MenuItemButton
+              <ActionMenu>
+                <ActionMenuItem>
+                  <ActionMenuItemButton
                     onClick={() => {
                       setStatus(POST_STATUS.PUBLISHED);
                     }}
                   >
                     {t("posts.actions.publish")}
-                  </MenuItemButton>
-                </MenuItem>
-                <Divider />
-                <MenuItem>
-                  <MenuItemButton
+                  </ActionMenuItemButton>
+                </ActionMenuItem>
+                <ActionDivider />
+                <ActionMenuItem>
+                  <ActionMenuItemButton
                     onClick={() => {
                       setStatus(POST_STATUS.DRAFT);
                     }}
                   >
                     {t("posts.actions.setAsDraft")}
-                  </MenuItemButton>
-                </MenuItem>
-              </Menu>
+                  </ActionMenuItemButton>
+                </ActionMenuItem>
+              </ActionMenu>
             </ActionDropdown>
             <Dropdown buttonStyle="secondary" icon={MenuHorizontal}>
-              <Dropdown.MenuItem>
-                <Dropdown.MenuItem.Button
+              <MenuItem>
+                <MenuItemButton
                   className="text-red-600"
                   onClick={() => setIsSingleDeleteModalOpen(true)}
                 >
                   {t("posts.actions.delete")}
-                </Dropdown.MenuItem.Button>
-              </Dropdown.MenuItem>
+                </MenuItemButton>
+              </MenuItem>
             </Dropdown>
           </div>
         </div>

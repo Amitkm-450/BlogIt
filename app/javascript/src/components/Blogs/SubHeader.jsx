@@ -2,17 +2,23 @@ import { POST_STATUS } from "constants/post";
 
 import React from "react";
 
-import { Delete, Filter } from "@bigbinary/neeto-icons";
+import classNames from "classnames";
+import { Delete, Filter } from "neetoicons";
 import {
   ActionDropdown,
   Button,
   Checkbox,
   Dropdown,
   Typography,
-} from "@bigbinary/neetoui";
-import classNames from "classnames";
+} from "neetoui";
 import { isEmpty } from "ramda";
 import { Trans, useTranslation } from "react-i18next";
+
+const { Menu, MenuItem, Divider } = Dropdown;
+const { Button: MenuItemButton } = MenuItem;
+
+const { Menu: ActionMenu, MenuItem: ActionMenuItem } = ActionDropdown;
+const { Button: ActionMenuItemButton } = ActionMenuItem;
 
 const SubHeader = ({
   setIsSearchPanOpen,
@@ -37,9 +43,6 @@ const SubHeader = ({
     translationValues = { count: selectedCount, total: totalPostsCount };
   }
 
-  const { Menu, MenuItem, Divider } = Dropdown;
-  const { Button: MenuItemButton } = MenuItem;
-
   return (
     <div className="flex w-full items-center justify-between py-2">
       <div className="flex items-center space-x-4">
@@ -52,8 +55,8 @@ const SubHeader = ({
         />
         <div
           className={classNames("flex space-x-2", {
-            block: selectedRowKeys.length !== 0,
-            hidden: selectedRowKeys.length === 0,
+            block: hasSelection,
+            hidden: !hasSelection,
           })}
         >
           <Dropdown
@@ -95,14 +98,11 @@ const SubHeader = ({
         </div>
       </div>
       <div className="flex items-center space-x-2">
-        <ActionDropdown buttonStyle="secondary" label="Column">
-          <ActionDropdown.Menu>
+        <ActionDropdown buttonStyle="secondary" label={t("subHeader.column")}>
+          <ActionMenu>
             {columnData.map(({ title }) => (
-              <ActionDropdown.MenuItem
-                key={title}
-                onClick={() => handleCheck(title)}
-              >
-                <ActionDropdown.MenuItem.Button
+              <ActionMenuItem key={title} onClick={() => handleCheck(title)}>
+                <ActionMenuItemButton
                   prefix={
                     <Checkbox
                       checked={checkedColumns[title]}
@@ -112,10 +112,10 @@ const SubHeader = ({
                   }
                 >
                   {title}
-                </ActionDropdown.MenuItem.Button>
-              </ActionDropdown.MenuItem>
+                </ActionMenuItemButton>
+              </ActionMenuItem>
             ))}
-          </ActionDropdown.Menu>
+          </ActionMenu>
         </ActionDropdown>
         <Button
           icon={Filter}

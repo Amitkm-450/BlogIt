@@ -2,8 +2,8 @@ import { POST_STATUS } from "constants/post";
 
 import React, { useEffect, useState } from "react";
 
-import { Avatar, Tag, Typography } from "@bigbinary/neetoui";
 import classNames from "classnames";
+import { Avatar, Tag, Typography } from "neetoui";
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
 import { formatDate } from "utils/date";

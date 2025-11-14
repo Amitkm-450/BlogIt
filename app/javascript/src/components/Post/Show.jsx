@@ -34,8 +34,14 @@ const Show = () => {
     );
   }
 
-  const { categories, title, status, user, lastPublishedAt, description } =
-    post;
+  const {
+    categories,
+    title,
+    status,
+    user: { id: userId = "", name: userName = "" },
+    lastPublishedAt,
+    description,
+  } = post;
 
   return (
     <PageLayout>
@@ -74,7 +80,7 @@ const Show = () => {
                 }}
                 onClick={() => setIsModalOpen(true)}
               />
-              {post.user?.id === getFromLocalStorage("authUserId") && (
+              {userId === getFromLocalStorage("authUserId") && (
                 <Button
                   icon={Edit}
                   size="large"
@@ -95,7 +101,7 @@ const Show = () => {
           </div>
           <div className="flex-col">
             <Typography className="font-bold text-black" style="body2">
-              {user.name}
+              {userName}
             </Typography>
             <Typography style="body2">
               {lastPublishedAt

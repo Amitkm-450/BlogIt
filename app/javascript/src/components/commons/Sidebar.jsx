@@ -1,16 +1,9 @@
 import React, { useState } from "react";
 
-import {
-  Book,
-  Edit,
-  Folder,
-  List,
-  MenuLayout,
-  User,
-} from "@bigbinary/neeto-icons";
-import { Button, Typography } from "@bigbinary/neetoui";
 import classNames from "classnames";
 import { useLogout } from "hooks/reactQuery/useUsersApi";
+import { Book, Edit, Folder, List, MenuLayout, User } from "neetoicons";
+import { Button, Typography } from "neetoui";
 import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
 import routes from "routes";
@@ -33,57 +26,58 @@ const Sidebar = ({ setIsCategorySidebarOpen }) => {
     });
   };
 
+  const sidebarButtons = [
+    {
+      icon: Book,
+      style: "tertiary",
+      to: routes.posts.root,
+    },
+    {
+      icon: List,
+      style: "secondary",
+      to: routes.posts.root,
+      tooltipKey: "sidebar.postsList",
+    },
+    {
+      icon: Edit,
+      style: "secondary",
+      to: routes.posts.new,
+      tooltipKey: "sidebar.postCreate",
+    },
+    {
+      icon: MenuLayout,
+      style: "secondary",
+      tooltipKey: "sidebar.category",
+      onClick: () => setIsCategorySidebarOpen(prev => !prev),
+    },
+    {
+      icon: Folder,
+      style: "secondary",
+      to: routes.posts.myBlogs,
+      tooltipKey: "sidebar.myBlogPosts",
+    },
+  ];
+
   return (
     <div className="relative flex h-screen w-24 flex-col items-center gap-1 border-r-2 border-gray-200 px-1 py-2">
       <div className="flex flex-col gap-y-4">
-        <Button
-          icon={Book}
-          size="large"
-          style="tertiary"
-          to={routes.posts.root}
-        />
-        <Button
-          icon={List}
-          size="large"
-          style="secondary"
-          to={routes.posts.root}
-          tooltipProps={{
-            content: t("sidebar.postsList"),
-            position: "right",
-          }}
-        />
-        <Button
-          icon={Edit}
-          size="large"
-          style="secondary"
-          to={routes.posts.new}
-          tooltipProps={{
-            content: t("sidebar.postCreate"),
-            position: "right",
-          }}
-        />
-        <Button
-          icon={MenuLayout}
-          size="large"
-          style="secondary"
-          tooltipProps={{
-            content: t("sidebar.category"),
-            position: "right",
-          }}
-          onClick={() => {
-            setIsCategorySidebarOpen(prev => !prev);
-          }}
-        />
-        <Button
-          icon={Folder}
-          size="large"
-          style="secondary"
-          to={routes.posts.myBlogs}
-          tooltipProps={{
-            content: t("sidebar.myBlogPosts"),
-            position: "right",
-          }}
-        />
+        {sidebarButtons.map(
+          ({ icon, style, to, onClick, tooltipKey }, index) => (
+            <Button
+              icon={icon}
+              key={index}
+              size="large"
+              style={style}
+              to={to}
+              tooltipProps={
+                tooltipKey
+                  ? { content: t(tooltipKey), position: "right" }
+                  : undefined
+              }
+              onClick={onClick}
+            />
+          )
+        )}
       </div>
       <Button
         className="mt-auto"

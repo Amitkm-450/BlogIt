@@ -8,6 +8,7 @@ json.extract! post,
   :created_at,
   :status,
   :last_published_at
+json.net_votes post.net_votes
 
 json.user do
   json.extract! post.user, :id, :name

@@ -21,6 +21,9 @@ const alias = {
   constants: absolutePath("src/constants"),
   channels: absolutePath("src/channels"),
   routes: absolutePath("src/routes"),
+  neetoui: "@bigbinary/neetoui",
+  neetoicons: "@bigbinary/neeto-icons",
+  neetocist: "@bigbinary/neeto-cist",
 };
 
 export { alias };

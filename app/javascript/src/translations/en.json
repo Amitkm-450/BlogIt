@@ -119,6 +119,7 @@
   "subHeader": {
     "bulkUpdate": "Change status",
     "bulkDelete": "Delete",
+    "column": "Column",
     "status": {
       "draft": "Draft",
       "publish": "Publish"
@@ -143,7 +144,7 @@
     "table": {
       "title": "Title",
       "category": "Category",
-      "lastPublishedAt": "Last Published At",
+      "lastPublishedAt": "Last published at",
       "status": "Status",
       "actions": "Actions",
       "empty": "—"
@@ -178,6 +179,7 @@
   "title": {
     "pageNotFound": "Page not found"
   },
+  "globalError": "Something went wrong!",
   "validations": {
     "name": {
       "required": "Name is required",

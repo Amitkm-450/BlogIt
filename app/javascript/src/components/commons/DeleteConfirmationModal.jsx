@@ -1,6 +1,6 @@
 import React from "react";
 
-import { Alert, Typography } from "@bigbinary/neetoui";
+import { Alert, Typography } from "neetoui";
 import { Trans } from "react-i18next";
 
 const DeleteConfirmationModal = ({

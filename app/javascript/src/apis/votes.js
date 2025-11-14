@@ -7,8 +7,8 @@ const fetch = postSlug => axios.get(postVotesUrl(postSlug));
 const create = (postSlug, payload) =>
   axios.post(postVotesUrl(postSlug), { vote: payload });
 
-const destroy = (params, payload) =>
-  axios.delete(postVoteUrl(params.postSlug, params.id), {
+const destroy = ({ postSlug, id }, payload) =>
+  axios.delete(postVoteUrl(postSlug, id), {
     vote: payload,
   });
 

@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-import CategorySidebar from "./Category";
+import CategorySidebar from "./CategorySidebar";
 import Sidebar from "./Sidebar";
 
 const PageLayout = ({ children }) => {

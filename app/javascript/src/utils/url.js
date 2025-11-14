@@ -1,4 +1,4 @@
-import { filterNonNull, keysToSnakeCase } from "@bigbinary/neeto-cist";
+import { filterNonNull, keysToSnakeCase } from "neetocist";
 import { stringify } from "qs";
 import { isEmpty, toPairs, pipe, omit } from "ramda";
 

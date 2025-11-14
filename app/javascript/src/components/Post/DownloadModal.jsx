@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
 
-import { Modal } from "@bigbinary/neetoui";
 import postsApi from "apis/posts";
 import createConsumer from "channels/consumer";
+import { subscribeToReportDownloadChannel } from "channels/postPdfDownloadChannel";
 import FileSaver from "file-saver";
+import { Modal, Typography } from "neetoui";
 
-import { subscribeToReportDownloadChannel } from "../../channels/postPdfDownloadChannel";
 import { ProgressBar } from "../commons";
 
 const DownloadModal = ({ isOpen, onClose, slug }) => {
@@ -56,7 +56,7 @@ const DownloadModal = ({ isOpen, onClose, slug }) => {
       <div className="mb-4 w-full">
         <div className="mx-auto mb-4 w-full overflow-hidden rounded-lg border border-gray-200 bg-white text-gray-800 sm:max-w-screen-sm md:max-w-screen-md lg:max-w-screen-2xl">
           <div className="space-y-2 p-6">
-            <p className="text-xl font-semibold">{message}</p>
+            <Typography className="text-xl font-semibold">{message}</Typography>
             <ProgressBar progress={progress} />
           </div>
         </div>

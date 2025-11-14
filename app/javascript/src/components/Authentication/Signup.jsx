@@ -7,10 +7,13 @@ import routes from "routes";
 const Signup = ({ history }) => {
   const { mutate: signupUser } = useSignup();
 
-  const handleSubmit = values => {
+  const handleSubmit = (values, { setSubmitting }) => {
     signupUser(values, {
       onSuccess: () => {
         history.push(routes.login);
+      },
+      onSettled: () => {
+        setSubmitting(false);
       },
     });
   };

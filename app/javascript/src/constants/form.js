@@ -1,7 +1,7 @@
 import i18n from "common/i18n";
 import * as yup from "yup";
 
-export const DEFAULT_ERROR_NOTIFICATION = "Something went wrong!";
+export const DEFAULT_ERROR_NOTIFICATION = i18n.t("globalError");
 
 export const POST_VALIDATION_SCHEMA = yup.object().shape({
   title: yup
@@ -18,15 +18,19 @@ export const POST_VALIDATION_SCHEMA = yup.object().shape({
     .required(i18n.t("validations.category.required")),
 });
 
-export const getPostInitialData = (post = {}) => ({
-  title: post.title || "",
-  description: post.description || "",
-  categories:
-    post.categories?.map(category => ({
-      name: category.name,
-      id: category.id,
-    })) || [],
-});
+export const getPostInitialData = (post = {}) => {
+  const { title, description, categories } = post;
+
+  return {
+    title: title || "",
+    description: description || "",
+    categories:
+      categories?.map(({ name, id }) => ({
+        name,
+        id,
+      })) || [],
+  };
+};
 
 export const getFilterInitialValues = ({
   searchTerm,
@@ -49,7 +53,7 @@ export const FILTER_VALIDATION_SCHEMA = yup.object().shape({
     .nullable(),
 });
 
-export const CATEGORY_INITIAL_DATA = {
+export const CATEGORY_INITIAL_VALUES = {
   name: "",
 };
 

@@ -2,12 +2,7 @@ import { POST_VALIDATION_SCHEMA } from "constants/form";
 
 import React from "react";
 
-import {
-  Form as NeetoForm,
-  Input,
-  Select,
-  Textarea,
-} from "@bigbinary/neetoui/formik";
+import { Form as NeetoForm, Input, Select, Textarea } from "neetoui/formik";
 import withT from "utils/withT";
 
 const Form = ({ formikRef, categories, initialValues, onSubmit, t }) => (
