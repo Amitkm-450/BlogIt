@@ -1,4 +1,4 @@
-import { keysToCamelCase } from "@bigbinary/neeto-cist";
+import { keysToCamelCase } from "neetocist";
 import { parse } from "qs";
 import { useLocation } from "react-router-dom";
 
