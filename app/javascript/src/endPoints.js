@@ -4,7 +4,8 @@ export const usersUrl = () => "/users";
 export const categoriesUrl = () => "/categories";
 
 export const postsUrl = () => "/posts";
-export const postUrl = slug => `${postsUrl()}/${slug}`;
+export const postUrl = (slug, quiet = false) =>
+  quiet ? `${postsUrl()}/${slug}?quiet` : `${postsUrl()}/${slug}`;
 export const postReportUrl = slug => `${postUrl(slug)}/report`;
 export const postReportDownloadUrl = slug => `${postReportUrl(slug)}/download`;
 

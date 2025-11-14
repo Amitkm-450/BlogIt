@@ -1,16 +1,12 @@
-import { getPostInitialData } from "constants/form";
+import { getPostInitialValues } from "constants/form";
 import { POST_STATUS } from "constants/post";
 
 import React, { useRef, useState } from "react";
 
-import {
-  ActionDropdown,
-  Button,
-  Spinner,
-  Typography,
-} from "@bigbinary/neetoui";
 import { useFetchCategories } from "hooks/reactQuery/useCategoriesApi";
 import { useCreatePost } from "hooks/reactQuery/usePostsApi";
+import { ActionDropdown, Button, Spinner, Typography } from "neetoui";
+import { pluck } from "ramda";
 import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
 import routes from "routes";
@@ -18,6 +14,13 @@ import routes from "routes";
 import Form from "./Form";
 
 import { PageLayout } from "../../commons";
+
+const {
+  Menu: ActionMenu,
+  MenuItem: ActionMenuItem,
+  Divider: ActionDivider,
+} = ActionDropdown;
+const { Button: ActionMenuItemButton } = ActionMenuItem;
 
 const Create = () => {
   const [status, setStatus] = useState(POST_STATUS.DRAFT);
@@ -37,8 +40,7 @@ const Create = () => {
     createPost(
       {
         ...values,
-        category_ids: values.categories.map(category => category.id),
-        organization_id: 1,
+        category_ids: pluck("id", values.categories),
         status,
       },
       {
@@ -56,9 +58,6 @@ const Create = () => {
       </div>
     );
   }
-
-  const { Menu, MenuItem, Divider } = ActionDropdown;
-  const { Button: MenuItemButton } = MenuItem;
 
   return (
     <PageLayout>
@@ -90,34 +89,34 @@ const Create = () => {
               }
               onClick={() => formikRef?.current.submitForm()}
             >
-              <Menu>
-                <MenuItem>
-                  <MenuItemButton
+              <ActionMenu>
+                <ActionMenuItem>
+                  <ActionMenuItemButton
                     onClick={() => {
                       setStatus(POST_STATUS.PUBLISHED);
                     }}
                   >
                     {t("posts.actions.publish")}
-                  </MenuItemButton>
-                </MenuItem>
-                <Divider />
-                <MenuItem>
-                  <MenuItemButton
+                  </ActionMenuItemButton>
+                </ActionMenuItem>
+                <ActionDivider />
+                <ActionMenuItem>
+                  <ActionMenuItemButton
                     onClick={() => {
                       setStatus(POST_STATUS.DRAFT);
                     }}
                   >
                     {t("posts.actions.setAsDraft")}
-                  </MenuItemButton>
-                </MenuItem>
-              </Menu>
+                  </ActionMenuItemButton>
+                </ActionMenuItem>
+              </ActionMenu>
             </ActionDropdown>
           </div>
         </div>
         <div className="mx-auto w-full rounded-lg bg-white p-6 shadow">
           <Form
             {...{ categories, formikRef }}
-            initialValues={getPostInitialData()}
+            initialValues={getPostInitialValues()}
             onSubmit={handleChangeStatus}
           />
         </div>

@@ -10,7 +10,7 @@ class MyPostPolicy
 
   def bulk_destroy?
     records = Array(record)
-    records.all? { |r| r.user_id == user.id }
+    records.all? { |record| record.user_id == user.id }
   end
 
   def bulk_status_update?

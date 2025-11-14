@@ -26,7 +26,7 @@ class Api::V1::PostsControllerTest < ActionDispatch::IntegrationTest
 
   def test_should_create_post
     post api_v1_posts_path,
-      params: { post: { title: "Hello", description: "World", organization_id: @organization.id } },
+      params: { post: { title: "Hello", description: "World" } },
       headers: @headers,
       as: :json
     assert_response :success

@@ -1,7 +1,7 @@
 import i18n from "common/i18n";
 import * as yup from "yup";
 
-export const SIGNUP_INITIAL_DATA = {
+export const SIGNUP_INITIAL_VALUES = {
   name: "",
   email: "",
   password: "",
@@ -30,7 +30,7 @@ export const SIGNUP_VALIDATION_SCHEMA = yup.object().shape({
     ),
 });
 
-export const LOGIN_INITIAL_DATA = {
+export const LOGIN_INITIAL_VALUES = {
   email: "",
   password: "",
 };

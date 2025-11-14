@@ -1,14 +1,16 @@
 import {
-  CATEGORY_INITIAL_DATA,
+  CATEGORY_INITIAL_VALUES,
   CATEGORY_VALIDATION_SCHEMA,
 } from "constants/form";
 
 import React, { useRef, useState } from "react";
 
-import { Button, Modal, Typography } from "@bigbinary/neetoui";
-import { Form, Input } from "@bigbinary/neetoui/formik";
 import { useCreateCategory } from "hooks/reactQuery/useCategoriesApi";
+import { Button, Modal, Typography } from "neetoui";
+import { Form, Input } from "neetoui/formik";
 import { useTranslation } from "react-i18next";
+
+const { Header, Body, Footer } = Modal;
 
 const AddCategoryModel = ({ isModalOpen, onClose }) => {
   const [isSubmittable, setIsSubmittable] = useState(false);
@@ -26,8 +28,6 @@ const AddCategoryModel = ({ isModalOpen, onClose }) => {
     });
   };
 
-  const { Header, Body, Footer } = Modal;
-
   return (
     <Modal
       closeOnOutsideClick
@@ -36,15 +36,13 @@ const AddCategoryModel = ({ isModalOpen, onClose }) => {
       onClose={onClose}
     >
       <Header>
-        <Typography component="h3" style="h2">
-          {t("categorySidebar.modal.header")}
-        </Typography>
+        <Typography style="h2">{t("categorySidebar.modal.header")}</Typography>
       </Header>
       <Body>
         <div className="space-y-4">
           <Form
             formikProps={{
-              initialValues: CATEGORY_INITIAL_DATA,
+              initialValues: CATEGORY_INITIAL_VALUES,
               validationSchema: CATEGORY_VALIDATION_SCHEMA,
               onSubmit: handleSubmit,
               innerRef: formRef,

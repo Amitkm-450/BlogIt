@@ -2,6 +2,7 @@ import React from "react";
 
 import classNames from "classnames";
 import { motion } from "framer-motion";
+import { Typography } from "neetoui";
 
 const ProgressBar = ({ progress }) => (
   <div className="relative h-5 w-full overflow-hidden rounded-full bg-gray-200">
@@ -11,13 +12,14 @@ const ProgressBar = ({ progress }) => (
       initial={{ width: 0 }}
       transition={{ duration: 0.5, ease: "easeInOut" }}
     >
-      <span
+      <Typography
+        component="span"
         className={classNames("flex items-center justify-center", {
           "absolute left-1": progress <= 8,
         })}
       >
         {progress}%
-      </span>
+      </Typography>
     </motion.div>
   </div>
 );

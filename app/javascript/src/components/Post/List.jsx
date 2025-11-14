@@ -2,39 +2,43 @@ import { PAGE_DEFAULT_NUMBER, PAGE_DEFAULT_SIZE } from "constants/query";
 
 import React from "react";
 
-import {
-  Button,
-  NoData,
-  Pagination,
-  Spinner,
-  Tag,
-  Typography,
-} from "@bigbinary/neetoui";
 import classNames from "classnames";
 import { useFetchCategories } from "hooks/reactQuery/useCategoriesApi";
 import { useFetchPosts } from "hooks/reactQuery/usePostsApi";
 import useQueryParams from "hooks/useQueryParams";
+import { filterNonNull, isNotEmpty } from "neetocist";
+import { Button, NoData, Pagination, Spinner, Typography } from "neetoui";
 import { isEmpty } from "ramda";
 import { Trans, useTranslation } from "react-i18next";
-import { useHistory } from "react-router-dom";
 import routes from "routes";
-import { handleFilterRemove } from "utils/url";
 
 import PostCard from "./Card";
+
+import { FilterSubHeader } from "../commons";
 
 const List = () => {
   const { categories: queryCategories = "", page } = useQueryParams();
 
-  const history = useHistory();
+  const { t } = useTranslation();
 
   const { data: { categories = [] } = {} } = useFetchCategories();
 
-  const filterParams = {
-    category_ids: categories
-      .filter(({ name }) => queryCategories.split(",").includes(name))
-      .map(({ id }) => id),
-    ...(page && { page }),
-  };
+  const selectedCategoryIds = categories
+    .filter(({ name }) => queryCategories?.split(",").includes(name))
+    .map(({ id }) => id);
+
+  const filterParams = filterNonNull({
+    category_ids: isNotEmpty(selectedCategoryIds)
+      ? selectedCategoryIds
+      : undefined,
+    page: page || undefined,
+  });
+
+  const filters = filterNonNull({
+    categories: isNotEmpty(queryCategories)
+      ? queryCategories?.split(",")
+      : undefined,
+  });
 
   const {
     data: { posts = [], count: totalPostsCount = 0 } = {},
@@ -42,8 +46,6 @@ const List = () => {
   } = useFetchPosts({
     params: filterParams,
   });
-
-  const { t } = useTranslation();
 
   if (isPostsLoading) {
     return (
@@ -76,27 +78,7 @@ const List = () => {
           block: !isEmpty(queryCategories),
         })}
       >
-        <Tag
-          style="secondary"
-          label={
-            <Trans
-              i18nKey="posts.filters.categories"
-              values={{ value: queryCategories }}
-              components={{
-                value: <Typography className="text-gray-500" style="body3" />,
-              }}
-            />
-          }
-          onClose={() => {
-            handleFilterRemove({
-              key: "categories",
-              filters: { categories: queryCategories },
-              page,
-              history,
-              route: routes.posts.root,
-            });
-          }}
-        />
+        <FilterSubHeader {...{ filters }} route={routes.posts.root} />
       </div>
       <div
         className={classNames("flex h-2/3 w-full items-center justify-center", {

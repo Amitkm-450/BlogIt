@@ -1,31 +1,39 @@
 import React from "react";
 
-import { DownArrow, UpArrow } from "@bigbinary/neeto-icons";
-import { Button, Tag, Typography } from "@bigbinary/neetoui";
 import classNames from "classnames";
 import {
   useCreateVote,
   useFetchVotes,
   useDeleteVote,
 } from "hooks/reactQuery/useVotesApi";
+import { DownArrow, UpArrow } from "neetoicons";
+import { Button, Tag, Typography } from "neetoui";
 import { useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
 import routes from "routes";
 import { formatDate } from "utils/date";
 import { buildUrl } from "utils/url";
 
-const Card = ({ title, user, createdAt, slug, categories, isBloggable }) => {
+const Card = ({
+  title,
+  user,
+  createdAt,
+  netVotes,
+  slug,
+  categories,
+  isBloggable,
+}) => {
   const history = useHistory();
 
-  const { data: { vote: { id, netVotes = 0, userVote = 0 } = {} } = {} } =
-    useFetchVotes(slug);
-
   const { t } = useTranslation();
+
+  const { data: { vote: { id = "", userVote = 0 } = {} } = {} } =
+    useFetchVotes(slug);
 
   const { mutate: createVote } = useCreateVote();
   const { mutate: deleteVote } = useDeleteVote();
 
-  const handleVote = async type => {
+  const handleVote = type => {
     const value = type === "up" ? 1 : -1;
     if (userVote === value) {
       deleteVote({
@@ -54,8 +62,8 @@ const Card = ({ title, user, createdAt, slug, categories, isBloggable }) => {
             {isBloggable && <Tag label={t("posts.blogIt")} style="success" />}
           </div>
           <div className="flex items-center justify-start gap-4">
-            {categories.map(category => (
-              <Tag key={category.id} label={category.name} style="success" />
+            {categories.map(({ id, name }) => (
+              <Tag key={id} label={name} style="success" />
             ))}
           </div>
         </div>

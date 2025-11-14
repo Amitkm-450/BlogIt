@@ -1,6 +1,6 @@
-import { filterNonNull, keysToSnakeCase } from "@bigbinary/neeto-cist";
+import { filterNonNull, keysToSnakeCase, isNotEmpty } from "neetocist";
 import { stringify } from "qs";
-import { isEmpty, toPairs, pipe, omit } from "ramda";
+import { isEmpty, toPairs, pipe, omit, isNotNil, pluck } from "ramda";
 
 export const buildUrl = (route, params) => {
   const placeHolders = [];
@@ -27,8 +27,8 @@ export const buildFilterParams = ({ title, categories = [], status }) => {
     params.searchTerm = title.trim();
   }
 
-  if (categories.length > 0) {
-    params.categories = categories.map(c => c.name).join(",");
+  if (isNotEmpty(categories)) {
+    params.categories = pluck("name", categories).join(",");
   }
 
   if (status) {
@@ -38,12 +38,33 @@ export const buildFilterParams = ({ title, categories = [], status }) => {
   return params;
 };
 
-export const handleFilterRemove = ({ key, filters, page, history, route }) => {
-  const updatedFilters = {
-    ...filters,
-    page,
-    [key]: null,
-  };
+export const handleFilterRemove = ({
+  key,
+  valueToRemove = null,
+  filters,
+  page,
+  history,
+  route,
+}) => {
+  const updatedFilters = { ...filters, page };
+  const { categories } = filters;
+
+  if (key === "categories") {
+    const filteredCategories = categories.filter(
+      category => category !== valueToRemove
+    );
+
+    updatedFilters.categories = isNotEmpty(filteredCategories)
+      ? filteredCategories.join(",")
+      : null;
+  } else {
+    updatedFilters[key] = null;
+
+    updatedFilters.categories =
+      isNotNil(categories) && isNotEmpty(categories)
+        ? categories.join(",")
+        : null;
+  }
 
   const url = buildUrl(route, filterNonNull(updatedFilters));
   history.replace(url);

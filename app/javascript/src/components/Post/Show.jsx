@@ -2,10 +2,10 @@ import { POST_STATUS } from "constants/post";
 
 import React, { useState } from "react";
 
-import { Download, Edit } from "@bigbinary/neeto-icons";
-import { Avatar, Spinner, Tag, Typography, Button } from "@bigbinary/neetoui";
 import classNames from "classnames";
 import { useFetchPost } from "hooks/reactQuery/usePostsApi";
+import { Download, Edit } from "neetoicons";
+import { Avatar, Spinner, Tag, Typography, Button } from "neetoui";
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
 import routes from "routes";
@@ -34,8 +34,14 @@ const Show = () => {
     );
   }
 
-  const { categories, title, status, user, lastPublishedAt, description } =
-    post;
+  const {
+    categories,
+    title,
+    status,
+    user: { id: userId = "", name: userName = "" },
+    lastPublishedAt,
+    description,
+  } = post;
 
   return (
     <PageLayout>
@@ -74,7 +80,7 @@ const Show = () => {
                 }}
                 onClick={() => setIsModalOpen(true)}
               />
-              {post.user?.id === getFromLocalStorage("authUserId") && (
+              {userId === getFromLocalStorage("authUserId") && (
                 <Button
                   icon={Edit}
                   size="large"
@@ -95,7 +101,7 @@ const Show = () => {
           </div>
           <div className="flex-col">
             <Typography className="font-bold text-black" style="body2">
-              {user.name}
+              {userName}
             </Typography>
             <Typography style="body2">
               {lastPublishedAt

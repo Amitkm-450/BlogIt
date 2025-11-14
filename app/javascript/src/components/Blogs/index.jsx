@@ -1,21 +1,8 @@
-import { POST_STATUS } from "constants/post";
+import { PAGE_DEFAULT_NUMBER, PAGE_DEFAULT_SIZE } from "constants/query";
 
 import React, { useState } from "react";
 
-import { capitalize } from "@bigbinary/neeto-cist";
-import { MenuHorizontal } from "@bigbinary/neeto-icons";
-import {
-  Dropdown,
-  Spinner,
-  Table,
-  Tooltip,
-  Typography,
-  NoData,
-  Tag,
-  Pagination,
-} from "@bigbinary/neetoui";
 import classNames from "classnames";
-import dayjs from "dayjs";
 import { useFetchCategories } from "hooks/reactQuery/useCategoriesApi";
 import {
   useFetchMyPosts,
@@ -24,17 +11,24 @@ import {
 } from "hooks/reactQuery/useMyPostsApi";
 import { useUpdatePost, useDeletePost } from "hooks/reactQuery/usePostsApi";
 import useQueryParams from "hooks/useQueryParams";
+import { filterNonNull, isNotEmpty } from "neetocist";
+import { Spinner, Table, Typography, NoData, Pagination } from "neetoui";
 import { isEmpty } from "ramda";
 import { Trans, useTranslation } from "react-i18next";
 import { useHistory } from "react-router-dom";
 import routes from "routes";
-import { buildFilterParams, buildUrl, handleFilterRemove } from "utils/url";
+import { getCheckedColumns } from "utils/post";
+import { buildFilterParams, buildUrl } from "utils/url";
 
-import SearchFilterPan from "./SearchFilterPan";
+import { getPostsColumns } from "./getColumns";
+import SearchFilterPane from "./SearchFilterPane";
 import SubHeader from "./SubHeader";
 
-import { PAGE_DEFAULT_NUMBER, PAGE_DEFAULT_SIZE } from "../../constants/query";
-import { DeleteConfirmationModal, PageLayout } from "../commons";
+import {
+  DeleteConfirmationModal,
+  FilterSubHeader,
+  PageLayout,
+} from "../commons";
 
 const Blogs = () => {
   const [isBulkDeleteModalOpen, setIsBulkDeleteModalOpen] = useState(false);
@@ -47,114 +41,6 @@ const Blogs = () => {
   const history = useHistory();
 
   const { t } = useTranslation();
-
-  const columnData = [
-    {
-      dataIndex: "title",
-      key: "title",
-      title: t("posts.table.title"),
-      width: 100,
-      render: (title, post) => {
-        const displayTitle =
-          title.length > 30 ? `${title.slice(0, 30)}...` : title;
-
-        const link = (
-          <a
-            className="block max-w-xs truncate"
-            href={buildUrl(routes.posts.edit, { slug: post.slug })}
-          >
-            {displayTitle}
-          </a>
-        );
-
-        return title.length > 30 ? (
-          <Tooltip content={title} position="right">
-            {link}
-          </Tooltip>
-        ) : (
-          link
-        );
-      },
-    },
-    {
-      title: t("posts.table.category"),
-      dataIndex: "categories",
-      key: "categories",
-      width: 200,
-      render: categories =>
-        categories?.length > 0
-          ? categories.map(({ name }) => name).join(", ")
-          : "—",
-    },
-    {
-      dataIndex: "lastPublishedAt",
-      key: "lastPublishedAt",
-      title: t("posts.table.lastPublishedAt"),
-      width: 200,
-      render: lastPublishedAt => (
-        <div className="flex items-center">
-          {lastPublishedAt
-            ? dayjs(lastPublishedAt).format("MMMM D, YYYY, hh.mm A")
-            : t("posts.table.empty")}
-        </div>
-      ),
-    },
-    {
-      dataIndex: "status",
-      key: "status",
-      title: t("posts.table.status"),
-      width: 100,
-      render: status => capitalize(status),
-    },
-    {
-      title: t("posts.table.actions"),
-      width: 50,
-      render: (_, post) => (
-        <Dropdown
-          buttonStyle="text"
-          icon={MenuHorizontal}
-          position="bottom-end"
-          strategy="fixed"
-        >
-          <Menu>
-            <MenuItem>
-              <MenuItemButton
-                className="text-black"
-                style="link"
-                onClick={() =>
-                  post.status === POST_STATUS.PUBLISHED
-                    ? handleChange(post.slug, POST_STATUS.DRAFT)
-                    : handleChange(post.slug, POST_STATUS.PUBLISHED)
-                }
-              >
-                {post.status === POST_STATUS.PUBLISHED
-                  ? t("posts.actions.unpublish")
-                  : t("posts.actions.publish")}
-              </MenuItemButton>
-            </MenuItem>
-            <Divider />
-            <MenuItem>
-              <MenuItemButton
-                style="danger"
-                type="delete"
-                onClick={() => handleDelete(post.slug)}
-              >
-                {t("posts.actions.delete")}
-              </MenuItemButton>
-            </MenuItem>
-          </Menu>
-        </Dropdown>
-      ),
-    },
-  ];
-
-  const [checkedColumns, setCheckedColumns] = useState(() =>
-    columnData.reduce((acc, { title }) => {
-      acc[title] = true;
-
-      return acc;
-    }, {})
-  );
 
   const queryParams = useQueryParams();
   const {
@@ -176,20 +62,24 @@ const Blogs = () => {
     .filter(({ name }) => queryCategories?.split(",").includes(name))
     .map(({ id }) => id);
 
-  const filterParams = {
-    ...(searchTerm && { title: searchTerm }),
-    ...(selectedCategoryIds.length > 0 && {
-      category_ids: selectedCategoryIds,
-    }),
-    ...(status && { status }),
-    ...(page && { page }),
+  const normalizedFilters = {
+    title: searchTerm || undefined,
+    category_ids: isNotEmpty(selectedCategoryIds)
+      ? selectedCategoryIds
+      : undefined,
+    status: status || undefined,
+    page: page || undefined,
   };
 
-  const filters = {
-    ...(searchTerm && { searchTerm }),
-    ...(status && { status }),
-    ...(queryCategories && { categories: queryCategories }),
-  };
+  const filterParams = filterNonNull(normalizedFilters);
+
+  const filters = filterNonNull({
+    searchTerm: searchTerm || undefined,
+    status: status || undefined,
+    categories: isNotEmpty(queryCategories)
+      ? queryCategories?.split(",")
+      : undefined,
+  });
 
   const {
     data: { posts: userBlogs = [], count: totalPostsCount = 0 } = {},
@@ -211,6 +101,16 @@ const Blogs = () => {
     });
   };
 
+  const handleDelete = slug => {
+    setIsSingleDeleteModalOpen(true);
+    setSelectedPostSlug(slug);
+  };
+
+  const columnData = getPostsColumns({ handleChange, handleDelete });
+  const [checkedColumns, setCheckedColumns] = useState(() =>
+    getCheckedColumns(columnData)
+  );
+
   const handleCheck = title => {
     setCheckedColumns(prev => ({
       ...prev,
@@ -218,16 +118,15 @@ const Blogs = () => {
     }));
   };
 
-  const handleDelete = slug => {
-    setIsSingleDeleteModalOpen(true);
-    setSelectedPostSlug(slug);
+  const handleResetRows = () => {
+    setSelectedRowKeys([]);
+    setSelectedRowIds([]);
   };
 
   const handleBulkDelete = () => {
     bulkDestroyPosts(selectedRowIds, {
       onSuccess: () => {
-        setSelectedRowKeys([]);
-        setSelectedRowIds([]);
+        handleResetRows();
       },
     });
   };
@@ -237,16 +136,14 @@ const Blogs = () => {
       { postIds: selectedRowIds, status },
       {
         onSuccess: () => {
-          setSelectedRowKeys([]);
-          setSelectedRowIds([]);
+          handleResetRows();
         },
       }
     );
   };
 
   const handleFilterApplied = values => {
-    setSelectedRowKeys([]);
-    setSelectedRowIds([]);
+    handleResetRows();
 
     const searchParams = buildFilterParams(values);
 
@@ -262,14 +159,10 @@ const Blogs = () => {
   const handleSingleDelete = () => {
     deletePost(selectedPostSlug, {
       onSuccess: () => {
-        setSelectedRowKeys([]);
-        setSelectedRowIds([]);
+        handleResetRows();
       },
     });
   };
-
-  const { Menu, MenuItem, Divider } = Dropdown;
-  const { Button: MenuItemButton } = MenuItem;
 
   const filteredColumnData = columnData.filter(
     column => checkedColumns[column.title]
@@ -312,45 +205,7 @@ const Blogs = () => {
           block: shouldShowFilters,
         })}
       >
-        <div className="flex items-center space-x-3 py-2">
-          {!isEmpty(filters) &&
-            Object.entries(filters)
-              .filter(([_, value]) => Boolean(value))
-              .map(([key, value]) => {
-                if (key === "status") value = capitalize(value);
-
-                return (
-                  <Tag
-                    key={key}
-                    style="secondary"
-                    label={
-                      <Trans
-                        i18nKey={`posts.filters.${key}`}
-                        key={key}
-                        values={{ value }}
-                        components={{
-                          value: (
-                            <Typography
-                              className="text-gray-500"
-                              style="body2"
-                            />
-                          ),
-                        }}
-                      />
-                    }
-                    onClose={() => {
-                      handleFilterRemove({
-                        key,
-                        filters,
-                        page,
-                        history,
-                        route: routes.posts.myBlogs,
-                      });
-                    }}
-                  />
-                );
-              })}
-        </div>
+        <FilterSubHeader {...{ filters }} route={routes.posts.myBlogs} />
       </div>
       <div
         className={classNames(
@@ -397,7 +252,7 @@ const Blogs = () => {
           />
         </div>
       </div>
-      <SearchFilterPan
+      <SearchFilterPane
         isOpen={isSearchPanOpen}
         onClose={() => setIsSearchPanOpen(false)}
         {...{ handleFilterApplied }}

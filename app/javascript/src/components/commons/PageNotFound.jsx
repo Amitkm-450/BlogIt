@@ -1,6 +1,6 @@
 import React from "react";
 
-import { NoData } from "@bigbinary/neetoui";
+import { NoData } from "neetoui";
 import routes from "routes";
 import withT from "utils/withT";
 
