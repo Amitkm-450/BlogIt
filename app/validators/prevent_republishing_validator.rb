@@ -22,6 +22,6 @@ class PreventRepublishingValidator < ActiveModel::Validator
 
     def changes_except_status?(record)
       ignored_fields = ["status", "updated_at"]
-      (record.changed - ignored_fields).any?
+      (record.changed - ignored_fields).any? || record.categories_changed?
     end
 end
