@@ -4,3 +4,6 @@ export const getCheckedColumns = (columns = []) =>
 
     return acc;
   }, {});
+
+export const getTruncatedTitle = title =>
+  title.length > 30 ? `${title.slice(0, 30)}...` : title;

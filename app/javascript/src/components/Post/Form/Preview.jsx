@@ -3,13 +3,12 @@ import { POST_STATUS } from "constants/post";
 import React, { useEffect, useState } from "react";
 
 import classNames from "classnames";
+import { PageLayout } from "components/commons";
 import { Avatar, Tag, Typography } from "neetoui";
 import { useTranslation } from "react-i18next";
 import { useParams } from "react-router-dom";
 import { formatDate } from "utils/date";
 import { getFromLocalStorage } from "utils/storage";
-
-import { PageLayout } from "../../commons";
 
 const Preview = () => {
   const [post, setPost] = useState({});

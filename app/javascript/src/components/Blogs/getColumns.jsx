@@ -8,6 +8,7 @@ import { capitalize } from "neetocist";
 import { MenuHorizontal } from "neetoicons";
 import { Dropdown, Tooltip } from "neetoui";
 import routes from "routes";
+import { getTruncatedTitle } from "utils/post";
 import { buildUrl } from "utils/url";
 
 const { Menu, MenuItem, Divider } = Dropdown;
@@ -20,8 +21,7 @@ export const getPostsColumns = ({ handleChange, handleDelete }) => [
     title: i18n.t("posts.table.title"),
     width: 100,
     render: (title, post) => {
-      const displayTitle =
-        title.length > 30 ? `${title.slice(0, 30)}...` : title;
+      const displayTitle = getTruncatedTitle(title);
 
       const link = (
         <a
@@ -87,9 +87,12 @@ export const getPostsColumns = ({ handleChange, handleDelete }) => [
               className="text-black"
               style="link"
               onClick={() =>
-                status === POST_STATUS.PUBLISHED
-                  ? handleChange(slug, POST_STATUS.DRAFT)
-                  : handleChange(slug, POST_STATUS.PUBLISHED)
+                handleChange(
+                  slug,
+                  status === POST_STATUS.PUBLISHED
+                    ? POST_STATUS.DRAFT
+                    : POST_STATUS.PUBLISHED
+                )
               }
             >
               {status === POST_STATUS.PUBLISHED
